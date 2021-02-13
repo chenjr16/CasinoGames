@@ -14,6 +14,4 @@ public abstract class CasinoGames implements GameInterface {
     public void exitCasino(){
         endGame();
     }
-
-
 }

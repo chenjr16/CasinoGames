@@ -10,6 +10,30 @@ class Baccarat extends CasinoGames {
     Dealer dealer;
     double bet;
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    private void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    private void setDealer(Dealer dealer) {
+        this.dealer = dealer;
+    }
+
+    public double getBet() {
+        return bet;
+    }
+
+    private void setBet(double bet) {
+        this.bet = bet;
+    }
+
     @Override
     public boolean isPlayable(Player player, double bet) {
         return false;
@@ -17,7 +41,9 @@ class Baccarat extends CasinoGames {
 
     @Override
     public void play(Player player, Dealer dealer, double bet) {
-
+        setPlayer(player);
+        setDealer(dealer);
+        setBet(bet);
     }
 
     @Override
