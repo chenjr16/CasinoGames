@@ -1,6 +1,6 @@
-package com.casinoGames;
+package com.casino.player;
 
-class Player {
+public class Player {
     //Attributes
     String name;
     double balance;
