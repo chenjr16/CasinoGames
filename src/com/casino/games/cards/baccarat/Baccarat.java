@@ -1,15 +1,21 @@
 package com.casino.games.cards.baccarat;
 
 import com.casino.games.CasinoGames;
-import static com.casino.games.cards.baccarat.utils.Pipe.apply;
+
+import com.casino.games.cards.baccarat.deck.Card;
+import com.casino.games.cards.baccarat.deck.Cards;
 import com.casino.player.Dealer;
 import com.casino.player.Player;
 
-class Baccarat extends CasinoGames {
-    Player player;
-    Dealer dealer;
-    double bet;
+import java.util.List;
 
+class Baccarat extends CasinoGames {
+    private Player player;
+    private Dealer dealer;
+    private double bet;
+    private final List<Card> deckOfCards = Cards.getDeck();
+
+    // Getters and Setters
     public Player getPlayer() {
         return player;
     }
@@ -33,6 +39,12 @@ class Baccarat extends CasinoGames {
     private void setBet(double bet) {
         this.bet = bet;
     }
+
+    public List<Card> getDeckOfCards() {
+        return deckOfCards;
+    }
+
+    // GameInterface overrides
 
     @Override
     public boolean isPlayable(Player player, double bet) {
