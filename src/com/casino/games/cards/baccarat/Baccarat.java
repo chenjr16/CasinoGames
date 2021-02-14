@@ -8,10 +8,7 @@ import static com.casino.games.cards.baccarat.utils.Pipe.apply;
 import com.casino.player.Dealer;
 import com.casino.player.Player;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 class Baccarat extends CasinoGames {
     private Player player;
@@ -38,6 +35,7 @@ class Baccarat extends CasinoGames {
                 .pipe(this::getSidePlayBet);
 
         // Play Game pipeline
+        Collections.shuffle(getDeckOfCards());
         apply(resultMap)
                 .pipe(this::startBaccarat)
                 .pipe(this::drawTwoFor, Play.PLAYER)
@@ -81,7 +79,7 @@ class Baccarat extends CasinoGames {
     }
 
 
-    int winningsMultiplier (WinningsType play) {
+    int winningsMultiplier (BetType play) {
         return Map.of(Play.TIE, 9, Play.BANKER, 2, Play.PLAYER, 2, SidePlays.PAIR, 11).get(play);
     }
 
@@ -344,6 +342,6 @@ class Baccarat extends CasinoGames {
 
     }
 
-    enum Play implements WinningsType {PLAYER, BANKER, TIE}
-    enum SidePlays implements WinningsType {PAIR, NONE;}
+    enum Play implements BetType {PLAYER, BANKER, TIE}
+    enum SidePlays implements BetType {PAIR, NONE;}
 }
