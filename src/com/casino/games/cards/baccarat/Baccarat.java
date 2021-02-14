@@ -23,41 +23,81 @@ class Baccarat extends CasinoGames {
     private boolean isPlayerFrozen;
     private boolean isBankerFrozen;
     private Play winner;
+    private boolean isPair;
     private Scanner scanner;
 
     // Business methods
 
     public void playBaccarat() {
 
-        // Get player bets
+        // Get responses pipeline
         apply(responseMap)
                 .pipe(this::getPlay)
                 .pipe(this::getPlayBet)
                 .pipe(this::getSidePlay)
                 .pipe(this::getSidePlayBet);
 
-        // play a round
-        /*
-         * 1. Give two cards to the PLAYER(not the console user).
-         * If the total is 8 or 9, change state to frozen.
-         * If the total is 8 or 9, calculate the total. Any total over 9 is
-         * calculated as total = total % 9 - 1.
-         * Do the same for the DEALER(not the dealer user).
-         * This is round 1. If the player total is <= 5, then the player gets
-         * another card, else they become frozen. If player was NOT dealt a third card
-         * then apply the same rules to the banker. Game ends.
-         * If the player WAS dealt a third card, then
-         */
+        // Play Game pipeline
+        apply(resultMap)
+                .pipe(this::startBaccarat)
+                .pipe(this::drawTwoFor, Play.PLAYER)
+                .pipe(this::drawTwoFor, Play.BANKER)
+                .pipe(this::playerDrawIfEligible)
+                .pipe(this::bankerDrawIfEligible)
+                .pipe(this::determineWinner);
 
-//        apply(resultMap)
-//                .pipe(this::startBaccarat) / DONE
-//                .pipe(this::drawTwoFor, Play.PLAYER) / DONE
-//                .pipe(this::drawTwoFor, Play.BANKER) / DONE
-//                .pipe(this::playerDrawIfEligible) / DONE
-//                .pipe(this::bankerDrawIfEligible) / DONE
-//                .pipe(this::determineWinner)
-//                .pipe(this::dishOutWinnings)
+        // Dish out them winnings
+        dishOutWinnings(responseMap);
     }
+
+    void dishOutWinnings(Map<String, Response<?>> responseMap) {
+        Play playerPlay = (Play) responseMap.get("play").getResponse();
+        SidePlays sidePlay = (SidePlays) responseMap.get("sidePlay").getResponse();
+
+        // regular play
+
+        if(playerPlay.equals(winner)) {
+            int multiplier = winningsMultiplier(playerPlay);
+            setWinnings(multiplier);
+        } else {
+            double currentDealerBalance = dealer.getBalance();
+            dealer.setBalance(currentDealerBalance + bet);
+        }
+
+        // side play
+
+        if(sidePlay.equals(SidePlays.PAIR) && isPair) {
+            int multiplier = winningsMultiplier(sidePlay);
+            setWinnings(multiplier);
+        }
+    }
+
+    void setWinnings(int multiplier) {
+        double currentPlayerBalance = player.getBalance();
+        double currentDealerBalance = dealer.getBalance();
+        double winnings = (bet * multiplier);
+        player.setBalance(currentPlayerBalance + winnings);
+        dealer.setBalance(currentDealerBalance - winnings);
+    }
+
+
+    int winningsMultiplier (WinningsType play) {
+        return Map.of(Play.TIE, 9, Play.BANKER, 2, Play.PLAYER, 2, SidePlays.PAIR, 11).get(play);
+    }
+
+    Map<String, Integer> determineWinner(Map<String, Integer> resultMap) {
+        int playerTotal = resultMap.get("playerTotal");
+        int bankerTotal = resultMap.get("bankerTotal");
+        if(playerTotal == bankerTotal) {
+            setWinner(Play.TIE);
+        } else if(playerTotal > bankerTotal) {
+            setWinner(Play.PLAYER);
+        } else {
+            setWinner(Play.BANKER);
+        }
+        return resultMap;
+    }
+
 
     Map<String, Integer> playerDrawIfEligible(Map<String, Integer> resultMap) {
         if(isPlayerFrozen) {
@@ -136,11 +176,6 @@ class Baccarat extends CasinoGames {
 
 
 
-
-
-
-
-
     private Map<String, Integer> startBaccarat(Map<String, Integer> resultMap) {
         System.out.println("Game is starting. No more bets please.");
         return resultMap;
@@ -149,6 +184,9 @@ class Baccarat extends CasinoGames {
     Map<String, Integer> drawTwoFor(Map<String, Integer> resultMap, Play play) {
         Card card1 = getDeckOfCards().remove(0);
         Card card2 = getDeckOfCards().remove(0);
+        if(card1.equals(card2)) {
+            setPair(true);
+        }
         int total = card1.getRankValue() + card2.getRankValue();
         if(total > 9) {
             total %= 10;
@@ -207,11 +245,15 @@ class Baccarat extends CasinoGames {
 
         SidePlays sidePlay = SidePlays.valueOf(input);
 
-        map.put("sidePlay", new Response<SidePlays>(sidePlay));
+        map.put("sidePlay", new Response<>(sidePlay));
         return map;
     }
 
     Map<String, Response<?>> getSidePlayBet(Map<String, Response<?>> map) {
+        if(responseMap.containsKey("sidePlay") && responseMap.get("sidePlay")
+                .getResponse().equals(SidePlays.NONE)) {
+            return map;
+        }
         scanner = new Scanner(System.in);
         String input = scanner.nextLine();
 
@@ -266,6 +308,18 @@ class Baccarat extends CasinoGames {
         isBankerFrozen = bankerFrozen;
     }
 
+    Play getWinner() {
+        return winner;
+    }
+
+    void setWinner(Play winner) {
+        this.winner = winner;
+    }
+
+    private void setPair(boolean pair) {
+        isPair = pair;
+    }
+
     // GameInterface overrides
 
     @Override
@@ -290,6 +344,6 @@ class Baccarat extends CasinoGames {
 
     }
 
-    enum Play {PLAYER, BANKER, TIE}
-    enum SidePlays {PAIR, THREE;}
+    enum Play implements WinningsType {PLAYER, BANKER, TIE}
+    enum SidePlays implements WinningsType {PAIR, NONE;}
 }

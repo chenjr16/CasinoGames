@@ -1,6 +1,5 @@
 package com.casino.games.cards.baccarat;
 
-import com.casino.games.cards.baccarat.deck.Card;
 import com.casino.player.Dealer;
 import com.casino.player.Player;
 import org.junit.Before;
@@ -18,14 +17,16 @@ public class BaccaratTest {
     Dealer dealer;
     Baccarat baccarat;
     Map<String, Response<?>> responseMap;
+    double bet = 1000;
 
     @Before
     public void setUp() {
         player = new Player("Nick", 50_000.0);
         dealer = new Dealer("Ron", 100_000.0);
         baccarat = new Baccarat();
-        baccarat.play(player, dealer, 1000);
+        baccarat.play(player, dealer, bet);
         responseMap = new HashMap<>();
+        responseMap.put("sidePlay", new Response<>(Baccarat.SidePlays.NONE));
     }
 
     @Test
@@ -61,8 +62,8 @@ public class BaccaratTest {
 
     @Test
     public void testGetSidePlay_shouldReturnResponseMapWithUserInput() {
-        Baccarat.SidePlays sidePlay = Baccarat.SidePlays.THREE;
-        String sidePlayString = "THREE";
+        Baccarat.SidePlays sidePlay = Baccarat.SidePlays.PAIR;
+        String sidePlayString = "PAIR";
 
         InputStream in = new ByteArrayInputStream(sidePlayString.getBytes());
         System.setIn(in);
@@ -217,5 +218,82 @@ public class BaccaratTest {
 
         assertSame(six, baccarat.bankerDrawIfEligible(resultMap).get("bankerTotal"));
     }
+
+    @Test
+    public void testDetermineWinner_shouldMakePlayerTheWinner_whenPlayerHasHigherTotal() {
+        Baccarat.Play winner = Baccarat.Play.PLAYER;
+        Map<String, Integer> resultMap = new HashMap<>();
+        resultMap.put("playerTotal", 8);
+        resultMap.put("bankerTotal", 7);
+        baccarat.determineWinner(resultMap);
+
+        assertEquals(winner, baccarat.getWinner());
+    }
+
+    @Test
+    public void testDetermineWinner_shouldMakeBankerTheWinner_whenBankerHasHigherTotal() {
+        Baccarat.Play winner = Baccarat.Play.BANKER;
+        Map<String, Integer> resultMap = new HashMap<>();
+        resultMap.put("playerTotal", 7);
+        resultMap.put("bankerTotal", 8);
+        baccarat.determineWinner(resultMap);
+
+        assertEquals(winner, baccarat.getWinner());
+    }
+
+    @Test
+    public void testDetermineWinner_shouldMakeTieTheWinner_whenBankerAndPlayerHaveSameTotal() {
+        Baccarat.Play winner = Baccarat.Play.TIE;
+        Map<String, Integer> resultMap = new HashMap<>();
+        resultMap.put("playerTotal", 8);
+        resultMap.put("bankerTotal", 8);
+        baccarat.determineWinner(resultMap);
+
+        assertEquals(winner, baccarat.getWinner());
+    }
+
+    @Test
+    public void dishOutWinnings_shouldIncreasePlayerBalanceByTwoTimesTheBet_whenPlayIsCorrectAndIsBanker() {
+        double newExpectedTotal = 50_000.0 + (bet * 2);
+        responseMap.put("play", new Response<>(Baccarat.Play.BANKER));
+        baccarat.setWinner(Baccarat.Play.BANKER);
+
+        baccarat.dishOutWinnings(responseMap);
+
+        assertEquals(newExpectedTotal, player.getBalance(), .001);
+    }
+
+    @Test
+    public void dishOutWinnings_shouldIncreasePlayerBalanceByTwoTimesTheBet_whenPlayIsCorrectAndIsPlayer() {
+        double newExpectedTotal = 50_000.0 + (bet * 2);
+        responseMap.put("play", new Response<>(Baccarat.Play.PLAYER));
+        baccarat.setWinner(Baccarat.Play.PLAYER);
+
+        baccarat.dishOutWinnings(responseMap);
+
+        assertEquals(newExpectedTotal, player.getBalance(), .001);
+    }
+    @Test
+    public void dishOutWinnings_shouldIncreasePlayerBalanceByNineTimesTheBet_whenPlayIsCorrectAndIsTie() {
+        double newExpectedTotal = 50_000.0 + (bet * 9);
+        responseMap.put("play", new Response<>(Baccarat.Play.TIE));
+        baccarat.setWinner(Baccarat.Play.TIE);
+
+        baccarat.dishOutWinnings(responseMap);
+
+        assertEquals(newExpectedTotal, player.getBalance(), .001);
+    }
+
+    @Test
+    public void dishOutWinnings_shouldNotAffectPlayerBalance_whenPlayIsWrong() {
+        double sameTotal = 50_000.0;
+        responseMap.put("play", new Response<>(Baccarat.Play.BANKER));
+        baccarat.setWinner(Baccarat.Play.PLAYER);
+
+        baccarat.dishOutWinnings(responseMap);
+
+        assertEquals(sameTotal, player.getBalance(), .001);
+    }
+
 
 }
