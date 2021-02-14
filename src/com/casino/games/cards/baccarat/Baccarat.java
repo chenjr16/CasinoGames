@@ -50,21 +50,101 @@ class Baccarat extends CasinoGames {
          */
 
 //        apply(resultMap)
-//                .pipe(this::startBaccarat)
-//                .pipe(this::drawTwoFor, Play.PLAYER)
-//                .pipe(this::drawTwoFor, Play.BANKER)
-//                .pipe(this::playerDrawIfEligible)
-//                .pipe(this::bankerDrawIfEligible)
+//                .pipe(this::startBaccarat) / DONE
+//                .pipe(this::drawTwoFor, Play.PLAYER) / DONE
+//                .pipe(this::drawTwoFor, Play.BANKER) / DONE
+//                .pipe(this::playerDrawIfEligible) / DONE
+//                .pipe(this::bankerDrawIfEligible) / DONE
 //                .pipe(this::determineWinner)
 //                .pipe(this::dishOutWinnings)
     }
+
+    Map<String, Integer> playerDrawIfEligible(Map<String, Integer> resultMap) {
+        if(isPlayerFrozen) {
+            return resultMap;
+        }
+        int playerTotal = resultMap.get("playerTotal");
+        if(playerTotal <= 5) {
+            drawSingleCard(resultMap, Play.PLAYER);
+        }
+        return resultMap;
+    }
+
+    Map<String, Integer> bankerDrawIfEligible(Map<String, Integer> resultMap) {
+        if(isBankerFrozen) {
+            return resultMap;
+        }
+        int bankerTotal = resultMap.get("bankerTotal");
+
+        if(resultMap.containsKey("playerThirdCard")) {
+            int playerThirdCardTotal = resultMap.get("playerThirdCard");
+            switch(bankerTotal) {
+                case 0: case 1: case 2:
+                    drawSingleCard(resultMap, Play.BANKER);
+                    break;
+                case 3:
+                    if(playerThirdCardTotal <= 9 && playerThirdCardTotal != 8) {
+                        drawSingleCard(resultMap, Play.BANKER);
+                    }
+                    break;
+                case 4:
+                    if(playerThirdCardTotal >= 2 && playerThirdCardTotal <= 7) {
+                        drawSingleCard(resultMap, Play.BANKER);
+                    }
+                    break;
+                case 5:
+                    if(playerThirdCardTotal >= 4 && playerThirdCardTotal <= 7) {
+                        drawSingleCard(resultMap, Play.BANKER);
+                    }
+                    break;
+                case 6:
+                    if(playerThirdCardTotal == 6 || playerThirdCardTotal == 7) {
+                        drawSingleCard(resultMap, Play.BANKER);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return resultMap;
+    }
+
+    void drawSingleCard(Map<String, Integer> resultMap, Play play) {
+        String bankerOrPlayerCard = "";
+        String bankerOrPlayerTotal = "";
+        switch(play) {
+            case PLAYER:
+                bankerOrPlayerCard = "playerThirdCard";
+                bankerOrPlayerTotal = "playerTotal";
+                break;
+            case BANKER:
+                bankerOrPlayerCard = "bankerThirdCard";
+                bankerOrPlayerTotal = "bankerTotal";
+                break;
+        }
+        int prevTotal = resultMap.get(bankerOrPlayerTotal);
+        Card thirdCard = getDeckOfCards().remove(0);
+        int thirdCardTotal = thirdCard.getRankValue();
+        resultMap.put(bankerOrPlayerCard, thirdCardTotal);
+
+        int newTotal = prevTotal + thirdCardTotal;
+        if(newTotal > 9) {
+            newTotal %= 10;
+        }
+        resultMap.put(bankerOrPlayerTotal, newTotal);
+    }
+
+
+
+
+
+
 
 
     private Map<String, Integer> startBaccarat(Map<String, Integer> resultMap) {
         System.out.println("Game is starting. No more bets please.");
         return resultMap;
     }
-
 
     Map<String, Integer> drawTwoFor(Map<String, Integer> resultMap, Play play) {
         Card card1 = getDeckOfCards().remove(0);
@@ -94,10 +174,10 @@ class Baccarat extends CasinoGames {
         if(total == 8 || total == 9) {
             switch(play) {
                 case PLAYER:
-                    isPlayerFrozen = true;
+                    setPlayerFrozen(true);
                     break;
                 case BANKER:
-                    isBankerFrozen = true;
+                    setBankerFrozen(true);
                     break;
             }
         }
@@ -176,6 +256,14 @@ class Baccarat extends CasinoGames {
 
     boolean isBankerFrozen() {
         return isBankerFrozen;
+    }
+
+    void setPlayerFrozen(boolean playerFrozen) {
+        isPlayerFrozen = playerFrozen;
+    }
+
+    void setBankerFrozen(boolean bankerFrozen) {
+        isBankerFrozen = bankerFrozen;
     }
 
     // GameInterface overrides

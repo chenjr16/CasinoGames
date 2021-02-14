@@ -132,4 +132,90 @@ public class BaccaratTest {
         baccarat.setFrozen(Baccarat.Play.BANKER, 9);
         assertTrue(baccarat.isBankerFrozen());
     }
+
+    @Test
+    public void testPlayerDrawIfEligible_shouldNotUpdateTotal_whenPlayerTotalGreaterThan5() {
+        Map<String, Integer> resultMap = new HashMap<>();
+        Integer seven = 6;
+        resultMap.put("playerTotal", seven);
+        baccarat.playerDrawIfEligible(resultMap);
+        assertSame(seven, baccarat.playerDrawIfEligible(resultMap).get("playerTotal"));
+    }
+
+    @Test
+    public void testPlayerDrawIfEligible_shouldNotUpdateTotal_whenPlayerIsFrozen() {
+        Map<String, Integer> resultMap = new HashMap<>();
+        Integer two = 2;
+        resultMap.put("playerTotal", two);
+        baccarat.setPlayerFrozen(true);
+
+        assertSame(two, baccarat.playerDrawIfEligible(resultMap).get("playerTotal"));
+    }
+
+    @Test
+    public void testPlayerDrawIfEligible_shouldUpdateTotal_whenPlayerTotalIs5OrLess() {
+        Map<String, Integer> resultMap = new HashMap<>();
+        Integer five = 5;
+        resultMap.put("playerTotal", five);
+        assertNotSame(five, baccarat.playerDrawIfEligible(resultMap).get("playerTotal"));
+    }
+
+    @Test
+    public void testBankerDrawIfEligible_shouldNotUpdateTotal_whenBankerHasTotal7() {
+        Map<String, Integer> resultMap = new HashMap<>();
+        Integer seven = 7;
+        resultMap.put("bankerTotal", seven);
+        assertSame(seven, baccarat.bankerDrawIfEligible(resultMap).get("bankerTotal"));
+    }
+
+    @Test
+    public void testBankerDrawIfEligible_shouldNotUpdateTotal_whenBankerIsFrozen() {
+        Map<String, Integer> resultMap = new HashMap<>();
+        Integer two = 2;
+        resultMap.put("bankerTotal", two);
+        baccarat.setBankerFrozen(true);
+
+        assertSame(two, baccarat.bankerDrawIfEligible(resultMap).get("bankerTotal"));
+    }
+
+    @Test
+    public void testBankerDrawIfEligible_shouldUpdateTotal_whenBankerHas3AndPlayerThirdCardIs1() {
+        Map<String, Integer> resultMap = new HashMap<>();
+        Integer three = 3;
+        resultMap.put("bankerTotal", three);
+        resultMap.put("playerThirdCard", 1);
+
+        assertNotSame(three, baccarat.bankerDrawIfEligible(resultMap).get("bankerTotal"));
+    }
+
+    @Test
+    public void testBankerDrawIfEligible_shouldNotUpdateTotal_whenBankerHas3AndPlayerThirdCardIs8() {
+        Map<String, Integer> resultMap = new HashMap<>();
+        Integer three = 3;
+        resultMap.put("bankerTotal", three);
+        resultMap.put("playerThirdCard", 8);
+
+        assertSame(three, baccarat.bankerDrawIfEligible(resultMap).get("bankerTotal"));
+    }
+
+    @Test
+    public void testBankerDrawIfEligible_shouldUpdateTotal_whenBankerHas6AndPlayerThirdCardIs7() {
+        Map<String, Integer> resultMap = new HashMap<>();
+        Integer six = 6;
+        resultMap.put("bankerTotal", six);
+        resultMap.put("playerThirdCard", 7);
+
+        assertNotSame(six, baccarat.bankerDrawIfEligible(resultMap).get("bankerTotal"));
+    }
+
+    @Test
+    public void testBankerDrawIfEligible_shouldNotUpdateTotal_whenBankerHas6AndPlayerThirdCardIs1() {
+        Map<String, Integer> resultMap = new HashMap<>();
+        Integer six = 6;
+        resultMap.put("bankerTotal", six);
+        resultMap.put("playerThirdCard", 1);
+
+        assertSame(six, baccarat.bankerDrawIfEligible(resultMap).get("bankerTotal"));
+    }
+
 }
