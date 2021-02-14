@@ -1,6 +1,6 @@
 package com.casino.games;
 
-abstract class CasinoGames implements GameInterface {
+public abstract class CasinoGames implements GameInterface {
 
     //General Methods
     public void playAgain(){

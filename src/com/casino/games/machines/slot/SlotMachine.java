@@ -1,5 +1,6 @@
 package com.casino.games.machines.slot;
 
+import com.casino.games.CasinoGames;
 import com.casino.games.GameInterface;
 import com.casino.player.Dealer;
 import com.casino.player.Player;
@@ -9,7 +10,7 @@ import java.util.Arrays;
 
 //author Junru Chen
 
-class SlotMachine implements GameInterface {
+public class SlotMachine extends CasinoGames {
     static double SLOT_MINIMUM = 5.0;
     Player player;
     Dealer dealer;
@@ -23,8 +24,6 @@ class SlotMachine implements GameInterface {
         if (player.getBalance() < bet || bet < SLOT_MINIMUM){
             result = false;
         }
-        //Taking out the bet
-        player.setBalance(player.getBalance() - bet);
         return result;
     }
 
@@ -33,6 +32,12 @@ class SlotMachine implements GameInterface {
         this.player = player;
         this.dealer = dealer;
         this.bet = bet;
+        int random1 = (int)(Math.random()*23);
+        System.out.println(random1);
+        int random2 = (int)(Math.random()*23);
+        System.out.println(random2);
+        int random3 = (int)(Math.random()*23);
+        System.out.println(random3);
 
         String[] result = new String[] {reel1[random1], reel2[random2], reel3[random3]};
         System.out.println("Your spin result is: " + Arrays.toString(result));
@@ -50,14 +55,14 @@ class SlotMachine implements GameInterface {
             gameResult = bet * 10;
         }
         else if((result[0].equals(result[1]) || result[1].equals(result[2]) || result[0].equals(result[2])) &&
-                (result[0].equals("Cherry") || result[1].equals("Cherry") || result[0].equals("Cherry"))){
+                (result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry"))){
             gameResult = bet * 3;
         }
         else if(result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry")){
             gameResult = bet * 1;
+        }else {
+            gameResult = -bet;
         }
-
-        gameResult = -bet;
 
         if(gameResult > 0) {
             System.out.println("Congratulations, you won:  " + gameResult + " dollars");
@@ -105,10 +110,6 @@ class SlotMachine implements GameInterface {
             "Orange", "Orange", "Orange", "Orange", "Orange", "Orange",
             "Banana", "Banana","Banana","Banana","Banana", "Banana",
             "Lemon", "Lemon", "Lemon", "Lemon", "Lemon",  "Lemon"};
-
-    int random1 = (int)Math.random()*23;
-    int random2 = (int)Math.random()*23;
-    int random3 = (int)Math.random()*23;
 
 
 
