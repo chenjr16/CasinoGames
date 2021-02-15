@@ -1,5 +1,4 @@
 package com.casino.games.cards.baccarat.deck;
-
 import java.util.Objects;
 
 public class Card {

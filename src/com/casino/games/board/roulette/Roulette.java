@@ -1,7 +1,9 @@
 package com.casino.games.board.roulette;
 
+
 import com.casino.games.CasinoGames;
-import com.casino.player.Dealer;
+import com.casino.employees.Dealer;
+
 import com.casino.player.Player;
 
 import java.util.Scanner;
