@@ -45,8 +45,7 @@ final class ResponsePipeline {
     }
 
     Map<String, Response<?>> getSidePlayBet(Map<String, Response<?>> map) {
-        if(map.containsKey("sidePlay") && map.get("sidePlay")
-                .getResponse().equals(Baccarat.SidePlay.NONE)) {
+        if(map.get("sidePlay").getResponse().equals(Baccarat.SidePlay.NONE)) {
             return map;
         }
         Scanner scanner = new Scanner(System.in);

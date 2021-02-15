@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 
 public class BaccaratDealerTest {
 
-    Map<String, BaccaratDealer.Result<?>> resultMap = new HashMap<>();
+    Map<String, BaccaratDealer.Result<?>> resultMap;
     List<Card> deckOfCards;
     BaccaratDealer baccaratDealer;
     Rank rankDeuce;
@@ -25,12 +25,24 @@ public class BaccaratDealerTest {
 
     @Before
     public void setUp() {
+        resultMap = createResultMap();
         deckOfCards = new ArrayList<>();
         baccaratDealer = new BaccaratDealer();
         rankDeuce = Rank.DEUCE;
         rankThree = Rank.THREE;
         suitDiamonds = Suit.DIAMONDS;
     }
+    private Map<String, BaccaratDealer.Result<?>> createResultMap() {
+        resultMap = new HashMap<>();
+        resultMap.put("winner", new BaccaratDealer.Result<>(0));
+        resultMap.put("playerTotal", new BaccaratDealer.Result<>(0));
+        resultMap.put("playerRound1", new BaccaratDealer.Result<>(0));
+        resultMap.put("bankerTotal", new BaccaratDealer.Result<>(0));
+        resultMap.put("bankerRound1", new BaccaratDealer.Result<>(0));
+        resultMap.put("isPair", new BaccaratDealer.Result<>(false));
+        return resultMap;
+    }
+
 
     @Test
     public void testDrawTwoFor_shouldInsertCardTotalsInResultMap() {

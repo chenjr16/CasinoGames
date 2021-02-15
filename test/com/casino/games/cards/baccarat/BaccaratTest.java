@@ -5,7 +5,6 @@ import com.casino.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 import com.casino.games.cards.baccarat.ResponsePipeline.Response;
 import com.casino.games.cards.baccarat.BaccaratDealer.Result;
@@ -29,6 +28,7 @@ public class BaccaratTest {
         dealer = new Dealer("Ron", 100_000.0);
         baccarat.play(player, dealer, bet);
     }
+
 
     @Test
     public void dishOutWinnings_shouldIncreasePlayerBalanceByTwoTimesTheBet_whenPlayIsCorrectAndIsBanker() {

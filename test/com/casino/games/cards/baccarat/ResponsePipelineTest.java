@@ -17,8 +17,17 @@ public class ResponsePipelineTest {
 
     @Before
     public void setUp() {
+        responseMap = setUpResponseMap();
         responsePipeline = new ResponsePipeline();
+    }
+
+    private Map<String, ResponsePipeline.Response<?>> setUpResponseMap() {
         responseMap = new HashMap<>();
+        responseMap.put("play", new ResponsePipeline.Response<>(0));
+        responseMap.put("bet", new ResponsePipeline.Response<>(0));
+        responseMap.put("sidePlay", new ResponsePipeline.Response<>(Baccarat.SidePlay.NONE));
+        responseMap.put("sideBet", new ResponsePipeline.Response<>(0));
+        return responseMap;
     }
 
     @Test
@@ -60,11 +69,13 @@ public class ResponsePipelineTest {
 
     @Test
     public void testGetSidePlayBet_shouldReturnResponseMapWithUserInput() {
+        responseMap.put("sidePlay", new ResponsePipeline.Response<>(Baccarat.SidePlay.PAIR));
         double sideBet = 2500.0;
         String sideBetString = "2500.0";
 
         InputStream in = new ByteArrayInputStream(sideBetString.getBytes());
         System.setIn(in);
+
 
         responsePipeline.getSidePlayBet(responseMap);
 

@@ -85,8 +85,6 @@ public final class Baccarat extends CasinoGames {
         getResultMap().put("playerRound1", new Result<>(0));
         getResultMap().put("bankerTotal", new Result<>(0));
         getResultMap().put("bankerRound1", new Result<>(0));
-        getResultMap().put("playerThirdCard", new Result<>(0));
-        getResultMap().put("bankerThirdCard", new Result<>(0));
         getResultMap().put("isPair", new Result<>(false));
     }
 
