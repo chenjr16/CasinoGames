@@ -28,18 +28,19 @@ public class Roulette extends CasinoGames {
     }
 
     //BUSINESS METHODS
-    public static void welcomeScreen(){                //author
+    public void welcomeScreen() {
         System.out.println("                 \t\tMarco Bragado");
         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         System.out.println("|                                                         |");
-        System.out.println("|             Welcome to the game of Roulette!            |");
+        System.out.println("|             Welcome to Roulette table!                  |");
         System.out.println("|             You have $XYZ in starting chips.            |");
         System.out.println("|                  Good Luck and Have Fun!                |");
         System.out.println("|                                                         |");
         System.out.println("|                                                         |");
         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%&&&&&&&\n");
+        table.displayRouletteTable();
         System.out.print(" Press ANY KEY and choose which bet you would like to place!\n");
+        scan.nextLine();
+        initializeGame();
     }
-
-
 }
