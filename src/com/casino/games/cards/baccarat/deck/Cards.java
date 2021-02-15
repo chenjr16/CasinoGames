@@ -10,6 +10,10 @@ public enum Cards {;
         return new ArrayList<>(DECK);
     }
 
+    public static Card getCard(Rank rank, Suit suit) {
+        return new Card(rank, suit);
+    }
+
     static {
         for(Suit suit : Suit.values()) {
             for(Rank rank : Rank.values()) {
