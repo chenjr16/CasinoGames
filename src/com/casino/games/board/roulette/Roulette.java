@@ -1,10 +1,12 @@
 package com.casino.games.board.roulette;
 
-import com.casino.games.GameInterface;
+import com.casino.games.CasinoGames;
 import com.casino.player.Dealer;
 import com.casino.player.Player;
 
-class Roulette implements GameInterface {
+public class Roulette extends CasinoGames {
+    int randomNumber = (int)(Math.random() * 36);
+
     @Override
     public boolean isPlayable(Player player, double bet) {
         return false;
@@ -24,4 +26,20 @@ class Roulette implements GameInterface {
     public void endGame() {
 
     }
+
+    //BUSINESS METHODS
+    public static void welcomeScreen(){                //author
+        System.out.println("                 \t\tMarco Bragado");
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("|                                                         |");
+        System.out.println("|             Welcome to the game of Roulette!            |");
+        System.out.println("|             You have $XYZ in starting chips.            |");
+        System.out.println("|                  Good Luck and Have Fun!                |");
+        System.out.println("|                                                         |");
+        System.out.println("|                                                         |");
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%&&&&&&&\n");
+        System.out.print(" Press ANY KEY and choose which bet you would like to place!\n");
+    }
+
+
 }
