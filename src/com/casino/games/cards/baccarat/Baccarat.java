@@ -16,6 +16,10 @@ public final class Baccarat extends CasinoGames {
     private final ResponsePipeline responsePipeline = new ResponsePipeline();
     private final BaccaratDealer baccaratDealer = new BaccaratDealer();
 
+    public Baccarat() {
+        createResultMap();
+        createResponseMap();
+    }
 
     // Business methods
 
@@ -23,7 +27,7 @@ public final class Baccarat extends CasinoGames {
         // Give an empty map to the ResponsePipeline and let it fill it up with Responses from the user.
         // Needs access to scanner.
         responsePipeline.start(getResponseMap());
-        // Give an empty map to the Dealer and let them fill it out with the results. Game logic here.
+        // Give a template map to the Dealer and let them fill it out with the results. Game logic here.
         baccaratDealer.start(getResultMap());
         // Dish out them winnings. Takes the responseMap and resultMap and compares results.
         dishOutWinnings(getResponseMap(), getResultMap());
@@ -37,10 +41,8 @@ public final class Baccarat extends CasinoGames {
         // Get the result data
 
         Play winner = (Play) resultMap.get("winner").getResult();
-        boolean isPair = false;
-        if(resultMap.containsKey("isPair")) {
-            isPair = (boolean) resultMap.get("isPair").getResult();
-        }
+        boolean isPair = (boolean) resultMap.get("isPair").getResult();
+
 
         // Compare and see if correct. For Regular Plays.
 
@@ -70,6 +72,24 @@ public final class Baccarat extends CasinoGames {
         getDealer().setBalance(currentDealerBalance - winnings);
     }
 
+    private void createResponseMap() {
+        getResponseMap().put("play", new Response<>(0));
+        getResponseMap().put("bet", new Response<>(0));
+        getResponseMap().put("sidePlay", new Response<>(SidePlay.NONE));
+        getResponseMap().put("sideBet", new Response<>(0));
+    }
+
+    private void createResultMap() {
+        getResultMap().put("winner", new Result<>(0));
+        getResultMap().put("playerTotal", new Result<>(0));
+        getResultMap().put("playerRound1", new Result<>(0));
+        getResultMap().put("bankerTotal", new Result<>(0));
+        getResultMap().put("bankerRound1", new Result<>(0));
+        getResultMap().put("playerThirdCard", new Result<>(0));
+        getResultMap().put("bankerThirdCard", new Result<>(0));
+        getResultMap().put("isPair", new Result<>(false));
+    }
+
     // Getters and Setters
     private Player getPlayer() {
         return player;
@@ -95,11 +115,11 @@ public final class Baccarat extends CasinoGames {
         this.bet = bet;
     }
 
-    private Map<String, Response<?>> getResponseMap() {
+    Map<String, Response<?>> getResponseMap() {
         return this.responseMap;
     }
 
-    private Map<String, Result<?>> getResultMap() {
+    Map<String, Result<?>> getResultMap() {
         return this.resultMap;
     }
 

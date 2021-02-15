@@ -16,17 +16,18 @@ public class BaccaratTest {
     Player player;
     Dealer dealer;
     Baccarat baccarat;
-    Map<String, Response<?>> responseMap = new HashMap<>();
-    Map<String, Result<?>> resultMap = new HashMap<>();
+    Map<String, Response<?>> responseMap;
+    Map<String, Result<?>> resultMap;
     double bet = 1000;
 
     @Before
     public void setUp() {
+        baccarat = new Baccarat();
+        resultMap = baccarat.getResultMap();
+        responseMap = baccarat.getResponseMap();
         player = new Player("Nick", 50_000.0);
         dealer = new Dealer("Ron", 100_000.0);
-        baccarat = new Baccarat();
         baccarat.play(player, dealer, bet);
-        responseMap.put("sidePlay", new Response<>(Baccarat.SidePlay.NONE));
     }
 
     @Test
