@@ -7,6 +7,7 @@ import com.casino.player.Player;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 //author Junru Chen
 
@@ -21,7 +22,8 @@ public class SlotMachine extends CasinoGames {
     @Override
     public boolean isPlayable(Player player, double bet) {
         boolean result = true;
-        if (player.getBalance() < bet || bet < SLOT_MINIMUM){
+        payoutTable();
+        if (player.getBalance() < bet || bet < SLOT_MINIMUM) {
             result = false;
         }
         return result;
@@ -32,41 +34,34 @@ public class SlotMachine extends CasinoGames {
         this.player = player;
         this.dealer = dealer;
         this.bet = bet;
-        int random1 = (int)(Math.random()*23);
-        System.out.println(random1);
-        int random2 = (int)(Math.random()*23);
-        System.out.println(random2);
-        int random3 = (int)(Math.random()*23);
-        System.out.println(random3);
+        int random1 = (int) (Math.random() * 23);
+        int random2 = (int) (Math.random() * 23);
+        int random3 = (int) (Math.random() * 23);
 
-        String[] result = new String[] {reel1[random1], reel2[random2], reel3[random3]};
+        String[] result = new String[]{reel1[random1], reel2[random2], reel3[random3]};
+        animate(random1, random2, random3);
         System.out.println("Your spin result is: " + Arrays.toString(result));
 
-        if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("BAR") ){
+        if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("BAR")) {
             gameResult = bet * 60;
-        }
-        else if(result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("SEVEN") ){
+        } else if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("SEVEN")) {
             gameResult = bet * 40;
-        }
-        else if(result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("Cherry") ){
+        } else if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("Cherry")) {
             gameResult = bet * 20;
-        }
-        else if(result[0].equals(result[1]) && result[1].equals(result[2]) ){
+        } else if (result[0].equals(result[1]) && result[1].equals(result[2])) {
             gameResult = bet * 10;
-        }
-        else if((result[0].equals(result[1]) || result[1].equals(result[2]) || result[0].equals(result[2])) &&
-                (result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry"))){
+        } else if ((result[0].equals(result[1]) || result[1].equals(result[2]) || result[0].equals(result[2])) &&
+                (result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry"))) {
             gameResult = bet * 3;
-        }
-        else if(result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry")){
+        } else if (result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry")) {
             gameResult = bet * 1;
-        }else {
+        } else {
             gameResult = -bet;
         }
 
-        if(gameResult > 0) {
+        if (gameResult > 0) {
             System.out.println("Congratulations, you won:  " + gameResult + " dollars");
-        }else{
+        } else {
             System.out.println("Sorry, you didn't win anything, please try again next time!");
         }
 
@@ -86,6 +81,64 @@ public class SlotMachine extends CasinoGames {
 
     }
 
+    private void animate(int order1, int order2, int order3) {
+        for (int i = 15; i >= 0; i--) {
+            if (order1 - i < 0) {
+                order1 = order1 + 22;
+            }
+            if (order1 - i > 22) {
+                order1 = order1 - 22;
+            }
+            System.out.print(reel1[order1 - i] + "\r");
+
+            try {
+                Thread.sleep(800-i* 50L);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        for (int i = 10; i >= 0; i--) {
+            if (order2 - i < 0) {
+                order2 = order2 + 22;
+            }
+            if (order2 - i > 22) {
+                order2 = order2 - 22;
+            }
+            System.out.print(reel1[order1] + " " + reel2[order2 - i] + "\r");
+            try {
+                Thread.sleep(800-i* 50L);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        for (int i = 15; i >= 0; i--) {
+            if (i >= 1){
+                if (order3 - i < 0) {
+                    order3 = order3 + 22;
+                }
+                if (order3 - i > 22) {
+                    order3 = order3 - 22;
+                }
+                System.out.print(reel1[order1] + " " + reel2[order2] + " " + reel3[order3 - i] + "\r");
+                try {
+                    Thread.sleep(800-i* 50L);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+            else{
+                System.out.print(reel1[order1] + " " + reel2[order2] + " " + reel3[order3 - i] + "\n");
+                try {
+                    Thread.sleep(750);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+    }
+
     private void payoutTable() {
         //rule based on https://anygamble.com/guide/learn-how-to-count-probability-and-payouts-in-slots/
         System.out.println("Payout Table: \n" +
@@ -98,19 +151,18 @@ public class SlotMachine extends CasinoGames {
     }
 
 
-    String[] reel1 = {"BAR", "SEVEN", "SEVEN", "SEVEN", "Cherry", "Cherry", "Cherry", "Cherry",
-            "Orange", "Orange", "Orange", "Orange", "Orange",
-            "Banana", "Banana","Banana","Banana","Banana",
-            "Lemon", "Lemon", "Lemon", "Lemon", "Lemon"};
-    String[] reel2 = {"BAR", "SEVEN", "Cherry", "Cherry", "Cherry",
-            "Orange", "Orange", "Orange", "Orange", "Orange", "Orange",
-            "Banana", "Banana","Banana","Banana","Banana", "Banana",
-            "Lemon", "Lemon", "Lemon", "Lemon", "Lemon",  "Lemon"};
-    String[] reel3 = {"BAR", "SEVEN", "Cherry", "Cherry", "Cherry",
-            "Orange", "Orange", "Orange", "Orange", "Orange", "Orange",
-            "Banana", "Banana","Banana","Banana","Banana", "Banana",
-            "Lemon", "Lemon", "Lemon", "Lemon", "Lemon",  "Lemon"};
-
+    String[] reel1 = {"BAR", "SEVEN", "Orange", "SEVEN", "Banana", "SEVEN", "Lemon",
+            "Cherry", "Orange", "Cherry", "Banana", "Cherry", "Lemon", "Cherry",
+            "Orange", "Banana", "Orange", "Lemon", "Orange", "Banana", "Lemon",
+            "Banana", "Lemon"};
+    String[] reel2 = {"BAR", "SEVEN", "Orange", "Lemon", "Banana", "Orange", "Lemon",
+            "Banana", "Orange", "Cherry", "Banana", "Cherry", "Lemon", "Cherry",
+            "Orange", "Banana", "Orange", "Lemon", "Orange", "Banana", "Lemon",
+            "Banana", "Lemon"};
+    String[] reel3 = {"BAR", "SEVEN", "Orange", "Lemon", "Banana", "Orange", "Lemon",
+            "Banana", "Orange", "Cherry", "Banana", "Cherry", "Lemon", "Cherry",
+            "Orange", "Banana", "Orange", "Lemon", "Orange", "Banana", "Lemon",
+            "Banana", "Lemon"};
 
 
 }
