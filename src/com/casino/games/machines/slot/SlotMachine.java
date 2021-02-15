@@ -1,13 +1,9 @@
 package com.casino.games.machines.slot;
 
 import com.casino.games.CasinoGames;
-import com.casino.games.GameInterface;
 import com.casino.player.Dealer;
 import com.casino.player.Player;
-
-import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 //author Junru Chen
 
@@ -42,22 +38,7 @@ public class SlotMachine extends CasinoGames {
         animate(random1, random2, random3);
         System.out.println("Your spin result is: " + Arrays.toString(result));
 
-        if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("BAR")) {
-            gameResult = bet * 60;
-        } else if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("SEVEN")) {
-            gameResult = bet * 40;
-        } else if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("Cherry")) {
-            gameResult = bet * 20;
-        } else if (result[0].equals(result[1]) && result[1].equals(result[2])) {
-            gameResult = bet * 10;
-        } else if ((result[0].equals(result[1]) || result[1].equals(result[2]) || result[0].equals(result[2])) &&
-                (result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry"))) {
-            gameResult = bet * 3;
-        } else if (result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry")) {
-            gameResult = bet * 1;
-        } else {
-            gameResult = -bet;
-        }
+        gameResult = getGameResult(bet, result);
 
         if (gameResult > 0) {
             System.out.println("Congratulations, you won:  " + gameResult + " dollars");
@@ -79,6 +60,27 @@ public class SlotMachine extends CasinoGames {
     @Override
     public void endGame() {
 
+    }
+
+    public double getGameResult(double bet, String[] result) {
+        double winningAmount = 0;
+        if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("BAR")) {
+            winningAmount = bet * 60;
+        } else if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("SEVEN")) {
+            winningAmount = bet * 40;
+        } else if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("Cherry")) {
+            winningAmount = bet * 20;
+        } else if (result[0].equals(result[1]) && result[1].equals(result[2])) {
+            winningAmount = bet * 10;
+        } else if ((result[0].equals(result[1]) || result[1].equals(result[2]) || result[0].equals(result[2])) &&
+                (result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry"))) {
+            winningAmount = bet * 3;
+        } else if (result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry")) {
+            winningAmount = bet * 1;
+        } else {
+            winningAmount = -bet;
+        }
+        return winningAmount;
     }
 
     private void animate(int order1, int order2, int order3) {
