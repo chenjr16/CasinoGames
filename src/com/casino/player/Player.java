@@ -6,8 +6,18 @@ public class Player {
     double balance;
 
     //Constructors
-    public Player (String name, double balance){
+
+    public Player() {
+        // non-op
+    }
+
+    public Player (String name){
         setName(name);
+    }
+
+
+    public Player (String name, double balance){
+        this(name);
         setBalance(balance);
     }
 

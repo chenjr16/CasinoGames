@@ -1,7 +1,7 @@
 package com.casino.games.machines.slot;
 
 import com.casino.games.GameInterface;
-import com.casino.player.Dealer;
+import com.casino.employees.Dealer;
 import com.casino.player.Player;
 
 class SlotMachine implements GameInterface {

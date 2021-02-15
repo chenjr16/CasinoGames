@@ -8,6 +8,7 @@ import static com.casino.games.cards.baccarat.utils.Pipe.apply;
 final class ResponsePipeline {
 
     void start(Map<String, Response<?>> map) {
+
         apply(map)
                 .pipe(this::getPlay)
                 .pipe(this::getPlayBet)
@@ -17,6 +18,7 @@ final class ResponsePipeline {
     }
 
     Map<String, Response<?>> getPlay(Map<String, Response<?>> map) {
+        // {"play" => Banker}
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
 
@@ -26,6 +28,7 @@ final class ResponsePipeline {
     }
 
     Map<String, Response<?>> getPlayBet(Map<String, Response<?>> map) {
+        // {"play" => Banker, "playBet" => 50.0}
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
 
@@ -35,6 +38,7 @@ final class ResponsePipeline {
     }
 
     Map<String, Response<?>> getSidePlay(Map<String, Response<?>> map) {
+        // {"play" => Banker, "playBet" => 50.0, "sidePlay" => PAIR}
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
 
@@ -45,6 +49,7 @@ final class ResponsePipeline {
     }
 
     Map<String, Response<?>> getSidePlayBet(Map<String, Response<?>> map) {
+        // {"play" => Banker, "playBet" => 50.0, "sidePlay" => PAIR, "sidePlayBet" => 100.0}
         if(map.get("sidePlay").getResponse().equals(Baccarat.SidePlay.NONE)) {
             return map;
         }
@@ -56,6 +61,8 @@ final class ResponsePipeline {
         map.put("sideBet", new Response<Double>(sideBet));
         return map;
     }
+
+    // {String, Response<T>}
 
     static class Response <T> {
         private final T response;

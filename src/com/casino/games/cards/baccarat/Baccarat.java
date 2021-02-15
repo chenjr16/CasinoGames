@@ -1,13 +1,15 @@
 package com.casino.games.cards.baccarat;
 
+import com.apps.util.Prompter;
 import com.casino.games.CasinoGames;
-import com.casino.player.Dealer;
+import com.casino.employees.Dealer;
 import com.casino.player.Player;
 import com.casino.games.cards.baccarat.ResponsePipeline.Response;
 import com.casino.games.cards.baccarat.BaccaratDealer.Result;
 import java.util.*;
 
 public final class Baccarat extends CasinoGames {
+    private Prompter prompter;
     private Player player;
     private Dealer dealer;
     private double bet;
@@ -21,16 +23,24 @@ public final class Baccarat extends CasinoGames {
         createResponseMap();
     }
 
+
+
     // Business methods
 
     public void playBaccarat() {
         // Give an empty map to the ResponsePipeline and let it fill it up with Responses from the user.
         // Needs access to scanner.
+
+        // {"play" => Banker, "playBet" => 50.0, "sidePlay" => PAIR, "sidePlayBet" => 100.0}
         responsePipeline.start(getResponseMap());
         // Give a template map to the Dealer and let them fill it out with the results. Game logic here.
+
+        //{"playerCard" => 5, "playerTotal" => 8, "bankerCard" => 6, "bankerTotal" => 6,
+        //  "playerThirdCard" => 3, "winner" =>  PLAYER}
         baccaratDealer.start(getResultMap());
         // Dish out them winnings. Takes the responseMap and resultMap and compares results.
         dishOutWinnings(getResponseMap(), getResultMap());
+//        someEndingQuestionMethod():
     }
 
     void dishOutWinnings(Map<String, Response<?>> responseMap, Map<String, Result<?>> resultMap) {
@@ -126,15 +136,15 @@ public final class Baccarat extends CasinoGames {
     // GameInterface overrides
 
     @Override
-    public boolean isPlayable(Player player, double bet) {
+    public boolean isPlayable(Player player, double bet, Prompter prompter) {
+        setPlayer(player);
+        this.prompter = prompter;
         return player.getBalance() >= 10.0;
     }
 
     @Override
-    public void play(Player player, com.casino.player.Dealer dealer, double bet) {
-        setPlayer(player);
+    public void play(Player player, Dealer dealer, double bet) {
         setDealer(dealer);
-        setBet(bet);
     }
 
     @Override
@@ -144,7 +154,7 @@ public final class Baccarat extends CasinoGames {
 
     @Override
     public void endGame() {
-
+        System.out.println("Hey get back here!!!");
     }
 
     interface BetType {}

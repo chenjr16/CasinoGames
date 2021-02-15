@@ -24,6 +24,7 @@ final class BaccaratDealer {
     }
 
     void start(Map<String, Result<?>> resultMap) {
+        // {}
         apply(resultMap)
                 .pipe(this::drawTwoFor, Baccarat.Play.PLAYER)
                 .pipe(this::drawTwoFor, Baccarat.Play.BANKER)
@@ -34,6 +35,7 @@ final class BaccaratDealer {
     }
 
     Map<String, Result<?>> drawTwoFor(Map<String, Result<?>> resultMap, Baccarat.Play play) {
+        //{"playerCard" => 5, "playerTotal" => 5, "bankerCard" => 6, "bankerTotal" => 6}
         Card card1 = getDeckOfCards().remove(0);
         Card card2 = getDeckOfCards().remove(0);
         if(card1.equals(card2)) {
@@ -49,6 +51,8 @@ final class BaccaratDealer {
     }
 
     Map<String, Result<?>> playerDrawIfEligible(Map<String, Result<?>> resultMap) {
+        //{"playerCard" => 5, "playerTotal" => 8, "bankerCard" => 6, "bankerTotal" => 6,
+        //  "playerThirdCard" => 3}
         if(isPlayerFrozen()) {
             return resultMap;
         }
@@ -60,6 +64,8 @@ final class BaccaratDealer {
     }
 
     Map<String, Result<?>> bankerDrawIfEligible(Map<String, Result<?>> resultMap) {
+        //{"playerCard" => 5, "playerTotal" => 8, "bankerCard" => 6, "bankerTotal" => 6,
+        //  "playerThirdCard" => 3}
         if(isBankerFrozen()) {
             return resultMap;
         }
@@ -99,6 +105,10 @@ final class BaccaratDealer {
     }
 
     Map<String, Result<?>> determineWinner(Map<String, Result<?>> resultMap) {
+        //{"playerCard" => 5, "playerTotal" => 8, "bankerCard" => 6, "bankerTotal" => 6,
+        //  "playerThirdCard" => 3, "winner" =>  PLAYER}
+
+
         int playerTotal = (int) resultMap.get("playerTotal").getResult();
         int bankerTotal = (int) resultMap.get("bankerTotal").getResult();
         if(playerTotal == bankerTotal) {

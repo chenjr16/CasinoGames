@@ -1,6 +1,6 @@
 package com.casino.games.cards.baccarat;
 
-import com.casino.player.Dealer;
+import com.casino.employees.Dealer;
 import com.casino.player.Player;
 import org.junit.Before;
 import org.junit.Test;
