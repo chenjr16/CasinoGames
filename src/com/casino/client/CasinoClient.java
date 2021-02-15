@@ -2,6 +2,8 @@ package com.casino.client;
 
 import com.casino.games.CasinoGames;
 import com.casino.games.board.roulette.Roulette;
+import com.casino.player.Dealer;
+import com.casino.player.Player;
 
 class CasinoClient {
     public static void main(String[] args) {
@@ -16,7 +18,9 @@ class CasinoClient {
 
 
         //Test code for Roulette
-        CasinoGames roulette = new Roulette();
-        Roulette.welcomeScreen();
+        CasinoGames r1 = new Roulette();
+        Player playerR = new Player("Marco", 10_000);
+        Dealer dealerR = new Dealer("Mr. Dealer", 100_000);
+        r1.play(playerR, dealerR, 50);
     }
 }

@@ -37,7 +37,7 @@ public class Roulette extends CasinoGames {
         System.out.println("                 \t\tMarco Bragado");
         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         System.out.println("|                                                         |");
-        System.out.println("|             Welcome to Roulette table!                  |");
+        System.out.println("|                Welcome to Roulette table!               |");
         System.out.println("|             You have $XYZ in starting chips.            |");
         System.out.println("|                  Good Luck and Have Fun!                |");
         System.out.println("|                                                         |");
@@ -91,7 +91,7 @@ public class Roulette extends CasinoGames {
         }
         if ((winningNumber % 2 == 0 && userInput == 2) || (winningNumber % 2 == 1 && userInput == 1)) {
             System.out.println("winning number: " + winningNumber);
-            System.out.printf("win");
+            System.out.print("win");
         } else {
             System.out.println("lose");
         }
