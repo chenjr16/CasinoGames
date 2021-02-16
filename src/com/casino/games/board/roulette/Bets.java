@@ -88,5 +88,4 @@ class Bets {
         }
         return false;
     }
-
 }
