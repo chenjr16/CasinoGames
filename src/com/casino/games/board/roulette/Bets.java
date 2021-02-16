@@ -62,8 +62,9 @@ class Bets {
 
                 //break;
             case 3:
-                return false;
+                return true;
 //            case 4:
+            //some change
 //                roulette.lowOrHigh();
 //                break;
 //            case 5:

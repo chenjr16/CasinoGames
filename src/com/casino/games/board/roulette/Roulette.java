@@ -56,6 +56,7 @@ public class Roulette extends CasinoGames {
 
     public void initializeGame() {
         //table.displayRouletteTable();
+        //
         bets.displayBets();
 
         Boolean playerResult = bets.playBetType(bets.selectBetType());
