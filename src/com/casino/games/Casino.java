@@ -3,6 +3,7 @@ package com.casino.games;
 import com.apps.util.Prompter;
 import com.casino.employees.CasinoBoss;
 import com.casino.employees.Dealer;
+import com.casino.games.machines.slot.SlotMachine;
 import com.casino.player.Player;
 
 import java.util.*;
@@ -48,8 +49,10 @@ public class Casino {
         player.setBalance(doubleBalance);
     }
 
+
     private void gameChoiceMenu() {
         List<Playable> playableGames = CasinoGames.games(player, bet);
+
 
         for(int i = 0; i < playableGames.size(); i++) {
             System.out.println(i + ": " + playableGames.get(i).getName());
