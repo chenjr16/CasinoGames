@@ -2,76 +2,108 @@ package com.casino.games;
 
 import com.apps.util.Prompter;
 import com.casino.employees.CasinoBoss;
-import com.casino.games.board.roulette.Roulette;
-import com.casino.games.cards.baccarat.Baccarat;
 import com.casino.employees.Dealer;
 import com.casino.games.machines.slot.SlotMachine;
 import com.casino.player.Player;
 
-import java.util.Scanner;
+import java.util.*;
 
-class Casino {
+public class Casino {
+    CasinoPrompter casinoPrompter = new CasinoPrompter();
+    Player player;
+    Dealer dealer;
+    double bet;
+    CasinoGames game;
 
-    public void main(String[] args) {
-        Prompter prompter = new Prompter(new Scanner(System.in));
+    public Casino() {
         CasinoBoss casinoBoss = new CasinoBoss(5_000_000.0);
-        Player player = new Player();
-        Dealer dealer = new Dealer("Casino Dealer");
-        String name = prompter.prompt("Please enter your name: ", "/^$|\\s+/", "\nThat is not a valid name!\n");
+    }
+
+
+    public void start() {
+        playerCreation();
+        betCreation();
+        gameChoiceMenu();
+    }
+
+    private void betCreation() {
+        String betInput = casinoPrompter.getPrompt("Please enter your bet: ", "\\d+", "\nThat is " +
+                                                    "not a valid bet!\n");
+        bet = Double.parseDouble(betInput);
+    }
+
+    private void playerCreation() {
+        player = new Player();
+        dealer = new Dealer("Casino Dealer");
+        String name = casinoPrompter.getPrompt("Please enter your name: ", "^([ \\u00c0-\\u01ffa-zA-Z'\\-])+$",
+                                                "\nThat is not a valid name!\n");
         player.setName(name);
-        String balance = prompter.prompt("Please enter your starting balance: ", "^(-?)(0|([1-9][0-9]*))(\\.[0-9]+)?$", "\nThat is not a valid balance!\n");
+        balanceCreation();
+    }
+
+    private void balanceCreation() {
+        String balance = casinoPrompter.getPrompt("Please enter your starting balance: ",
+                                            "^(-?)(0|([1-9][0-9]*))(\\.[0-9]+)?$",
+                                            "\nThat is not a valid balance!\n");
         double doubleBalance = Double.parseDouble(balance);
         player.setBalance(doubleBalance);
-        mainScreen(prompter, player, dealer);
     }
 
-    public void mainScreen(Prompter prompter, Player player, Dealer dealer) {
-        String gameChoice = prompter.prompt("Please select: [1] Nick's Game , [2] Junuru's Game , [3]Marco's ");
-        int gameChoiceInt = Integer.parseInt(gameChoice);
-        CasinoGames game;
 
-        switch(gameChoiceInt) {
-            case 1:
-                game = new Baccarat();
-                break;
-            case 2:
-                game = new SlotMachine();
-                break;
-            default:
-                game = new Roulette();
-                break;
+    private void gameChoiceMenu() {
+        List<Playable> playableGames = CasinoGames.games(player, bet);
 
+
+        for(int i = 0; i < playableGames.size(); i++) {
+            System.out.println(i + ": " + playableGames.get(i).getName());
         }
-
-        String bet = prompter.prompt("Please enter your bet: ", "\\d+", "\nThat is not a valid bet!\n");
-        double betDouble = Double.parseDouble(bet);
-        playValidate(prompter, player, game, betDouble, dealer);
-    }
-
-    private void playValidate(Prompter prompter, Player player, CasinoGames game, double betDouble, Dealer dealer) {
-        if(game.isPlayable(player, betDouble, prompter)) {
-            game.play(player, dealer, betDouble);
+        int gameChoice = casinoPrompter.gameChoice("Please choose a playable game:", playableGames,
+                                                        "Please enter a valid number.");
+        Playable playable = playableGames.get(gameChoice);
+        if(playable.playableResult()) {
+            game = playable.getInstance();
+            game.play(player, bet, dealer, casinoPrompter);
         } else {
-            System.out.println("You can't play that game. You don't have enough money.");
-            String choice = prompter.prompt("Would you like to [1] raise your balance or [2] change your bet [3] change the game?");
-            switch(choice) {
-                case "1":
-                    String newBalance = prompter.prompt("How much would you like your new balance to be?");
-                    double newBalanceDouble = Double.parseDouble(newBalance);
-                    player.setBalance(newBalanceDouble);
-                    playValidate(prompter, player, game, betDouble, dealer);
-                    break;
-                case "2":
-                    String newBet = prompter.prompt("How much would you like your new balance to be?");
-                    betDouble = Double.parseDouble(newBet);
-                    playValidate(prompter, player, game, betDouble, dealer);
-                    break;
-                case "3":
-                    mainScreen(prompter, player, dealer);
-                    break;
-            }
+            System.out.println(playable.getMessage());
+            gameChoiceMenu();
         }
     }
 
+    public void quitGame() {
 
+    }
+    public class CasinoPrompter {
+        Scanner scanner = new Scanner(System.in);
+        Prompter prompter = new Prompter(scanner);
+
+        public String getPrompt(String message, String regex, String errorMessage) {
+            String input = prompter.prompt(message, regex, errorMessage);
+
+            switch(input) {
+                case "bet":
+                    betCreation();
+                    break;
+                case "balance":
+                    balanceCreation();
+                    break;
+                case "quit":
+                    System.exit(0);
+                case "setup":
+                    playerCreation();
+                    break;
+                case "select game":
+                    gameChoiceMenu();
+            }
+            return input;
+        }
+
+        public int gameChoice(String message, List<Playable> playableGames, String errorMessage) {
+            int input = Integer.parseInt(this.getPrompt(message, "^(0|[1-9][0-9]*)$", errorMessage));
+            if(input > playableGames.size() - 1 || input < 0) {
+                System.out.println(errorMessage);
+                this.gameChoice(message, playableGames, errorMessage);
+            }
+            return input;
+        }
+    }
 }
