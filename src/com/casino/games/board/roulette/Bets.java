@@ -55,36 +55,38 @@ class Bets {
         return betSelected;
     }
 
-    public void playBetType(int betType) {
+    public boolean playBetType(int betType) {
         switch (betType) {
             case 2:
-                roulette.oddsOrEvens();
+                 return roulette.oddsOrEvens();
 
-                break;
+                //break;
             case 3:
-                roulette.redOrBlack();
-                break;
-            case 4:
-                roulette.lowOrHigh();
-                break;
-            case 5:
-                roulette.dozens();
-                break;
-            case 6:
-                roulette.columns();
-                break;
-            case 7:
-                roulette.street();
-                break;
-            case 8:
-                roulette.sixNumbers();
-                break;
-            case 9:
-                roulette.split();
-                break;
-            case 10:
-                roulette.corner();
-                break;
+                return true;
+//            case 4:
+            //some change
+//                roulette.lowOrHigh();
+//                break;
+//            case 5:
+//                roulette.dozens();
+//                break;
+//            case 6:
+//                roulette.columns();
+//                break;
+//            case 7:
+//                roulette.street();
+//                break;
+//            case 8:
+//                roulette.sixNumbers();
+//                break;
+//            case 9:
+//                roulette.split();
+//                break;
+//            case 10:
+//                roulette.corner();
+//                break;
         }
+        return false;
     }
+
 }

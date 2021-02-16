@@ -2,15 +2,17 @@ package com.casino.games.machines.slot;
 
 
 import com.apps.util.Prompter;
-import com.casino.games.CasinoGames;
 import com.casino.employees.Dealer;
+import com.casino.games.CasinoGames;
 import com.casino.player.Player;
+
 import java.util.Arrays;
 
 //author Junru Chen
 
 public class SlotMachine extends CasinoGames {
     static double SLOT_MINIMUM = 5.0;
+    Prompter prompter;
     Player player;
     Dealer dealer;
     double bet;
@@ -19,6 +21,7 @@ public class SlotMachine extends CasinoGames {
 
     @Override
     public boolean isPlayable(Player player, double bet, Prompter prompter) {
+
         boolean result = true;
         payoutTable();
         if (player.getBalance() < bet || bet < SLOT_MINIMUM) {
