@@ -6,7 +6,10 @@ import com.casino.employees.Dealer;
 import com.casino.games.machines.slot.SlotMachine;
 import com.casino.player.Player;
 
-import java.util.*;
+import java.util.List;
+import java.util.Scanner;
+
+//import java.util.*; TODO
 
 public class Casino {
     CasinoPrompter casinoPrompter = new CasinoPrompter();
@@ -27,7 +30,7 @@ public class Casino {
     }
 
     private void betCreation() {
-        String betInput = casinoPrompter.getPrompt("Please enter your bet: ", "\\d+", "\nThat is " +
+        String betInput = casinoPrompter.getPrompt("Please enter your bet: ", "[0-9]*\\.?[0-9]*", "\nThat is " +
                                                     "not a valid bet!\n");
         bet = Double.parseDouble(betInput);
     }
@@ -35,7 +38,7 @@ public class Casino {
     private void playerCreation() {
         player = new Player();
         dealer = new Dealer("Casino Dealer");
-        String name = casinoPrompter.getPrompt("Please enter your name: ", "^([ \\u00c0-\\u01ffa-zA-Z'\\-])+$",
+        String name = casinoPrompter.getPrompt("Please enter your name: ", "[a-zA-z]*",
                                                 "\nThat is not a valid name!\n");
         player.setName(name);
         balanceCreation();
@@ -43,7 +46,7 @@ public class Casino {
 
     private void balanceCreation() {
         String balance = casinoPrompter.getPrompt("Please enter your starting balance: ",
-                                            "^(-?)(0|([1-9][0-9]*))(\\.[0-9]+)?$",
+                                            "^[0-9]*\\.?[0-9]*",
                                             "\nThat is not a valid balance!\n");
         double doubleBalance = Double.parseDouble(balance);
         player.setBalance(doubleBalance);
@@ -73,8 +76,8 @@ public class Casino {
 
     }
     public class CasinoPrompter {
-        Scanner scanner = new Scanner(System.in);
-        Prompter prompter = new Prompter(scanner);
+
+        Prompter prompter = new Prompter(new Scanner(System.in));
 
         public String getPrompt(String message, String regex, String errorMessage) {
             String input = prompter.prompt(message, regex, errorMessage);
@@ -98,7 +101,7 @@ public class Casino {
         }
 
         public int gameChoice(String message, List<Playable> playableGames, String errorMessage) {
-            int input = Integer.parseInt(this.getPrompt(message, "^(0|[1-9][0-9]*)$", errorMessage));
+            int input = Integer.parseInt(this.getPrompt(message, "[0-2]", errorMessage));
             if(input > playableGames.size() - 1 || input < 0) {
                 System.out.println(errorMessage);
                 this.gameChoice(message, playableGames, errorMessage);

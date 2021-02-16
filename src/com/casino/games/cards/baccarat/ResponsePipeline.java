@@ -8,6 +8,7 @@ import java.util.Scanner;
 import static com.casino.games.cards.baccarat.utils.Pipe.apply;
 
 final class ResponsePipeline {
+
     Casino.CasinoPrompter prompter;
 
     void start(Map<String, Response<?>> map, Casino.CasinoPrompter prompter) {

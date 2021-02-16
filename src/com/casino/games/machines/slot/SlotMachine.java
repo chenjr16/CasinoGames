@@ -15,10 +15,12 @@ import java.util.Arrays;
 public class SlotMachine extends CasinoGames {
     static double SLOT_MINIMUM = 5.0;
     Prompter prompter;
-    Player player;
-    Dealer dealer;
-    double bet;
-    double gameResult;
+
+    //TODO make private
+    private Player player;
+    private Dealer dealer;
+    private double bet;
+     double gameResult;
     
 
     @Override
