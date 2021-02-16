@@ -2,8 +2,10 @@ package com.casino.games;
 
 import com.apps.util.Prompter;
 import com.casino.employees.CasinoBoss;
+import com.casino.games.board.roulette.Roulette;
 import com.casino.games.cards.baccarat.Baccarat;
 import com.casino.employees.Dealer;
+import com.casino.games.machines.slot.SlotMachine;
 import com.casino.player.Player;
 
 import java.util.Scanner;
@@ -33,10 +35,10 @@ class Casino {
                 game = new Baccarat();
                 break;
             case 2:
-                game = new Baccarat();
+                game = new SlotMachine();
                 break;
             default:
-                game = new Baccarat();
+                game = new Roulette();
                 break;
 
         }

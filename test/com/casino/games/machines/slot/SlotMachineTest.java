@@ -1,9 +1,12 @@
 package com.casino.games.machines.slot;
 
-import com.casino.player.Dealer;
+import com.apps.util.Prompter;
+import com.casino.employees.Dealer;
 import com.casino.player.Player;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Scanner;
 
 import static org.junit.Assert.*;
 
@@ -16,19 +19,21 @@ public class SlotMachineTest {
     @Before
     public void setUp() {
         player = new Player("Junru", 5_000.0);
-        dealer = new Dealer("James", 100_000.0);
+        dealer = new Dealer("James");
         game = new SlotMachine();
     }
 
     @Test
     public void isPlayable_shouldReturnFalse_whenPlayBalanceLessThanBet() {
         Player player1 = new Player("Jason", 5);
-        assertFalse(game.isPlayable(player1, 50));
+        Prompter prompter = new Prompter(new Scanner(System.in));
+        assertFalse(game.isPlayable(player1, 50, prompter));
     }
 
     @Test
     public void isPlayable_shouldReturnFalse_whenPlayBalanceLessThanMinimum() {
-        assertFalse(game.isPlayable(player, 1));
+        Prompter prompter = new Prompter(new Scanner(System.in));
+        assertFalse(game.isPlayable(player, 1, prompter));
     }
 
     @Test

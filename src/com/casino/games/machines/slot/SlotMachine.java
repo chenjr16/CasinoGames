@@ -1,6 +1,7 @@
 package com.casino.games.machines.slot;
 
 
+import com.apps.util.Prompter;
 import com.casino.games.CasinoGames;
 import com.casino.employees.Dealer;
 import com.casino.player.Player;
@@ -14,10 +15,10 @@ public class SlotMachine extends CasinoGames {
     Dealer dealer;
     double bet;
     double gameResult;
-
+    
 
     @Override
-    public boolean isPlayable(Player player, double bet) {
+    public boolean isPlayable(Player player, double bet, Prompter prompter) {
         boolean result = true;
         payoutTable();
         if (player.getBalance() < bet || bet < SLOT_MINIMUM) {
@@ -64,7 +65,7 @@ public class SlotMachine extends CasinoGames {
     }
 
     public double getGameResult(double bet, String[] result) {
-        double winningAmount = 0;
+        double winningAmount;
         if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("BAR")) {
             winningAmount = bet * 60;
         } else if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("SEVEN")) {

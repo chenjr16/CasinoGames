@@ -25,7 +25,7 @@ public class BaccaratTest {
         resultMap = baccarat.getResultMap();
         responseMap = baccarat.getResponseMap();
         player = new Player("Nick", 50_000.0);
-        dealer = new Dealer("Ron", 100_000.0);
+        dealer = new Dealer("Ron");
         baccarat.play(player, dealer, bet);
     }
 

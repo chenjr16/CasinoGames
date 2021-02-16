@@ -1,6 +1,7 @@
 package com.casino.games.board.roulette;
 
 
+import com.apps.util.Prompter;
 import com.casino.games.CasinoGames;
 import com.casino.employees.Dealer;
 
@@ -15,7 +16,7 @@ public class Roulette extends CasinoGames {
     int winningNumber = getWinningNumber();
 
     @Override
-    public boolean isPlayable(Player player, double bet) {
+    public boolean isPlayable(Player player, double bet, Prompter prompter) {
         return false;
     }
 
