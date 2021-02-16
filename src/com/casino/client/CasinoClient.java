@@ -1,8 +1,8 @@
 package com.casino.client;
 
+import com.casino.employees.Dealer;
 import com.casino.games.CasinoGames;
 import com.casino.games.board.roulette.Roulette;
-import com.casino.player.Dealer;
 import com.casino.player.Player;
 
 class CasinoClient {
@@ -20,7 +20,7 @@ class CasinoClient {
         //Test code for Roulette
         CasinoGames r1 = new Roulette();
         Player playerR = new Player("Marco", 10_000);
-        Dealer dealerR = new Dealer("Mr. Dealer", 100_000);
-        r1.play(playerR, dealerR, 50);
+        Dealer dealer1 = new Dealer("D1");
+        r1.play(playerR,dealer1,10);
     }
 }

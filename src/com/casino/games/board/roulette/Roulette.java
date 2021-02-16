@@ -1,9 +1,9 @@
 package com.casino.games.board.roulette;
 
 
-import com.casino.games.CasinoGames;
+import com.apps.util.Prompter;
 import com.casino.employees.Dealer;
-
+import com.casino.games.CasinoGames;
 import com.casino.player.Player;
 
 import java.util.Scanner;
@@ -13,15 +13,18 @@ public class Roulette extends CasinoGames {
     Bets bets = new Bets();
     Table table = new Table();
     int winningNumber = getWinningNumber();
+    boolean playerWon;
+    int userInput;
+
 
     @Override
-    public boolean isPlayable(Player player, double bet) {
+    public boolean isPlayable(Player player, double bet, Prompter prompter) {
         return false;
     }
 
     @Override
     public void play(Player player, Dealer dealer, double bet) {
-
+        initializeGame();
     }
 
     @Override
@@ -35,7 +38,7 @@ public class Roulette extends CasinoGames {
     }
 
     //BUSINESS METHODS
-    public void welcomeScreen() {
+    public void welcomeScreen() {            // Will read from file
         System.out.println("                 \t\tMarco Bragado");
         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         System.out.println("|                                                         |");
@@ -55,31 +58,27 @@ public class Roulette extends CasinoGames {
         //table.displayRouletteTable();
         bets.displayBets();
         bets.playBetType(bets.selectBetType());
-
+        didPlayerWin(playerWon);
     }
 
 
     //ROULETTE METHODS
-
     //TODO
     public void straight() {
         System.out.println("TODO");
         bets.playBetType(bets.selectBetType());
     }
 
-    public void oddsOrEvens() {
+    public boolean oddsOrEvens() {
         int userInput;
-        boolean pickAgain;
-        System.out.println("\t\tODDS/EVENS");
+        System.out.println("\n\t\tODDS/EVENS");
         System.out.println("\n1)\tOdds");
         System.out.println("2)\tEvens\n");
         do {
             try {
-                System.out.printf("Please select: [1] Odds or [2] Evens  ");
+                System.out.print("Please select: [1] Odds or [2] Evens  ");
                 userInput = Integer.valueOf(scan.nextLine());
             } catch (Exception e) {
-//                invalid();
-//                System.out.println("Please pick from the list available\n");
                 userInput = -1;
             }
             if (userInput != 1 && userInput != 2) {
@@ -88,14 +87,16 @@ public class Roulette extends CasinoGames {
                 userInput = -1;
             }
         } while (userInput == -1);
+        System.out.println("Winning Number " + winningNumber);
         if (winningNumber == 0 || winningNumber == 37) {
-            System.out.println("lose");
+            return false;
         }
         if ((winningNumber % 2 == 0 && userInput == 2) || (winningNumber % 2 == 1 && userInput == 1)) {
-            System.out.println("winning number: " + winningNumber);
-            System.out.print("win");
+            System.out.println("WIN");
+            return true;
         } else {
-            System.out.println("lose");
+            System.out.println("LOSE");
+            return  false;
         }
     }
 
@@ -178,6 +179,20 @@ public class Roulette extends CasinoGames {
     public void corner() {
         System.out.println("TODO");
         bets.playBetType(bets.selectBetType());
+    }
+
+    public void didPlayerWin(boolean win){
+        if(win){
+            System.out.println("\n\t\t   Congrats, you won!");
+            System.out.print("\tYou just won ");
+            //Create addition/deductions logic
+        }else{
+            System.out.println("\n\t\t   I'm sorry, you lost!");
+            System.out.print("\tYou just lost ");
+            //Create addition/deductions logic
+        }
+        System.out.println("[BET AMOUNT] chips!");
+        System.out.println("\n\t\tYou now have [CURRENT AMOUNT]");
     }
 
     public int getWinningNumber() {
