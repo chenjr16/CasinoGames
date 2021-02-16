@@ -55,15 +55,14 @@ class Bets {
         return betSelected;
     }
 
-    public void playBetType(int betType) {
+    public boolean playBetType(int betType) {
         switch (betType) {
             case 2:
-                roulette.oddsOrEvens();
+                 return roulette.oddsOrEvens();
 
-                break;
+                //break;
             case 3:
-                roulette.redOrBlack();
-                break;
+                return false;
 //            case 4:
 //                roulette.lowOrHigh();
 //                break;
@@ -86,5 +85,7 @@ class Bets {
 //                roulette.corner();
 //                break;
         }
+        return false;
     }
+
 }

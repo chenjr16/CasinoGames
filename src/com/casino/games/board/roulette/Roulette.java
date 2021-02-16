@@ -13,7 +13,7 @@ public class Roulette extends CasinoGames {
     Bets bets = new Bets();
     Table table = new Table();
     int winningNumber = getWinningNumber();
-    boolean playerWon;
+    boolean playerWon = true;
     int userInput;
 
 
@@ -57,8 +57,9 @@ public class Roulette extends CasinoGames {
     public void initializeGame() {
         //table.displayRouletteTable();
         bets.displayBets();
-        bets.playBetType(bets.selectBetType());
-        didPlayerWin(playerWon);
+
+        Boolean playerResult = bets.playBetType(bets.selectBetType());
+        didPlayerWin(playerResult);
     }
 
 
@@ -96,7 +97,7 @@ public class Roulette extends CasinoGames {
             return true;
         } else {
             System.out.println("LOSE");
-            return  false;
+            return false;
         }
     }
 
@@ -186,7 +187,8 @@ public class Roulette extends CasinoGames {
             System.out.println("\n\t\t   Congrats, you won!");
             System.out.print("\tYou just won ");
             //Create addition/deductions logic
-        }else{
+        }
+        else{
             System.out.println("\n\t\t   I'm sorry, you lost!");
             System.out.print("\tYou just lost ");
             //Create addition/deductions logic
@@ -203,4 +205,5 @@ public class Roulette extends CasinoGames {
     public void invalid() {
         System.out.print("\n[INVALID SELECTION]  ");
     }
+
 }
