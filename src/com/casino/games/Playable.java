@@ -3,13 +3,13 @@ package com.casino.games;
 public class Playable {
     private final String name;
     private final String message;
-    private final boolean isPlayable;
+    private final boolean playableResult;
     private final CasinoGames instance;
 
     public Playable(String name, String message, boolean result, CasinoGames instance) {
         this.name = name;
         this.message = message;
-        this.isPlayable = result;
+        this.playableResult = result;
         this.instance = instance;
     }
 
@@ -21,8 +21,8 @@ public class Playable {
         return message;
     }
 
-    public boolean isPlayable() {
-        return isPlayable;
+    public boolean playableResult() {
+        return playableResult;
     }
 
     public CasinoGames getInstance() {

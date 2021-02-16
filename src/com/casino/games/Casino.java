@@ -49,7 +49,7 @@ public class Casino {
     }
 
     private void gameChoiceMenu() {
-        List<Playable> playableGames = CasinoGames.games(player, bet, casinoPrompter);
+        List<Playable> playableGames = CasinoGames.games(player, bet);
 
         for(int i = 0; i < playableGames.size(); i++) {
             System.out.println(i + ": " + playableGames.get(i).getName());
@@ -57,7 +57,7 @@ public class Casino {
         int gameChoice = casinoPrompter.gameChoice("Please choose a playable game:", playableGames,
                                                         "Please enter a valid number.");
         Playable playable = playableGames.get(gameChoice);
-        if(playable.isPlayable()) {
+        if(playable.playableResult()) {
             game = playable.getInstance();
             game.play(player, bet, dealer, casinoPrompter);
         } else {

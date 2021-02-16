@@ -15,11 +15,11 @@ public abstract class CasinoGames implements GameInterface {
 
     public abstract void play(Player player, double bet, Dealer dealer, Casino.CasinoPrompter prompter);
 
-    public static List<Playable> games(Player player, double bet, Casino.CasinoPrompter prompter) {
+    public static List<Playable> games(Player player, double bet) {
         List<Playable> playableGames = new ArrayList<>();
         // add each game's Playable to the list by calling their isPlayable method.
         // then return the list to the casino.
-        playableGames.add(new Baccarat().isPlayable(player, bet, prompter));
+        playableGames.add(new Baccarat().isPlayable(player, bet));
         return playableGames;
     }
 
