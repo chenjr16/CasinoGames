@@ -13,7 +13,6 @@ class CasinoClient {
     public static void main(String[] args) {
 
         //Test code for slotMachine
-
         //Test code for Roulette
 
 //        CasinoGames r1 = new Roulette();
