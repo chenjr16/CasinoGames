@@ -17,11 +17,17 @@ public class SlotMachine extends CasinoGames {
     Dealer dealer;
     double bet;
     double gameResult;
-
+    
 
     @Override
     public boolean isPlayable(Player player, double bet, Prompter prompter) {
-        return false;
+
+        boolean result = true;
+        payoutTable();
+        if (player.getBalance() < bet || bet < SLOT_MINIMUM) {
+            result = false;
+        }
+        return result;
     }
 
     @Override
@@ -62,7 +68,7 @@ public class SlotMachine extends CasinoGames {
     }
 
     public double getGameResult(double bet, String[] result) {
-        double winningAmount = 0;
+        double winningAmount;
         if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("BAR")) {
             winningAmount = bet * 60;
         } else if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("SEVEN")) {

@@ -1,6 +1,5 @@
 package com.casino.games.machines.slot;
 
-
 import com.apps.util.Prompter;
 import com.casino.employees.Dealer;
 import com.casino.player.Player;
