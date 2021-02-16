@@ -1,9 +1,9 @@
 package com.casino.games.board.roulette;
 
-
-import com.apps.util.Prompter;
 import com.casino.employees.Dealer;
+import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
+import com.casino.games.Playable;
 import com.casino.player.Player;
 
 import java.util.Scanner;
@@ -18,13 +18,13 @@ public class Roulette extends CasinoGames {
 
 
     @Override
-    public boolean isPlayable(Player player, double bet, Prompter prompter) {
-        return false;
+    public void play(Player player, double bet, Dealer dealer, Casino.CasinoPrompter prompter) {
+        initializeGame();
     }
 
     @Override
-    public void play(Player player, Dealer dealer, double bet) {
-        initializeGame();
+    public Playable isPlayable(Player player, double bet) {
+        return null;
     }
 
     @Override

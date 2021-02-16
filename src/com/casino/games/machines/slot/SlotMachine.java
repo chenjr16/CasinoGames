@@ -3,7 +3,9 @@ package com.casino.games.machines.slot;
 
 import com.apps.util.Prompter;
 import com.casino.employees.Dealer;
+import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
+import com.casino.games.Playable;
 import com.casino.player.Player;
 
 import java.util.Arrays;
@@ -20,18 +22,18 @@ public class SlotMachine extends CasinoGames {
     
 
     @Override
-    public boolean isPlayable(Player player, double bet, Prompter prompter) {
-
+    public Playable isPlayable(Player player, double bet) {
+        Playable playable = null;
         boolean result = true;
         payoutTable();
         if (player.getBalance() < bet || bet < SLOT_MINIMUM) {
             result = false;
         }
-        return result;
+        return null;
     }
 
     @Override
-    public void play(Player player, Dealer dealer, double bet) {
+    public void play(Player player, double bet, Dealer dealer, Casino.CasinoPrompter prompter) {
         this.player = player;
         this.dealer = dealer;
         this.bet = bet;
@@ -170,6 +172,5 @@ public class SlotMachine extends CasinoGames {
             "Banana", "Orange", "Cherry", "Banana", "Cherry", "Lemon", "Cherry",
             "Orange", "Banana", "Orange", "Lemon", "Orange", "Banana", "Lemon",
             "Banana", "Lemon"};
-
 
 }
