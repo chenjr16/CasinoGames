@@ -19,17 +19,14 @@ class Bets {
         System.out.println("5)\t\tDozens\t\t\t2:1");
         System.out.println("6)\t\tColumns\t\t\t2:1");
         System.out.println("7)\t\tStreet\t\t\t11:1");
-        System.out.println("8)\t\t6 Numbers\t\t5:1");
-        System.out.println("9)\t\tSplit\t\t\t17:1");
-        System.out.print("10)\t\tCorner\t\t\t8:1");
         System.out.println("\n");
-        System.out.println("Please select a type of bet you would like to place [1 - 10]\n");
+        System.out.println("Please select a type of bet you would like to place [1 - 7]\n");
     }
 
     public int selectBetType() {
         int betSelected;
         do {
-            System.out.print("\nWhat kind of bet would you like to make [1-10]: ");
+            System.out.print("\nWhat kind of bet would you like to make [1-7]: ");
             try {
                 betSelected = Integer.parseInt(scan.nextLine());
             } catch (Exception e) {
@@ -39,7 +36,7 @@ class Bets {
                 return betSelected;
             } else {
                 roulette.invalid();
-                System.out.print("Please select from the list: [1 - 10]\n");
+                System.out.print("Please select from the list: [1 - 7]\n");
                 betSelected = 0;
             }
         } while (betSelected == 0);

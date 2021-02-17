@@ -1,5 +1,6 @@
 package com.casino.games.board.roulette;
 
+import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
 import com.casino.games.Playable;
 import com.casino.games.machines.slot.SlotMachine;
@@ -10,7 +11,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Roulette extends CasinoGames {
-    private final Scanner scan = new Scanner(System.in);
+    //private final Scanner scan = new Scanner(System.in);
     private final Bets bets = new Bets();
     private final Table table = new Table();
     private final Random randomNumber = new Random();
@@ -28,13 +29,11 @@ public class Roulette extends CasinoGames {
     @Override
     public Playable isPlayable(Player player, double bet) {
         Playable playable;
-        if(player.getBalance() < bet) {
+        if (player.getBalance() < bet) {
             playable = new Playable("Roulette", "You don't have enough to play", false, new Roulette());
-        }
-        else if (bet < ROULETTE_MINIMUM) {
+        } else if (bet < ROULETTE_MINIMUM) {
             playable = new Playable("Roulette", "Too little money, minimal bet is: " + ROULETTE_MINIMUM, false, new Roulette());
-        }
-        else{
+        } else {
             playable = new Playable("Roulette", "Can play", true, new Roulette());
         }
 
@@ -50,8 +49,6 @@ public class Roulette extends CasinoGames {
     public void endGame() {
         System.exit(0);
     }
-
-
 
     public void welcomeScreen() {
         System.out.println("                 \t\tMarco Bragado");
@@ -90,38 +87,38 @@ public class Roulette extends CasinoGames {
         System.out.println("2)\t[1 - 36]\n");
 
         // 1st Screen Selection
-        do {
-            try {
-                System.out.print("\n Please select the number you would like to bet on: 1) => [0, 00]   OR   2) => [1 - 36] : ");
-                userInput = Integer.parseInt(scan.nextLine());
-            } catch (Exception e) {
-                userInput = -1;
-            }
-            if (userInput != 1 && userInput != 2) {
-                invalid();
-                System.out.println("Please pick from the list available\n");
-                userInput = -1;
-            }
-        } while (userInput == -1);
+        String newInput = Casino.prompt("\n Please select the number you would like to bet on: 1) => [0, 00]   OR   2) => [1 - 36] : ", "[1-2]", "That's not a valid input.");
+        userInput = Integer.parseInt(newInput);
+
+//        do {
+//            if (userInput != 1 && userInput != 2) {
+//                invalid();
+//                System.out.println("Please pick from the list available\n");
+//                userInput = -1;
+//            }
+//        } while (userInput == -1);
 
         //2nd Screen Selection
         if (userInput == 1) {
             int optionSelection;
-            do {
-                System.out.println("\n1)\t[0]");
-                System.out.println("2)\t[00]\n");
-                System.out.print("\n Please select from the following: 1) => [0]  OR  2) => [00] : ");
-                try {
-                    optionSelection = Integer.parseInt(scan.nextLine());
-                } catch (Exception e) {
-                    optionSelection = -1;
-                }
-                if (optionSelection != 1 && optionSelection != 2) {
-                    invalid();
-                    System.out.println("Please pick from the list available\n");
-                    optionSelection = -1;
-                }
-            } while (optionSelection == -1);
+            String newOptionSelection = Casino.prompt("\n Please select from the following: 1) => [0]  OR  2) => [00] : ", "[1-2]", "That's not a valid input.");
+            optionSelection = Integer.parseInt(newOptionSelection);
+
+//            do {
+//                System.out.println("\n1)\t[0]");
+//                System.out.println("2)\t[00]\n");
+//                System.out.print("\n Please select from the following: 1) => [0]  OR  2) => [00] : ");
+//                try {
+//                    optionSelection = Integer.parseInt(scan.nextLine());
+//                } catch (Exception e) {
+//                    optionSelection = -1;
+//                }
+//                if (optionSelection != 1 && optionSelection != 2) {
+//                    invalid();
+//                    System.out.println("Please pick from the list available\n");
+//                    optionSelection = -1;
+//                }
+//            } while (optionSelection == -1);
             if (optionSelection == 1 && winningNumber == 0) {
                 return true;
             } else {
@@ -197,17 +194,9 @@ public class Roulette extends CasinoGames {
             return false;
         }
         for (int i = 0; i < table.redNumbers.length; i++) {
-            if (winningNumber == table.redNumbers[i]) {
-                isRed = true;
-            } else {
-                isRed = false;
-            }
+            isRed = winningNumber == table.redNumbers[i];
         }
-        if (isRed && userInput == 1) {
-            return true;
-        }else {
-            return false;
-        }
+        return isRed && userInput == 1;
     }
 
     //DONE
@@ -234,11 +223,7 @@ public class Roulette extends CasinoGames {
         if (winningNumber == 0 || winningNumber == 37) {
             return false;
         }
-        if (winningNumber < 19 && userInput == 1 || winningNumber > 18 && userInput == 2) {
-            return true;
-        } else {
-            return false;
-        }
+        return winningNumber < 19 && userInput == 1 || winningNumber > 18 && userInput == 2;
     }
 
     //DONE
@@ -412,7 +397,7 @@ public class Roulette extends CasinoGames {
     }
 
     public void clearConsole() {
-        for (int i = 0; i < 50; ++i) System.out.println("");
+        for (int i = 0; i < 50; ++i) System.out.println();
     }
 
 }
