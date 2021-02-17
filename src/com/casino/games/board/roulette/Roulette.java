@@ -228,10 +228,38 @@ public class Roulette extends CasinoGames {
         }
     }
 
-    //TODO
-    public void dozens() {
-        System.out.println("TODO");
-        bets.playBetType(bets.selectBetType());
+    //DONE
+    public boolean dozen() {
+        clearConsole();
+        System.out.println("\n\t\tDozens");
+        table.displayRouletteTable();
+        System.out.println("\n1)\t[1 - 12]");
+        System.out.println("2)\t[13 - 24]");
+        System.out.println("3)\t[25 - 36]\n");
+        do {
+            try {
+                System.out.print("Please select: [1] 1-12 , [2] 13-24 , [3] 25-36 : ");
+                userInput = Integer.parseInt(scan.nextLine());
+            } catch (Exception e) {
+                userInput = -1;
+            }
+            if (userInput != 1 && userInput != 2 && userInput != 3) {
+                invalid();
+                System.out.println("Please pick from the list available\n");
+                userInput = -1;
+            }
+        } while (userInput == -1);
+        if (winningNumber == 0 || winningNumber == 37) {
+            System.out.println("lost");
+            return false;
+        }
+        if ((userInput == 1 && winningNumber < 13) || (userInput == 2 && winningNumber > 12 && winningNumber < 25) || (userInput == 3 && winningNumber > 24)) {
+            System.out.println("won");
+            return true;
+        } else {
+            System.out.println("lost");
+            return false;
+        }
     }
 
     //TODO
