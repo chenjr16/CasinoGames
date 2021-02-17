@@ -262,10 +262,39 @@ public class Roulette extends CasinoGames {
         }
     }
 
-    //TODO
-    public void columns() {
-        System.out.println("TODO");
-        bets.playBetType(bets.selectBetType());
+    //DONE
+    public boolean columns() {
+        int userInput;
+        clearConsole();
+        System.out.println("\n\t\t\t\tColumns");
+        table.displayRouletteTable();
+        System.out.println("\n1)\t1st Column (1,4,7,10,13,16,19,22,25,28,31,34)");
+        System.out.println("2)\t2nd Column (2,5,8,11,14,17,20,23,26,29,32,35)");
+        System.out.println("3)\t3rd Column (3,6,9,12,15,18,21,24,27,30,33,36)\n");
+        do {
+            try {
+                System.out.print("Please select: [1] 1st Column , [2] 2nd Column , [3] 3rd Column : ");
+                userInput = Integer.parseInt(scan.nextLine());
+            } catch (Exception e) {
+                userInput = -1;
+            }
+            if (userInput != 1 && userInput != 2 && userInput != 3) {
+                invalid();
+                System.out.println("Please pick from the list available\n");
+                userInput = -1;
+            }
+        } while (userInput == -1);
+        if (winningNumber == 0 || winningNumber == 37) {
+            return false;
+        }
+        for (int i = userInput; i <= 36; i += 3) {
+            if (winningNumber == i) {
+                return true;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
     //TODO
