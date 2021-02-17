@@ -10,15 +10,12 @@ import com.casino.player.Player;
 import java.util.Arrays;
 import java.util.List;
 
-//author Junru Chen
-
 public class SlotMachine extends CasinoGames {
     static double SLOT_MINIMUM = 0.25;
     private double betAgain;
     private Player player;
     private Dealer dealer;
     private double gameResult;
-
 
     @Override
     public Playable isPlayable(Player player, double bet) {
@@ -79,7 +76,9 @@ public class SlotMachine extends CasinoGames {
         }
         else {
 
-            Casino.prompt("Type in 'select game'", "", "that's not a correct response");
+            //For Nick
+            Casino.prompt("Please type in 'select game' to go back to game menu", " ", "Invalid input");
+
         }
     }
 

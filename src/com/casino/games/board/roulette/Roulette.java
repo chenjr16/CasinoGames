@@ -11,7 +11,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Roulette extends CasinoGames {
-    //private final Scanner scan = new Scanner(System.in);
+    private final Scanner scan = new Scanner(System.in);
     private final Bets bets = new Bets();
     private final Table table = new Table();
     private final Random randomNumber = new Random();

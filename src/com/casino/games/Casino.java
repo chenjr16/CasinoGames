@@ -47,7 +47,6 @@ public class Casino {
     private void gameChoiceMenu() {
         List<Playable> playableGames = CasinoGames.games(player, bet);
 
-
         for(int i = 0; i < playableGames.size(); i++) {
             System.out.println(i + ": " + playableGames.get(i).getName());
         }
@@ -90,10 +89,11 @@ public class Casino {
                 casino.playerCreation();
                 break;
             case "select game":
-                casino.gameChoiceMenu();
+//                casino.gameChoiceMenu();
         }
         return input;
     }
+
 
     static {
         casino = new Casino();
