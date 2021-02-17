@@ -19,7 +19,7 @@ class CasinoClient {
         // Test code for Casino
 
         Casino casino = new Casino();
-        casino.start();
+        casino.start(casino);
 
         //CasinoGames r1 = new Roulette();
         //Player playerR = new Player("Marco", 10_000);

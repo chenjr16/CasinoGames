@@ -11,12 +11,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import static com.casino.games.cards.baccarat.Baccarat.ResultKeys.*;
+import com.casino.games.cards.baccarat.Baccarat.ResultKeys;
 
 import static org.junit.Assert.*;
 
 public class BaccaratDealerTest {
 
-    Map<String, BaccaratDealer.Result<?>> resultMap;
+    Map<ResultKeys, BaccaratDealer.Result<?>> resultMap;
     List<Card> deckOfCards;
     BaccaratDealer baccaratDealer;
     Rank rankDeuce;
@@ -32,14 +34,14 @@ public class BaccaratDealerTest {
         rankThree = Rank.THREE;
         suitDiamonds = Suit.DIAMONDS;
     }
-    private Map<String, BaccaratDealer.Result<?>> createResultMap() {
+    private Map<ResultKeys, BaccaratDealer.Result<?>> createResultMap() {
         resultMap = new HashMap<>();
-        resultMap.put("winner", new BaccaratDealer.Result<>(0));
-        resultMap.put("playerTotal", new BaccaratDealer.Result<>(0));
-        resultMap.put("playerRound1", new BaccaratDealer.Result<>(0));
-        resultMap.put("bankerTotal", new BaccaratDealer.Result<>(0));
-        resultMap.put("bankerRound1", new BaccaratDealer.Result<>(0));
-        resultMap.put("isPair", new BaccaratDealer.Result<>(false));
+        resultMap.put(WINNER, new BaccaratDealer.Result<>(0));
+        resultMap.put(PLAYER_TOTAL, new BaccaratDealer.Result<>(0));
+        resultMap.put(PLAYER_ROUND1, new BaccaratDealer.Result<>(0));
+        resultMap.put(BANKER_TOTAL, new BaccaratDealer.Result<>(0));
+        resultMap.put(BANKER_ROUND1, new BaccaratDealer.Result<>(0));
+        resultMap.put(IS_PAIR, new BaccaratDealer.Result<>(false));
         return resultMap;
     }
 
@@ -52,17 +54,17 @@ public class BaccaratDealerTest {
         baccaratDealer.replaceDeckOfCards(deckOfCards);
         baccaratDealer.drawTwoFor(resultMap, Baccarat.Play.BANKER);
 
-        assertEquals(total, resultMap.get("bankerTotal").getResult());
+        assertEquals(total, resultMap.get(BANKER_TOTAL).getResult());
     }
 
     @Test
     public void testPlayerDrawIfEligible_shouldNotUpdateTotal_whenPlayerIsFrozen() {
         BaccaratDealer.Result<Integer> twoResult = new BaccaratDealer.Result<>(2);
-        resultMap.put("playerTotal", twoResult);
+        resultMap.put(PLAYER_TOTAL, twoResult);
         baccaratDealer.setPlayerFrozen();
         baccaratDealer.playerDrawIfEligible(resultMap);
 
-        assertSame(twoResult, resultMap.get("playerTotal"));
+        assertSame(twoResult, resultMap.get(PLAYER_TOTAL));
     }
 
     @Test
@@ -70,26 +72,26 @@ public class BaccaratDealerTest {
         Rank rankFour = Rank.FOUR;
         deckOfCards.add(Cards.getCard(rankFour, suitDiamonds));
         baccaratDealer.replaceDeckOfCards(deckOfCards);
-        resultMap.put("playerTotal", new BaccaratDealer.Result<>(5));
+        resultMap.put(PLAYER_TOTAL, new BaccaratDealer.Result<>(5));
         baccaratDealer.playerDrawIfEligible(resultMap);
 
-        assertEquals(rankFour.getValue(), resultMap.get("playerThirdCard").getResult());
+        assertEquals(rankFour.getValue(), resultMap.get(PLAYER_THIRD_CARD).getResult());
     }
 
     @Test
     public void testPlayerDrawIfEligible_shouldNotInsertThirdCard_whenPlayerIsInEligibleWithTotalGreaterThan5() {
-        resultMap.put("playerTotal", new BaccaratDealer.Result<>(7));
+        resultMap.put(PLAYER_TOTAL, new BaccaratDealer.Result<>(7));
         baccaratDealer.playerDrawIfEligible(resultMap);
 
-        assertFalse(resultMap.containsKey("playerThirdCard"));
+        assertFalse(resultMap.containsKey(PLAYER_THIRD_CARD));
     }
 
     @Test
     public void testBankerDrawIfEligible_shouldNotInsertThirdCard_whenBankerTotalIsTooHighAt7() {
-        resultMap.put("bankerTotal", new BaccaratDealer.Result<>(7));
+        resultMap.put(BANKER_TOTAL, new BaccaratDealer.Result<>(7));
         baccaratDealer.bankerDrawIfEligible(resultMap);
 
-        assertFalse(resultMap.containsKey("bankerThirdCard"));
+        assertFalse(resultMap.containsKey(BANKER_THIRD_CARD));
     }
 
     @Test
@@ -97,25 +99,25 @@ public class BaccaratDealerTest {
         baccaratDealer.setBankerFrozen();
         baccaratDealer.bankerDrawIfEligible(resultMap);
 
-        assertFalse(resultMap.containsKey("bankerThirdCard"));
+        assertFalse(resultMap.containsKey(BANKER_THIRD_CARD));
     }
 
     @Test
     public void testBankerDrawIfEligible_shouldInsertThirdCard_whenBankerHas3AndPlayerThirdCardIs1() {
-        resultMap.put("bankerTotal", new BaccaratDealer.Result<>(3));
+        resultMap.put(BANKER_TOTAL, new BaccaratDealer.Result<>(3));
         Rank rankOne = Rank.ACE;
-        resultMap.put("playerThirdCard", new BaccaratDealer.Result<>(rankOne.getValue()));
+        resultMap.put(PLAYER_THIRD_CARD, new BaccaratDealer.Result<>(rankOne.getValue()));
 
         baccaratDealer.bankerDrawIfEligible(resultMap);
 
-        assertTrue(resultMap.containsKey("bankerThirdCard"));
+        assertTrue(resultMap.containsKey(BANKER_THIRD_CARD));
     }
 
     @Test
     public void testBankerDrawIfEligible_shouldNotUpdateTotal_whenBankerHas3AndPlayerThirdCardIs8() {
         BaccaratDealer.Result<Integer> threeResult = new BaccaratDealer.Result<>(3);
-        resultMap.put("bankerTotal", threeResult);
-        resultMap.put("playerThirdCard", new BaccaratDealer.Result<>(8));
+        resultMap.put(BANKER_TOTAL, threeResult);
+        resultMap.put(PLAYER_THIRD_CARD, new BaccaratDealer.Result<>(8));
         baccaratDealer.bankerDrawIfEligible(resultMap);
 
         assertSame(threeResult, resultMap.get("bankerTotal"));
@@ -124,18 +126,18 @@ public class BaccaratDealerTest {
     @Test
     public void testBankerDrawIfEligible_shouldUpdateTotal_whenBankerHas6AndPlayerThirdCardIs7() {
         BaccaratDealer.Result<Integer> sixResult = new BaccaratDealer.Result<>(6);
-        resultMap.put("bankerTotal", sixResult);
-        resultMap.put("playerThirdCard", new BaccaratDealer.Result<>(7));
+        resultMap.put(BANKER_TOTAL, sixResult);
+        resultMap.put(PLAYER_THIRD_CARD, new BaccaratDealer.Result<>(7));
         baccaratDealer.bankerDrawIfEligible(resultMap);
 
-        assertNotSame(sixResult, resultMap.get("bankerTotal"));
+        assertNotSame(sixResult, resultMap.get(BANKER_TOTAL));
     }
 
     @Test
     public void testBankerDrawIfEligible_shouldNotUpdateTotal_whenBankerHas6AndPlayerThirdCardIs1() {
         BaccaratDealer.Result<Integer> sixResult = new BaccaratDealer.Result<>(6);
-        resultMap.put("bankerTotal", sixResult);
-        resultMap.put("playerThirdCard", new BaccaratDealer.Result<>(1));
+        resultMap.put(BANKER_TOTAL, sixResult);
+        resultMap.put(PLAYER_THIRD_CARD, new BaccaratDealer.Result<>(1));
         baccaratDealer.bankerDrawIfEligible(resultMap);
 
         assertSame(sixResult, resultMap.get("bankerTotal"));
@@ -144,31 +146,31 @@ public class BaccaratDealerTest {
     @Test
     public void testDetermineWinner_shouldMakeBankerTheWinner_whenBankerHasHigherTotal() {
         Baccarat.Play winner = Baccarat.Play.BANKER;
-        resultMap.put("playerTotal", new BaccaratDealer.Result<>(7));
-        resultMap.put("bankerTotal", new BaccaratDealer.Result<>(8));
+        resultMap.put(PLAYER_TOTAL, new BaccaratDealer.Result<>(7));
+        resultMap.put(BANKER_TOTAL, new BaccaratDealer.Result<>(8));
         baccaratDealer.determineWinner(resultMap);
 
-        assertEquals(winner, resultMap.get("winner").getResult());
+        assertEquals(winner, resultMap.get(WINNER).getResult());
     }
 
     @Test
     public void testDetermineWinner_shouldMakeTieTheWinner_whenBankerAndPlayerHaveSameTotal() {
         Baccarat.Play winner = Baccarat.Play.TIE;
-        resultMap.put("playerTotal", new BaccaratDealer.Result<>(8));
-        resultMap.put("bankerTotal", new BaccaratDealer.Result<>(8));
+        resultMap.put(PLAYER_TOTAL, new BaccaratDealer.Result<>(8));
+        resultMap.put(BANKER_TOTAL, new BaccaratDealer.Result<>(8));
         baccaratDealer.determineWinner(resultMap);
 
-        assertEquals(winner, resultMap.get("winner").getResult());
+        assertEquals(winner, resultMap.get(WINNER).getResult());
     }
 
     @Test
     public void testDetermineWinner_shouldMakePlayerTheWinner_whenPlayerHasHigherTotal() {
         Baccarat.Play winner = Baccarat.Play.PLAYER;
-        resultMap.put("playerTotal", new BaccaratDealer.Result<>(8));
-        resultMap.put("bankerTotal", new BaccaratDealer.Result<>(7));
+        resultMap.put(PLAYER_TOTAL, new BaccaratDealer.Result<>(8));
+        resultMap.put(BANKER_TOTAL, new BaccaratDealer.Result<>(7));
         baccaratDealer.determineWinner(resultMap);
 
-        assertEquals(winner, resultMap.get("winner").getResult());
+        assertEquals(winner, resultMap.get(WINNER).getResult());
     }
 
     @Test

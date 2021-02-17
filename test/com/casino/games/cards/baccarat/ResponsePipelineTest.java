@@ -7,13 +7,16 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import com.casino.games.cards.baccarat.Baccarat.ResponseKeys;
+import static com.casino.games.cards.baccarat.Baccarat.ResponseKeys.*;
+import com.casino.games.cards.baccarat.ResponsePipeline.Response;
 
 import static org.junit.Assert.*;
 
 public class ResponsePipelineTest {
 
     ResponsePipeline responsePipeline;
-    Map<String, ResponsePipeline.Response<?>> responseMap;
+    Map<ResponseKeys, Response<?>> responseMap;
 
     @Before
     public void setUp() {
@@ -21,12 +24,14 @@ public class ResponsePipelineTest {
         responsePipeline = new ResponsePipeline();
     }
 
-    private Map<String, ResponsePipeline.Response<?>> setUpResponseMap() {
+    private Map<ResponseKeys, Response<?>> setUpResponseMap() {
         responseMap = new HashMap<>();
-        responseMap.put("play", new ResponsePipeline.Response<>(0));
-        responseMap.put("bet", new ResponsePipeline.Response<>(0));
-        responseMap.put("sidePlay", new ResponsePipeline.Response<>(Baccarat.SidePlay.NONE));
-        responseMap.put("sideBet", new ResponsePipeline.Response<>(0));
+        responseMap.put(PLAY, new ResponsePipeline.Response<>(0));
+        responseMap.put(BET, new ResponsePipeline.Response<>(4000));
+        responseMap.put(SIDE_PLAY, new ResponsePipeline.Response<>(Baccarat.SidePlay.NONE));
+        responseMap.put(SIDE_BET, new ResponsePipeline.Response<>(0));
+        responseMap.put(BET_MINIMUM, new ResponsePipeline.Response<>(10.0));
+        responseMap.put(PLAYER_BALANCE, new ResponsePipeline.Response<>(50_000.0));
         return responseMap;
     }
 
@@ -39,7 +44,7 @@ public class ResponsePipelineTest {
         System.setIn(in);
         responsePipeline.getPlay(responseMap);
 
-        assertEquals(play, responseMap.get("play").getResponse());
+        assertEquals(play, responseMap.get(PLAY).getResponse());
     }
 
     @Test
@@ -49,7 +54,7 @@ public class ResponsePipelineTest {
         InputStream in = new ByteArrayInputStream(betString.getBytes());
         System.setIn(in);
         responsePipeline.getPlayBet(responseMap);
-        Double data = (Double) responseMap.get("bet").getResponse();
+        Double data = (Double) responseMap.get(BET).getResponse();
 
         assertEquals(bet, data, .001);
     }
@@ -64,12 +69,12 @@ public class ResponsePipelineTest {
 
         responsePipeline.getSidePlay(responseMap);
 
-        assertEquals(sidePlay, responseMap.get("sidePlay").getResponse());
+        assertEquals(sidePlay, responseMap.get(SIDE_PLAY).getResponse());
     }
 
     @Test
     public void testGetSidePlayBet_shouldReturnResponseMapWithUserInput() {
-        responseMap.put("sidePlay", new ResponsePipeline.Response<>(Baccarat.SidePlay.PAIR));
+        responseMap.put(SIDE_PLAY, new ResponsePipeline.Response<>(Baccarat.SidePlay.PAIR));
         double sideBet = 2500.0;
         String sideBetString = "2500.0";
 
@@ -79,7 +84,7 @@ public class ResponsePipelineTest {
 
         responsePipeline.getSidePlayBet(responseMap);
 
-        Double data = (Double) responseMap.get("sideBet").getResponse();
+        Double data = (Double) responseMap.get(SIDE_BET).getResponse();
 
         assertEquals(sideBet, data, .001);
     }

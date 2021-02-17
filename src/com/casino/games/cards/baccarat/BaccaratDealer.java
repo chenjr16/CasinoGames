@@ -3,6 +3,8 @@ package com.casino.games.cards.baccarat;
 import com.casino.games.cards.baccarat.deck.Card;
 import com.casino.games.cards.baccarat.deck.Cards;
 import static com.casino.games.cards.baccarat.utils.Pipe.apply;
+import static com.casino.games.cards.baccarat.Baccarat.ResultKeys;
+import static com.casino.games.cards.baccarat.Baccarat.ResultKeys.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +25,9 @@ final class BaccaratDealer {
         Collections.shuffle(getDeckOfCards());
     }
 
-    void start(Map<String, Result<?>> resultMap) {
-        // {}
+    void start(Map<ResultKeys, Result<?>> resultMap) {
+        System.out.println("\nStarting game. No more bets please!");
+        sleepBetweenDraw(3000);
         apply(resultMap)
                 .pipe(this::drawTwoFor, Baccarat.Play.PLAYER)
                 .pipe(this::drawTwoFor, Baccarat.Play.BANKER)
@@ -34,45 +37,44 @@ final class BaccaratDealer {
                 .result();
     }
 
-    Map<String, Result<?>> drawTwoFor(Map<String, Result<?>> resultMap, Baccarat.Play play) {
-        //{"playerCard" => 5, "playerTotal" => 5, "bankerCard" => 6, "bankerTotal" => 6}
+    Map<ResultKeys, Result<?>> drawTwoFor(Map<ResultKeys, Result<?>> resultMap, Baccarat.Play play) {
         Card card1 = getDeckOfCards().remove(0);
         Card card2 = getDeckOfCards().remove(0);
         if(card1.equals(card2)) {
-            resultMap.put("isPair", new Result<>(true));
+            resultMap.put(IS_PAIR, new Result<>(true));
         }
         int total = card1.getRankValue() + card2.getRankValue();
         if(total > 9) {
             total %= 10;
         }
+
+        printTotals(play, card1, card2, total);
+
         setFrozen(play, total);
         insertTotals(resultMap, play, total);
+        sleepBetweenDraw(2000);
         return resultMap;
     }
 
-    Map<String, Result<?>> playerDrawIfEligible(Map<String, Result<?>> resultMap) {
-        //{"playerCard" => 5, "playerTotal" => 8, "bankerCard" => 6, "bankerTotal" => 6,
-        //  "playerThirdCard" => 3}
+    Map<ResultKeys, Result<?>> playerDrawIfEligible(Map<ResultKeys, Result<?>> resultMap) {
         if(isPlayerFrozen()) {
             return resultMap;
         }
-        int playerTotal = (int) resultMap.get("playerTotal").getResult();
+        int playerTotal = (int) resultMap.get(PLAYER_TOTAL).getResult();
         if(playerTotal <= 5) {
             drawSingleCard(resultMap, Baccarat.Play.PLAYER);
         }
         return resultMap;
     }
 
-    Map<String, Result<?>> bankerDrawIfEligible(Map<String, Result<?>> resultMap) {
-        //{"playerCard" => 5, "playerTotal" => 8, "bankerCard" => 6, "bankerTotal" => 6,
-        //  "playerThirdCard" => 3}
+    Map<ResultKeys, Result<?>> bankerDrawIfEligible(Map<ResultKeys, Result<?>> resultMap) {
         if(isBankerFrozen()) {
             return resultMap;
         }
-        int bankerTotal = (int) resultMap.get("bankerTotal").getResult();
+        int bankerTotal = (int) resultMap.get(BANKER_TOTAL).getResult();
 
-        if(resultMap.containsKey("playerThirdCard")) {
-            int playerThirdCardTotal = (int) resultMap.get("playerThirdCard").getResult();
+        if(resultMap.containsKey(PLAYER_THIRD_CARD)) {
+            int playerThirdCardTotal = (int) resultMap.get(PLAYER_THIRD_CARD).getResult();
             switch(bankerTotal) {
                 case 0: case 1: case 2:
                     drawSingleCard(resultMap, Baccarat.Play.BANKER);
@@ -104,34 +106,30 @@ final class BaccaratDealer {
         return resultMap;
     }
 
-    Map<String, Result<?>> determineWinner(Map<String, Result<?>> resultMap) {
-        //{"playerCard" => 5, "playerTotal" => 8, "bankerCard" => 6, "bankerTotal" => 6,
-        //  "playerThirdCard" => 3, "winner" =>  PLAYER}
-
-
-        int playerTotal = (int) resultMap.get("playerTotal").getResult();
-        int bankerTotal = (int) resultMap.get("bankerTotal").getResult();
+    Map<ResultKeys, Result<?>> determineWinner(Map<ResultKeys, Result<?>> resultMap) {
+        int playerTotal = (int) resultMap.get(PLAYER_TOTAL).getResult();
+        int bankerTotal = (int) resultMap.get(BANKER_TOTAL).getResult();
         if(playerTotal == bankerTotal) {
-            resultMap.put("winner", new Result<>(Baccarat.Play.TIE));
+            resultMap.put(WINNER, new Result<>(Baccarat.Play.TIE));
         } else if(playerTotal > bankerTotal) {
-            resultMap.put("winner", new Result<>(Baccarat.Play.PLAYER));
+            resultMap.put(WINNER, new Result<>(Baccarat.Play.PLAYER));
         } else {
-            resultMap.put("winner", new Result<>(Baccarat.Play.BANKER));
+            resultMap.put(WINNER, new Result<>(Baccarat.Play.BANKER));
         }
         return resultMap;
     }
 
     // private helper methods
 
-    private void insertTotals(Map<String, Result<?>> resultMap, Baccarat.Play play, int total) {
+    private void insertTotals(Map<ResultKeys, Result<?>> resultMap, Baccarat.Play play, int total) {
         switch (play) {
             case PLAYER:
-                resultMap.put("playerRound1", new Result<>(total));
-                resultMap.put("playerTotal", new Result<>(total));
+                resultMap.put(PLAYER_ROUND1, new Result<>(total));
+                resultMap.put(PLAYER_TOTAL, new Result<>(total));
                 break;
             case BANKER:
-                resultMap.put("bankerRound1", new Result<>(total));
-                resultMap.put("bankerTotal", new Result<>(total));
+                resultMap.put(BANKER_ROUND1, new Result<>(total));
+                resultMap.put(BANKER_TOTAL, new Result<>(total));
         }
     }
 
@@ -148,35 +146,42 @@ final class BaccaratDealer {
         }
     }
 
-    /*
-     * Takes in a resultMap and Play type(Dealer or Player). Assigns string variables based on
-     * Play type. Draws a third card and places total into the resultMap. Calculates the new
-     * total by adding the third card to the previous, places the result in the resultMap.
-     */
-
-    private void drawSingleCard(Map<String, Result<?>> resultMap, Baccarat.Play play) {
-        String bankerOrPlayerCard = "";
-        String bankerOrPlayerTotal = "";
-        switch(play) {
-            case PLAYER:
-                bankerOrPlayerCard = "playerThirdCard";
-                bankerOrPlayerTotal = "playerTotal";
-                break;
-            case BANKER:
-                bankerOrPlayerCard = "bankerThirdCard";
-                bankerOrPlayerTotal = "bankerTotal";
-                break;
+    private void drawSingleCard(Map<ResultKeys, Result<?>> resultMap, Baccarat.Play play) {
+        ResultKeys bankerOrPlayerCard = PLAYER_THIRD_CARD;
+        ResultKeys bankerOrPlayerTotal = PLAYER_TOTAL;
+        if (play == Baccarat.Play.BANKER) {
+            bankerOrPlayerCard = BANKER_THIRD_CARD;
+            bankerOrPlayerTotal = BANKER_TOTAL;
         }
         int prevTotal = (int) resultMap.get(bankerOrPlayerTotal).getResult();
         Card thirdCard = getDeckOfCards().remove(0);
         int thirdCardTotal = thirdCard.getRankValue();
         resultMap.put(bankerOrPlayerCard, new Result<>(thirdCardTotal));
-
         int newTotal = prevTotal + thirdCardTotal;
         if(newTotal > 9) {
             newTotal %= 10;
         }
+        printTotals(play, thirdCard, newTotal);
         resultMap.put(bankerOrPlayerTotal, new Result<>(newTotal));
+        sleepBetweenDraw(2000);
+    }
+
+    private void printTotals(Baccarat.Play play, Card thirdCard, int total) {
+        System.out.println("\nThe " + play + " received a " + thirdCard.getRankValue() +
+                    " for a total of " + total);
+    }
+
+    private void printTotals(Baccarat.Play play, Card card1, Card card2, int total) {
+        System.out.println("\nThe " + play + " received a " + card1.getRankValue() + " and a " +
+                card2.getRankValue() + " for a total of " + total);
+    }
+
+    private void sleepBetweenDraw(int time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     // Getters and Setters

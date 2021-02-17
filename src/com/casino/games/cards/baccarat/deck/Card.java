@@ -28,11 +28,11 @@ public class Card {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
-        return getRank() == card.getRank();
+        return getRank().getValue() == card.getRank().getValue();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getRank());
+        return Objects.hash(getRank().getValue());
     }
 }

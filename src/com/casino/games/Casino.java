@@ -7,7 +7,7 @@ import com.casino.player.Player;
 import java.util.List;
 
 public class Casino {
-    private static final Casino casino;
+    private static Casino me;
     private static final CasinoPrompter casinoPrompter = new CasinoPrompter();
     Player player;
     Dealer dealer;
@@ -15,8 +15,11 @@ public class Casino {
     CasinoGames game;
 
 
+    public Casino() {
+    }
 
-    public void start() {
+    public void start(Casino casino) {
+        me = casino;
         playerCreation();
         betCreation();
         gameChoiceMenu();
@@ -66,7 +69,8 @@ public class Casino {
     }
 
     public static int promptGameChoice(String message, List<Playable> playableGames, String errorMessage) {
-        String input = prompt(message, "[0-2]", errorMessage);
+        int size =  playableGames.size() - 1;
+        String input = prompt(message, "[0-" + size + "]", errorMessage);
         int choice = Integer.parseInt(input);
         if (choice > playableGames.size() - 1 || choice < 0) {
             System.out.println(errorMessage);
@@ -76,29 +80,25 @@ public class Casino {
     }
 
     public static String prompt(String message, String regex, String errorMessage) {
-        String customRegex = "" + regex;
+        String customRegex = "bet|balance|quit|setup|select game|" + regex;
         String input = casinoPrompter.getPrompt(message, customRegex, errorMessage);
         // check for global commands
         switch(input) {
             case "bet":
-                casino.betCreation();
+                me.betCreation();
                 break;
             case "balance":
-                casino.balanceCreation();
+                me.balanceCreation();
                 break;
             case "quit":
-                casino.quitGame();
+                me.quitGame();
             case "setup":
-                casino.playerCreation();
+                me.playerCreation();
                 break;
             case "select game":
-                casino.gameChoiceMenu();
+                me.gameChoiceMenu();
         }
         return input;
-    }
-
-    static {
-        casino = new Casino();
     }
 
     public void quitGame() {
