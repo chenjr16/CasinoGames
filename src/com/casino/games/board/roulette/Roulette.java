@@ -158,19 +158,20 @@ public class Roulette extends CasinoGames {
         }
     }
 
-    public void redOrBlack() {
+    //DONE
+    public boolean redOrBlack() {
         int userInput;
         boolean isRed = false;
+        clearConsole();
         System.out.println("\t\tRED/BLACK");
+        table.displayRouletteTable();
         System.out.println("\n1)\tRed");
         System.out.println("2)\tBlack\n");
         do {
             try {
-                System.out.printf("Please select: [1] Red or [2] Black  ");
-                userInput = Integer.valueOf(scan.nextLine());
+                System.out.print("Please select: [1] Red or [2] Black  ");
+                userInput = Integer.parseInt(scan.nextLine());
             } catch (Exception e) {
-//                invalid();
-//                System.out.println("Please pick from the list available\n");
                 userInput = -1;
             }
             if (userInput != 1 && userInput != 2) {
@@ -180,9 +181,9 @@ public class Roulette extends CasinoGames {
             }
         } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
-            System.out.println("lose");
+            return false;
         }
-        for (int i = 0; i <= table.redNumbers.length; i++) {
+        for (int i = 0; i < table.redNumbers.length; i++) {
             if (winningNumber == table.redNumbers[i]) {
                 isRed = true;
             } else {
@@ -190,10 +191,9 @@ public class Roulette extends CasinoGames {
             }
         }
         if (isRed && userInput == 1) {
-            System.out.println("won");
-        }
-        if (isRed == false && userInput == 2) {
-            System.out.print("won");
+            return true;
+        }else {
+            return false;
         }
     }
 
