@@ -1,12 +1,10 @@
 package com.casino.games.machines.slot;
 
 
-import com.apps.util.Prompter;
-import com.casino.employees.Dealer;
+import com.casino.player.Dealer;
 import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
 import com.casino.games.Playable;
-import com.casino.games.cards.baccarat.Baccarat;
 import com.casino.player.Player;
 
 import java.util.Arrays;

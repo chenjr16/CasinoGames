@@ -1,12 +1,8 @@
 package com.casino.client;
 
 
-import com.casino.employees.Dealer;
 import com.casino.games.Casino;
-import com.casino.games.CasinoGames;
 //import com.casino.games.board.roulette.Roulette;
-import com.casino.games.machines.slot.SlotMachine;
-import com.casino.player.Player;
 
 
 class CasinoClient {

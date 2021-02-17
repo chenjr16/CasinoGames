@@ -1,6 +1,6 @@
 package com.casino.games;
 
-import com.casino.employees.Dealer;
+import com.casino.player.Dealer;
 import com.casino.games.cards.baccarat.Baccarat;
 import com.casino.games.machines.slot.SlotMachine;
 import com.casino.player.Player;
