@@ -18,6 +18,9 @@ public class Dealer extends Player{
             System.out.println(this.getBalance());
             this.setBalance(this.getBalance() - money);
             player.setBalance(player.getBalance() + money);
+        }else {
+            player.setBalance(player.getBalance() - money);
+            this.setBalance(this.getBalance() + money);
         }
     }
 }

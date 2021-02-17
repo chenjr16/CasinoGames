@@ -3,7 +3,6 @@ package com.casino.games.board.roulette;
 import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
 import com.casino.games.Playable;
-import com.casino.games.machines.slot.SlotMachine;
 import com.casino.player.Dealer;
 import com.casino.player.Player;
 
@@ -101,12 +100,12 @@ public class Roulette extends CasinoGames {
         //2nd Screen Selection
         if (userInput == 1) {
             int optionSelection;
-            String newOptionSelection = Casino.prompt("\n Please select from the following: 1) => [0]  OR  2) => [00] : ", "[1-2]", "That's not a valid input.");
+            System.out.println("\n1)\t[0]");
+            System.out.println("2)\t[00]\n");
+            String newOptionSelection = Casino.prompt("\n Please select from the following: 1) => [0]  OR  2) => [00] : ", "[1-2]", "[INVALID INPUT] Please select from the following options.");
             optionSelection = Integer.parseInt(newOptionSelection);
-
 //            do {
-//                System.out.println("\n1)\t[0]");
-//                System.out.println("2)\t[00]\n");
+//
 //                System.out.print("\n Please select from the following: 1) => [0]  OR  2) => [00] : ");
 //                try {
 //                    optionSelection = Integer.parseInt(scan.nextLine());
@@ -127,9 +126,12 @@ public class Roulette extends CasinoGames {
         }
         //3rd Screen Selection
         if (userInput == 2) {
-            System.out.print("Please select from the following [1 - 36]: ");
-            int numberSelection = Integer.parseInt(scan.nextLine());
-            return numberSelection == winningNumber;
+            int userGuess;
+            String newOptionSelection = Casino.prompt("\n Please select from the following [1 - 36]: ", "(3[0-6]|[12][0-9]|[1-9])", "[INVALID INPUT] Please select from the following options.");
+            userGuess = Integer.parseInt(newOptionSelection);
+            if(userGuess == winningNumber){
+                return true;
+            }
         }
         return false;
     }
@@ -142,28 +144,29 @@ public class Roulette extends CasinoGames {
         table.displayRouletteTable();
         System.out.println("\n1)\tOdds");
         System.out.println("2)\tEvens\n");
-        do {
-            try {
-                System.out.print("Please select: [1] Odds or [2] Evens  ");
-                userInput = Integer.parseInt(scan.nextLine());
-            } catch (Exception e) {
-                userInput = -1;
-            }
-            if (userInput != 1 && userInput != 2) {
-                invalid();
-                System.out.println("Please pick from the list available\n");
-                userInput = -1;
-            }
-        } while (userInput == -1);
-        System.out.println("Winning Number " + winningNumber);
+
+        String newOptionSelection = Casino.prompt("\n Please select from the following: 1) Odds  OR  2) Evens : ", "[1-2]", "[INVALID INPUT] Please select from the following options.");
+        userInput = Integer.parseInt(newOptionSelection);
+
+//        do {
+//            try {
+//                System.out.print("Please select: [1] Odds or [2] Evens  ");
+//                userInput = Integer.parseInt(scan.nextLine());
+//            } catch (Exception e) {
+//                userInput = -1;
+//            }
+//            if (userInput != 1 && userInput != 2) {
+//                invalid();
+//                System.out.println("Please pick from the list available\n");
+//                userInput = -1;
+//            }
+//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
             return false;
         }
         if ((winningNumber % 2 == 0 && userInput == 2) || (winningNumber % 2 == 1 && userInput == 1)) {
-            System.out.println("WIN");
             return true;
         } else {
-            System.out.println("LOSE");
             return false;
         }
     }
@@ -177,19 +180,23 @@ public class Roulette extends CasinoGames {
         table.displayRouletteTable();
         System.out.println("\n1)\tRed");
         System.out.println("2)\tBlack\n");
-        do {
-            try {
-                System.out.print("Please select: [1] Red or [2] Black  ");
-                userInput = Integer.parseInt(scan.nextLine());
-            } catch (Exception e) {
-                userInput = -1;
-            }
-            if (userInput != 1 && userInput != 2) {
-                invalid();
-                System.out.println("Please pick from the list available\n");
-                userInput = -1;
-            }
-        } while (userInput == -1);
+
+        String newOptionSelection = Casino.prompt("\n Please select from the following: 1) Red  OR  2) Black : ", "[1-2]", "[INVALID INPUT] Please select from the following options.");
+        userInput = Integer.parseInt(newOptionSelection);
+
+//        do {
+//            try {
+//                System.out.print("Please select: [1] Red or [2] Black  ");
+//                userInput = Integer.parseInt(scan.nextLine());
+//            } catch (Exception e) {
+//                userInput = -1;
+//            }
+//            if (userInput != 1 && userInput != 2) {
+//                invalid();
+//                System.out.println("Please pick from the list available\n");
+//                userInput = -1;
+//            }
+//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
             return false;
         }
@@ -207,19 +214,21 @@ public class Roulette extends CasinoGames {
         table.displayRouletteTable();
         System.out.println("\n1)\tLow [1 - 18]");
         System.out.println("2)\tHigh [19 - 36]\n");
-        do {
-            try {
-                System.out.print("Please select: [1] Lows or [2] Highs  ");
-                userInput = Integer.parseInt(scan.nextLine());
-            } catch (Exception e) {
-                userInput = -1;
-            }
-            if (userInput != 1 && userInput != 2) {
-                invalid();
-                System.out.println("Please pick from the list available\n");
-                userInput = -1;
-            }
-        } while (userInput == -1);
+        String newOptionSelection = Casino.prompt("\n Please select from the following: 1) Lows  OR  2) Highs : ", "[1-2]", "[INVALID INPUT] Please select from the following options.");
+        userInput = Integer.parseInt(newOptionSelection);
+//        do {
+//            try {
+//                System.out.print("Please select: [1] Lows or [2] Highs  ");
+//                userInput = Integer.parseInt(scan.nextLine());
+//            } catch (Exception e) {
+//                userInput = -1;
+//            }
+//            if (userInput != 1 && userInput != 2) {
+//                invalid();
+//                System.out.println("Please pick from the list available\n");
+//                userInput = -1;
+//            }
+//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
             return false;
         }
@@ -234,19 +243,23 @@ public class Roulette extends CasinoGames {
         System.out.println("\n1)\t[1 - 12]");
         System.out.println("2)\t[13 - 24]");
         System.out.println("3)\t[25 - 36]\n");
-        do {
-            try {
-                System.out.print("Please select: [1] 1-12 , [2] 13-24 , [3] 25-36 : ");
-                userInput = Integer.parseInt(scan.nextLine());
-            } catch (Exception e) {
-                userInput = -1;
-            }
-            if (userInput != 1 && userInput != 2 && userInput != 3) {
-                invalid();
-                System.out.println("Please pick from the list available\n");
-                userInput = -1;
-            }
-        } while (userInput == -1);
+
+        String newOptionSelection = Casino.prompt("\n Please select from the following: [1] 1-12 , [2] 13-24 , [3] 25-36 : ", "[1-3]", "[INVALID INPUT] Please select from the following options.");
+        userInput = Integer.parseInt(newOptionSelection);
+
+//        do {
+//            try {
+//                System.out.print("Please select: [1] 1-12 , [2] 13-24 , [3] 25-36 : ");
+//                userInput = Integer.parseInt(scan.nextLine());
+//            } catch (Exception e) {
+//                userInput = -1;
+//            }
+//            if (userInput != 1 && userInput != 2 && userInput != 3) {
+//                invalid();
+//                System.out.println("Please pick from the list available\n");
+//                userInput = -1;
+//            }
+//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
             System.out.println("lost");
             return false;
@@ -269,22 +282,27 @@ public class Roulette extends CasinoGames {
         System.out.println("\n1)\t1st Column (1,4,7,10,13,16,19,22,25,28,31,34)");
         System.out.println("2)\t2nd Column (2,5,8,11,14,17,20,23,26,29,32,35)");
         System.out.println("3)\t3rd Column (3,6,9,12,15,18,21,24,27,30,33,36)\n");
-        do {
-            try {
-                System.out.print("Please select: [1] 1st Column , [2] 2nd Column , [3] 3rd Column : ");
-                userInput = Integer.parseInt(scan.nextLine());
-            } catch (Exception e) {
-                userInput = -1;
-            }
-            if (userInput != 1 && userInput != 2 && userInput != 3) {
-                invalid();
-                System.out.println("Please pick from the list available\n");
-                userInput = -1;
-            }
-        } while (userInput == -1);
+
+        String newOptionSelection = Casino.prompt("\n Please select from the following: [1] 1st Column , [2] 2nd Column , [3] 3rd Column : ", "[1-3]", "[INVALID INPUT] Please select from the following options.");
+        userInput = Integer.parseInt(newOptionSelection);
+
+//        do {
+//            try {
+//                System.out.print("Please select: [1] 1st Column , [2] 2nd Column , [3] 3rd Column : ");
+//                userInput = Integer.parseInt(scan.nextLine());
+//            } catch (Exception e) {
+//                userInput = -1;
+//            }
+//            if (userInput != 1 && userInput != 2 && userInput != 3) {
+//                invalid();
+//                System.out.println("Please pick from the list available\n");
+//                userInput = -1;
+//            }
+//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
             return false;
         }
+        // will iterate at the number user selected and increments by 3
         for (int i = userInput; i <= 36; i += 3) {
             if (winningNumber == i) {
                 return true;
@@ -313,23 +331,29 @@ public class Roulette extends CasinoGames {
         System.out.println("Row [10] = 28/29/30");
         System.out.println("Row [11] = 31/32/33");
         System.out.println("Row [12] = 34/35/36");
-        do {
-            try {
-                System.out.print("\nWhich Street do you want to bet on? [1-12]: ");
-                userInput = Integer.parseInt(scan.nextLine());
-            } catch (Exception e) {
-                userInput = -1;
-            }
 
-            if (userInput < 1 || userInput > 12) {
-                invalid();
-                System.out.println("Please select from the list.");
-                userInput = -1;
-            }
-        } while (userInput == -1);
+        int userInput;
+        String newOptionSelection = Casino.prompt("\n Please select from the following: [1 - 12] 3rd Column : ", "[1-12]", "[INVALID INPUT] Please select from the following options.");
+        userInput = Integer.parseInt(newOptionSelection);
+
+//        do {
+//            try {
+//                System.out.print("\nWhich Street do you want to bet on? [1-12]: ");
+//                userInput = Integer.parseInt(scan.nextLine());
+//            } catch (Exception e) {
+//                userInput = -1;
+//            }
+//
+//            if (userInput < 1 || userInput > 12) {
+//                invalid();
+//                System.out.println("Please select from the list.");
+//                userInput = -1;
+//            }
+//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
             return false;
         }
+        // stores the user's input starting number  Ex. Choosing option 1 starts at 1 | Choosing option 2 starts at 4, etc.
         int startingNumber = (userInput - 1) * 3 + 1;
         for (int i = startingNumber; i < startingNumber + 3; i++) {
             if (winningNumber == i) {
@@ -359,19 +383,22 @@ public class Roulette extends CasinoGames {
         System.out.println("\n1)\tYes");
         System.out.println("2)\tNo, Go Back TO Main Casino Menu");
         System.out.println("3)\tExit Game\n");
-        do {
-            try {
-                System.out.print("Please select: [1] Yes , [2] No, Go Back To Casino Menu , [3] Exit Game : ");
-                userInput = Integer.parseInt(scan.nextLine());
-            } catch (Exception e) {
-                userInput = -1;
-            }
-            if (userInput != 1 && userInput != 2 && userInput != 3) {
-                invalid();
-                System.out.println("Please pick from the list available\n");
-                userInput = -1;
-            }
-        } while (userInput == -1);
+        int userInput;
+        String newOptionSelection = Casino.prompt("\n Please select from the following: [1] Yes , [2] No, Go Back To Casino Menu , [3] Exit Game : ", "[1-3]", "[INVALID INPUT] Please select from the following options.");
+        userInput = Integer.parseInt(newOptionSelection);
+//        do {
+//            try {
+//                System.out.print("Please select: [1] Yes , [2] No, Go Back To Casino Menu , [3] Exit Game : ");
+//                userInput = Integer.parseInt(scan.nextLine());
+//            } catch (Exception e) {
+//                userInput = -1;
+//            }
+//            if (userInput != 1 && userInput != 2 && userInput != 3) {
+//                invalid();
+//                System.out.println("Please pick from the list available\n");
+//                userInput = -1;
+//            }
+//        } while (userInput == -1);
         switch (userInput) {
             case 1:
                 initializeGame();
