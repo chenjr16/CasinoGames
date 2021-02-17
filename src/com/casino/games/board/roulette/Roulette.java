@@ -2,6 +2,7 @@ package com.casino.games.board.roulette;
 
 import com.casino.games.CasinoGames;
 import com.casino.games.Playable;
+import com.casino.games.machines.slot.SlotMachine;
 import com.casino.player.Dealer;
 import com.casino.player.Player;
 
@@ -16,6 +17,7 @@ public class Roulette extends CasinoGames {
     private int winningNumber;
     private boolean winResult;
     private int userInput;
+    static double ROULETTE_MINIMUM = 100.0;
 
     //METHODS
     @Override
@@ -25,7 +27,18 @@ public class Roulette extends CasinoGames {
 
     @Override
     public Playable isPlayable(Player player, double bet) {
-        return null;
+        Playable playable;
+        if(player.getBalance() < bet) {
+            playable = new Playable("Roulette", "You don't have enough to play", false, new Roulette());
+        }
+        else if (bet < ROULETTE_MINIMUM) {
+            playable = new Playable("Roulette", "Too little money, minimal bet is: " + ROULETTE_MINIMUM, false, new Roulette());
+        }
+        else{
+            playable = new Playable("Roulette", "Can play", true, new Roulette());
+        }
+
+        return playable;
     }
 
     @Override

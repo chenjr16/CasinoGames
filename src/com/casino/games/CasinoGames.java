@@ -1,5 +1,6 @@
 package com.casino.games;
 
+import com.casino.games.board.roulette.Roulette;
 import com.casino.player.Dealer;
 import com.casino.games.cards.baccarat.Baccarat;
 import com.casino.games.machines.slot.SlotMachine;
@@ -22,6 +23,7 @@ public abstract class CasinoGames implements GameInterface {
         // then return the list to the casino.
         playableGames.add(new Baccarat().isPlayable(player, bet));
         playableGames.add(new SlotMachine().isPlayable(player, bet));
+        playableGames.add(new Roulette().isPlayable(player, bet));
         return playableGames;
     }
 
