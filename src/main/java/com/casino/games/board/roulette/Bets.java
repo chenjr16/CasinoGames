@@ -32,7 +32,7 @@ class Bets {
             } catch (Exception e) {
                 betSelected = 0;
             }
-            if (betSelected > 0 && betSelected < 11) {
+            if (betSelected > 0 && betSelected < 8) {
                 return betSelected;
             } else {
                 roulette.invalid();
