@@ -342,19 +342,18 @@ public class Roulette extends CasinoGames {
     }
 
 
-    public void didPlayerWin(boolean win){
-        if(win){
-            System.out.println("\n\t\t   Congrats, you won!");
-            System.out.print("\tYou just won ");
+    public void didPlayerWin(boolean win) {
+        if (win) {
+            System.out.println("\n\t\t\t   Congrats, you won!");
+            System.out.print("\t\tYou just won ");
             //Create addition/deductions logic
-        }
-        else{
-            System.out.println("\n\t\t   I'm sorry, you lost!");
-            System.out.print("\tYou just lost ");
+        } else {
+            System.out.println("\n\t\t\t   I'm sorry, you lost!");
+            System.out.print("\t\tYou just lost ");
             //Create addition/deductions logic
         }
         System.out.println("[BET AMOUNT] chips!");
-        System.out.println("\n\t\tYou now have [CURRENT AMOUNT]");
+        System.out.println("\t\t  You now have [CURRENT AMOUNT]");
     }
 
     public int getWinningNumber() {
