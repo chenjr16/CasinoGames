@@ -197,10 +197,35 @@ public class Roulette extends CasinoGames {
         }
     }
 
-    //TODO
-    public void lowOrHigh() {
-        System.out.println("TODO");
-        bets.playBetType(bets.selectBetType());
+    //DONE
+    public boolean lowOrHigh() {
+        clearConsole();
+        int userInput;
+        System.out.println("\n\t\tLows or Highs");
+        table.displayRouletteTable();
+        System.out.println("\n1)\tLow [1 - 18]");
+        System.out.println("2)\tHigh [19 - 36]\n");
+        do {
+            try {
+                System.out.print("Please select: [1] Lows or [2] Highs  ");
+                userInput = Integer.parseInt(scan.nextLine());
+            } catch (Exception e) {
+                userInput = -1;
+            }
+            if (userInput != 1 && userInput != 2) {
+                invalid();
+                System.out.println("Please pick from the list available\n");
+                userInput = -1;
+            }
+        } while (userInput == -1);
+        if (winningNumber == 0 || winningNumber == 37) {
+            return false;
+        }
+        if (winningNumber < 19 && userInput == 1 || winningNumber > 18 && userInput == 2) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //TODO
