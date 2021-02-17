@@ -124,15 +124,18 @@ public class Roulette extends CasinoGames {
         return false;
     }
 
+    //DONE
     public boolean oddsOrEvens() {
         int userInput;
+        clearConsole();
         System.out.println("\n\t\tODDS/EVENS");
+        table.displayRouletteTable();
         System.out.println("\n1)\tOdds");
         System.out.println("2)\tEvens\n");
         do {
             try {
                 System.out.print("Please select: [1] Odds or [2] Evens  ");
-                userInput = Integer.valueOf(scan.nextLine());
+                userInput = Integer.parseInt(scan.nextLine());
             } catch (Exception e) {
                 userInput = -1;
             }
@@ -258,6 +261,10 @@ public class Roulette extends CasinoGames {
 
     public void invalid() {
         System.out.print("\n[INVALID SELECTION]  ");
+    }
+
+    public void clearConsole() {
+        for (int i = 0; i < 50; ++i) System.out.println("");
     }
 
 }
