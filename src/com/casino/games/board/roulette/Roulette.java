@@ -17,10 +17,10 @@ public class Roulette extends CasinoGames {
     private boolean winResult;
     private int userInput;
 
-
+    //METHODS
     @Override
     public void play(Player player, double bet, Dealer dealer) {
-        initializeGame();
+        welcomeScreen();
     }
 
     @Override
@@ -35,41 +35,93 @@ public class Roulette extends CasinoGames {
 
     @Override
     public void endGame() {
-
+        System.exit(0);
     }
 
-    //BUSINESS METHODS
-    public void welcomeScreen() {            // Will read from file
+
+
+    public void welcomeScreen() {
         System.out.println("                 \t\tMarco Bragado");
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("|                                                         |");
-        System.out.println("|                Welcome to Roulette table!               |");
-        System.out.println("|             You have $XYZ in starting chips.            |");
-        System.out.println("|                  Good Luck and Have Fun!                |");
-        System.out.println("|                                                         |");
-        System.out.println("|                                                         |");
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%&&&&&&&\n");
-        table.displayRouletteTable();
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("|                                                          |");
+        System.out.println("|                Welcome to the Roulette table!            |");
+        System.out.println("|               You have $XYZ in starting chips.           |");
+        System.out.println("|                   Good Luck and Have Fun!                |");
+        System.out.println("|                                                          |");
+        System.out.println("|                                                          |");
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%&&&&&&&%\n");
         System.out.print(" Press ANY KEY and choose which bet you would like to place!\n");
         scan.nextLine();
         initializeGame();
     }
 
     public void initializeGame() {
-        //table.displayRouletteTable();
-        //
-        bets.displayBets();
-
-        Boolean playerResult = bets.playBetType(bets.selectBetType());
-        didPlayerWin(playerResult);
+        clearConsole();
+        winningNumber = getWinningNumber();
+        bets.displayBets();                                     // Display Bets
+        winResult = bets.playBetType(bets.selectBetType());     // User Selects Bets
+        table.spinWheel();                                      // Ball Animation and Winning Number Reveal
+        didPlayerWin(winResult);                                // If true, player won else lost
+        playAgain();
     }
 
 
     //ROULETTE METHODS
-    //TODO
-    public void straight() {
-        System.out.println("TODO");
-        bets.playBetType(bets.selectBetType());
+    //DONE
+    public boolean straight() {
+        int userInput;
+        clearConsole();
+        System.out.println("\n\t\tStraight [1 Number]");
+        table.displayRouletteTable();
+        System.out.println("\n1)\t[0, 00]");
+        System.out.println("2)\t[1 - 36]\n");
+
+        // 1st Screen Selection
+        do {
+            try {
+                System.out.print("\n Please select the number you would like to bet on: 1) => [0, 00]   OR   2) => [1 - 36] : ");
+                userInput = Integer.parseInt(scan.nextLine());
+            } catch (Exception e) {
+                userInput = -1;
+            }
+            if (userInput != 1 && userInput != 2) {
+                invalid();
+                System.out.println("Please pick from the list available\n");
+                userInput = -1;
+            }
+        } while (userInput == -1);
+
+        //2nd Screen Selection
+        if (userInput == 1) {
+            int optionSelection;
+            do {
+                System.out.println("\n1)\t[0]");
+                System.out.println("2)\t[00]\n");
+                System.out.print("\n Please select from the following: 1) => [0]  OR  2) => [00] : ");
+                try {
+                    optionSelection = Integer.parseInt(scan.nextLine());
+                } catch (Exception e) {
+                    optionSelection = -1;
+                }
+                if (optionSelection != 1 && optionSelection != 2) {
+                    invalid();
+                    System.out.println("Please pick from the list available\n");
+                    optionSelection = -1;
+                }
+            } while (optionSelection == -1);
+            if (optionSelection == 1 && winningNumber == 0) {
+                return true;
+            } else {
+                return optionSelection == 2 && winningNumber == 37;
+            }
+        }
+        //3rd Screen Selection
+        if (userInput == 2) {
+            System.out.print("Please select from the following [1 - 36]: ");
+            int numberSelection = Integer.parseInt(scan.nextLine());
+            return numberSelection == winningNumber;
+        }
+        return false;
     }
 
     public boolean oddsOrEvens() {
