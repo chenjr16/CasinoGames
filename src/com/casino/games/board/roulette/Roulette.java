@@ -297,10 +297,48 @@ public class Roulette extends CasinoGames {
         return false;
     }
 
-    //TODO
-    public void street() {
-        System.out.println("TODO");
-        bets.playBetType(bets.selectBetType());
+    ///DONE
+    public boolean street() {
+        clearConsole();
+        System.out.println("\t STREET");
+        table.displayRouletteTable();
+        System.out.println("\nPlease select which row you would like to bet on!\n");
+        System.out.println("Row [1] = 1/2/3");
+        System.out.println("Row [2] = 4/5/6");
+        System.out.println("Row [3] = 7/8/9");
+        System.out.println("Row [4] = 10/11/12");
+        System.out.println("Row [5] = 13/14/15");
+        System.out.println("Row [6] = 16/17/18");
+        System.out.println("Row [7] = 19/20/21");
+        System.out.println("Row [8] = 22/23/24");
+        System.out.println("Row [9] = 25/26/27");
+        System.out.println("Row [10] = 28/29/30");
+        System.out.println("Row [11] = 31/32/33");
+        System.out.println("Row [12] = 34/35/36");
+        do {
+            try {
+                System.out.print("\nWhich Street do you want to bet on? [1-12]: ");
+                userInput = Integer.parseInt(scan.nextLine());
+            } catch (Exception e) {
+                userInput = -1;
+            }
+
+            if (userInput < 1 || userInput > 12) {
+                invalid();
+                System.out.println("Please select from the list.");
+                userInput = -1;
+            }
+        } while (userInput == -1);
+        if (winningNumber == 0 || winningNumber == 37) {
+            return false;
+        }
+        int startingNumber = (userInput - 1) * 3 + 1;
+        for (int i = startingNumber; i < startingNumber + 3; i++) {
+            if (winningNumber == i) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //TODO
