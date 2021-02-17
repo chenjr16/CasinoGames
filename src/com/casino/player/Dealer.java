@@ -5,11 +5,9 @@ public class Dealer extends Player{
     public Dealer() {
         // non-op
     }
-
     public Dealer (String name){
         super();
     }
-
 
     public Dealer (String name, double balance){
         super();

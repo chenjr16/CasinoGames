@@ -39,7 +39,7 @@ public class SlotMachine extends CasinoGames {
     }
 
     @Override
-    public void play(Player player, double bet, Dealer dealer, Casino.CasinoPrompter prompter) {
+    public void play(Player player, double bet, Dealer dealer) {
         this.player = player;
         this.dealer = dealer;
         int random1 = (int) (Math.random() * 23);

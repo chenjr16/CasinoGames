@@ -18,7 +18,7 @@ public class Roulette extends CasinoGames {
 
 
     @Override
-    public void play(Player player, double bet, Dealer dealer, Casino.CasinoPrompter prompter) {
+    public void play(Player player, double bet, Dealer dealer) {
         initializeGame();
     }
 

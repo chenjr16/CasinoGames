@@ -1,8 +1,7 @@
 package com.casino.games;
 
-import com.casino.employees.CasinoBoss;
-import com.casino.employees.Dealer;
 
+import com.casino.player.Dealer;
 import com.casino.player.Player;
 
 import java.util.List;
