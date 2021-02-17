@@ -1,17 +1,28 @@
 package com.casino.games.cards.baccarat;
 
+import com.apps.util.Prompter;
+import com.casino.games.Casino;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
+
 import com.casino.games.cards.baccarat.Baccarat.ResponseKeys;
 import static com.casino.games.cards.baccarat.Baccarat.ResponseKeys.*;
 import com.casino.games.cards.baccarat.ResponsePipeline.Response;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.anyString;
+
 
 public class ResponsePipelineTest {
 
@@ -27,21 +38,20 @@ public class ResponsePipelineTest {
     private Map<ResponseKeys, Response<?>> setUpResponseMap() {
         responseMap = new HashMap<>();
         responseMap.put(PLAY, new ResponsePipeline.Response<>(0));
-        responseMap.put(BET, new ResponsePipeline.Response<>(4000));
+        responseMap.put(BET, new ResponsePipeline.Response<>(4000.0));
         responseMap.put(SIDE_PLAY, new ResponsePipeline.Response<>(Baccarat.SidePlay.NONE));
-        responseMap.put(SIDE_BET, new ResponsePipeline.Response<>(0));
+        responseMap.put(SIDE_BET, new ResponsePipeline.Response<>(0.0));
         responseMap.put(BET_MINIMUM, new ResponsePipeline.Response<>(10.0));
         responseMap.put(PLAYER_BALANCE, new ResponsePipeline.Response<>(50_000.0));
         return responseMap;
     }
 
     @Test
-    public void testGetPlay_shouldReturnResponseMapWithUserInput() {
+    public void testGetPlay_shouldReturnResponseMapWithUserInput() throws Exception {
         Baccarat.Play play = Baccarat.Play.PLAYER;
-        String playString = "PLAYER";
+        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
+        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2));
 
-        InputStream in = new ByteArrayInputStream(playString.getBytes());
-        System.setIn(in);
         responsePipeline.getPlay(responseMap);
 
         assertEquals(play, responseMap.get(PLAY).getResponse());

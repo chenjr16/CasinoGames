@@ -33,7 +33,7 @@ public class Casino {
 
     private void playerCreation() {
         player = new Player();
-        dealer = new Dealer("Casino Dealer");
+        dealer = new Dealer("Casino Dealer", 50_000_000.0);
         String name = prompt("Please enter your name: ", "[a-zA-z]*",
                                                 "\nThat is not a valid name!\n");
         player.setName(name);

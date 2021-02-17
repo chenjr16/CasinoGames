@@ -120,7 +120,7 @@ public class BaccaratDealerTest {
         resultMap.put(PLAYER_THIRD_CARD, new BaccaratDealer.Result<>(8));
         baccaratDealer.bankerDrawIfEligible(resultMap);
 
-        assertSame(threeResult, resultMap.get("bankerTotal"));
+        assertSame(threeResult, resultMap.get(BANKER_TOTAL));
     }
 
     @Test
@@ -140,7 +140,7 @@ public class BaccaratDealerTest {
         resultMap.put(PLAYER_THIRD_CARD, new BaccaratDealer.Result<>(1));
         baccaratDealer.bankerDrawIfEligible(resultMap);
 
-        assertSame(sixResult, resultMap.get("bankerTotal"));
+        assertSame(sixResult, resultMap.get(BANKER_TOTAL));
     }
 
     @Test

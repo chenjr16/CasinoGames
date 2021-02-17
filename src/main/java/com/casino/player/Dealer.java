@@ -6,15 +6,16 @@ public class Dealer extends Player{
         // non-op
     }
     public Dealer (String name){
-        super();
+        super(name);
     }
 
     public Dealer (String name, double balance){
-        super();
+        super(name, balance);
     }
 
     public void moneyTransfer(Player player, Boolean win, double money){
         if(win) {
+            System.out.println(this.getBalance());
             this.setBalance(this.getBalance() - money);
             player.setBalance(player.getBalance() + money);
         }
