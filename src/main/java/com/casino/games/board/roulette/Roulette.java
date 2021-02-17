@@ -10,18 +10,23 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Roulette extends CasinoGames {
-    private final Scanner scan = new Scanner(System.in);
+    private Player player;
+    private Dealer dealer;
     private final Bets bets = new Bets();
     private final Table table = new Table();
     private final Random randomNumber = new Random();
+    private int userInput;
     private int winningNumber;
     private boolean winResult;
-    private int userInput;
+    private int winningModifier;
     static double ROULETTE_MINIMUM = 100.0;
+    private final Scanner scan = new Scanner(System.in);
 
     //METHODS
     @Override
     public void play(Player player, double bet, Dealer dealer) {
+        this.player = player;
+        this.dealer = dealer;
         welcomeScreen();
     }
 
@@ -41,7 +46,6 @@ public class Roulette extends CasinoGames {
 
     @Override
     public void distributeMoney() {
-
     }
 
     @Override
@@ -59,18 +63,21 @@ public class Roulette extends CasinoGames {
         System.out.println("|                                                          |");
         System.out.println("|                                                          |");
         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%&&&&&&&%\n");
-        System.out.print(" Press ANY KEY and choose which bet you would like to place!\n");
+        System.out.print(" Press ENTER and choose which bet you would like to place!\n");
         scan.nextLine();
         initializeGame();
     }
 
     public void initializeGame() {
         clearConsole();
-        winningNumber = getWinningNumber();
         bets.displayBets();                                     // Display Bets
+        getWinningNumber();
+        System.out.println("WINNING: " + winningNumber);
         winResult = bets.playBetType(bets.selectBetType());     // User Selects Bets
         table.spinWheel();                                      // Ball Animation and Winning Number Reveal
+        displayWinningNumber();
         didPlayerWin(winResult);                                // If true, player won else lost
+        distributeMoney();
         playAgain();
     }
 
@@ -89,14 +96,6 @@ public class Roulette extends CasinoGames {
         String newInput = Casino.prompt("\n Please select the number you would like to bet on: 1) => [0, 00]   OR   2) => [1 - 36] : ", "[1-2]", "That's not a valid input.");
         userInput = Integer.parseInt(newInput);
 
-//        do {
-//            if (userInput != 1 && userInput != 2) {
-//                invalid();
-//                System.out.println("Please pick from the list available\n");
-//                userInput = -1;
-//            }
-//        } while (userInput == -1);
-
         //2nd Screen Selection
         if (userInput == 1) {
             int optionSelection;
@@ -104,20 +103,7 @@ public class Roulette extends CasinoGames {
             System.out.println("2)\t[00]\n");
             String newOptionSelection = Casino.prompt("\n Please select from the following: 1) => [0]  OR  2) => [00] : ", "[1-2]", "[INVALID INPUT] Please select from the following options.");
             optionSelection = Integer.parseInt(newOptionSelection);
-//            do {
-//
-//                System.out.print("\n Please select from the following: 1) => [0]  OR  2) => [00] : ");
-//                try {
-//                    optionSelection = Integer.parseInt(scan.nextLine());
-//                } catch (Exception e) {
-//                    optionSelection = -1;
-//                }
-//                if (optionSelection != 1 && optionSelection != 2) {
-//                    invalid();
-//                    System.out.println("Please pick from the list available\n");
-//                    optionSelection = -1;
-//                }
-//            } while (optionSelection == -1);
+
             if (optionSelection == 1 && winningNumber == 0) {
                 return true;
             } else {
@@ -147,26 +133,15 @@ public class Roulette extends CasinoGames {
 
         String newOptionSelection = Casino.prompt("\n Please select from the following: 1) Odds  OR  2) Evens : ", "[1-2]", "[INVALID INPUT] Please select from the following options.");
         userInput = Integer.parseInt(newOptionSelection);
-
-//        do {
-//            try {
-//                System.out.print("Please select: [1] Odds or [2] Evens  ");
-//                userInput = Integer.parseInt(scan.nextLine());
-//            } catch (Exception e) {
-//                userInput = -1;
-//            }
-//            if (userInput != 1 && userInput != 2) {
-//                invalid();
-//                System.out.println("Please pick from the list available\n");
-//                userInput = -1;
-//            }
-//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
+            System.out.println("WINNING: " + winningNumber);
             return false;
         }
         if ((winningNumber % 2 == 0 && userInput == 2) || (winningNumber % 2 == 1 && userInput == 1)) {
+            System.out.println("WINNING: " + winningNumber);
             return true;
         } else {
+            System.out.println("WINNING: " + winningNumber);
             return false;
         }
     }
@@ -183,20 +158,6 @@ public class Roulette extends CasinoGames {
 
         String newOptionSelection = Casino.prompt("\n Please select from the following: 1) Red  OR  2) Black : ", "[1-2]", "[INVALID INPUT] Please select from the following options.");
         userInput = Integer.parseInt(newOptionSelection);
-
-//        do {
-//            try {
-//                System.out.print("Please select: [1] Red or [2] Black  ");
-//                userInput = Integer.parseInt(scan.nextLine());
-//            } catch (Exception e) {
-//                userInput = -1;
-//            }
-//            if (userInput != 1 && userInput != 2) {
-//                invalid();
-//                System.out.println("Please pick from the list available\n");
-//                userInput = -1;
-//            }
-//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
             return false;
         }
@@ -216,19 +177,6 @@ public class Roulette extends CasinoGames {
         System.out.println("2)\tHigh [19 - 36]\n");
         String newOptionSelection = Casino.prompt("\n Please select from the following: 1) Lows  OR  2) Highs : ", "[1-2]", "[INVALID INPUT] Please select from the following options.");
         userInput = Integer.parseInt(newOptionSelection);
-//        do {
-//            try {
-//                System.out.print("Please select: [1] Lows or [2] Highs  ");
-//                userInput = Integer.parseInt(scan.nextLine());
-//            } catch (Exception e) {
-//                userInput = -1;
-//            }
-//            if (userInput != 1 && userInput != 2) {
-//                invalid();
-//                System.out.println("Please pick from the list available\n");
-//                userInput = -1;
-//            }
-//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
             return false;
         }
@@ -246,20 +194,6 @@ public class Roulette extends CasinoGames {
 
         String newOptionSelection = Casino.prompt("\n Please select from the following: [1] 1-12 , [2] 13-24 , [3] 25-36 : ", "[1-3]", "[INVALID INPUT] Please select from the following options.");
         userInput = Integer.parseInt(newOptionSelection);
-
-//        do {
-//            try {
-//                System.out.print("Please select: [1] 1-12 , [2] 13-24 , [3] 25-36 : ");
-//                userInput = Integer.parseInt(scan.nextLine());
-//            } catch (Exception e) {
-//                userInput = -1;
-//            }
-//            if (userInput != 1 && userInput != 2 && userInput != 3) {
-//                invalid();
-//                System.out.println("Please pick from the list available\n");
-//                userInput = -1;
-//            }
-//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
             System.out.println("lost");
             return false;
@@ -285,20 +219,6 @@ public class Roulette extends CasinoGames {
 
         String newOptionSelection = Casino.prompt("\n Please select from the following: [1] 1st Column , [2] 2nd Column , [3] 3rd Column : ", "[1-3]", "[INVALID INPUT] Please select from the following options.");
         userInput = Integer.parseInt(newOptionSelection);
-
-//        do {
-//            try {
-//                System.out.print("Please select: [1] 1st Column , [2] 2nd Column , [3] 3rd Column : ");
-//                userInput = Integer.parseInt(scan.nextLine());
-//            } catch (Exception e) {
-//                userInput = -1;
-//            }
-//            if (userInput != 1 && userInput != 2 && userInput != 3) {
-//                invalid();
-//                System.out.println("Please pick from the list available\n");
-//                userInput = -1;
-//            }
-//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
             return false;
         }
@@ -333,23 +253,8 @@ public class Roulette extends CasinoGames {
         System.out.println("Row [12] = 34/35/36");
 
         int userInput;
-        String newOptionSelection = Casino.prompt("\n Please select from the following: [1 - 12] 3rd Column : ", "[1-12]", "[INVALID INPUT] Please select from the following options.");
+        String newOptionSelection = Casino.prompt("\n Please select from the following: [1 - 12]: ", "1[0-2]|[1-9]", "[INVALID INPUT] Please select from the following options.");
         userInput = Integer.parseInt(newOptionSelection);
-
-//        do {
-//            try {
-//                System.out.print("\nWhich Street do you want to bet on? [1-12]: ");
-//                userInput = Integer.parseInt(scan.nextLine());
-//            } catch (Exception e) {
-//                userInput = -1;
-//            }
-//
-//            if (userInput < 1 || userInput > 12) {
-//                invalid();
-//                System.out.println("Please select from the list.");
-//                userInput = -1;
-//            }
-//        } while (userInput == -1);
         if (winningNumber == 0 || winningNumber == 37) {
             return false;
         }
@@ -362,7 +267,6 @@ public class Roulette extends CasinoGames {
         }
         return false;
     }
-
 
     public void didPlayerWin(boolean win) {
         if (win) {
@@ -386,32 +290,40 @@ public class Roulette extends CasinoGames {
         int userInput;
         String newOptionSelection = Casino.prompt("\n Please select from the following: [1] Yes , [2] No, Go Back To Casino Menu , [3] Exit Game : ", "[1-3]", "[INVALID INPUT] Please select from the following options.");
         userInput = Integer.parseInt(newOptionSelection);
-//        do {
-//            try {
-//                System.out.print("Please select: [1] Yes , [2] No, Go Back To Casino Menu , [3] Exit Game : ");
-//                userInput = Integer.parseInt(scan.nextLine());
-//            } catch (Exception e) {
-//                userInput = -1;
-//            }
-//            if (userInput != 1 && userInput != 2 && userInput != 3) {
-//                invalid();
-//                System.out.println("Please pick from the list available\n");
-//                userInput = -1;
-//            }
-//        } while (userInput == -1);
         switch (userInput) {
             case 1:
+                String betInput = Casino.prompt("Please enter your bet: ", "[0-9]*\\.?[0-9]*", "\nThat is " +
+                        "not a valid bet!\n");
                 initializeGame();
                 break;
             case 2:
-                System.out.println("Thank you for stopping By!");
-                System.out.println("Please press ANY KEY to return to the Main Menu");
-                scan.nextLine();
-                initializeGame();
-                break;
+                Casino.prompt("Please type in 'select game' to go back to game menu", " ", "Invalid input");
             case 3:
+                System.out.println("\nThank you for playing!");
                 endGame();
         }
+    }
+
+    public void displayWinningNumber(){
+        String winningNumberString = String.valueOf(winningNumber);
+//        System.out.println("\t\t\t\t\t\t " + winningNumberString);    <= will use for debugging when number is not displayed in result box.
+        System.out.println("\t\t\t  **************");
+        System.out.print("\t\t\t  the number ");
+        if (winningNumber == 0 || winningNumber == 37) {
+            System.out.println(Table.ANSI_GREEN_BACKGROUND + Table.ANSI_BLACK + winningNumberString + Table.ANSI_RESET);
+        } else {
+            for (int i = 0; i < table.redNumbers.length; i++) {
+                if (Integer.parseInt(winningNumberString) == table.redNumbers[i]) {
+                    System.out.println(Table.ANSI_RED_BACKGROUND + Table.ANSI_BLACK + winningNumberString + Table.ANSI_RESET);
+                }
+            }
+            for (int i = 0; i < table.blackNumbers.length; i++) {
+                if (Integer.parseInt(winningNumberString) == table.blackNumbers[i]) {
+                    System.out.println(Table.ANSI_WHITE_BACKGROUND + Table.ANSI_BLACK + winningNumberString + Table.ANSI_RESET);
+                }
+            }
+        }
+        System.out.println("\t\t\t  **************");
     }
 
     public int getWinningNumber() {

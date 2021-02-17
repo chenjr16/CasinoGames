@@ -12,9 +12,9 @@ class Table {
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
     // SOURCE: https://www.youtube.com/watch?v=w-9ZTeO7q_E || 2D Array with Mike Dane
-    public static int[][] rouletteTableLayout = {{1,2,3}, {4,5,6}, {7,8,9}, {10,11,12}, {13,14,15}, {16,17,18}, {19,20,21}, {22,23,24}, {25,26,27}, {28,29,30}, {31,32,33}, {34,35,36} };
-    public int[] redNumbers = { 1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36 };
-    public int[] blackNumbers = { 2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35 };
+    public static int[][] rouletteTableLayout = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}, {13, 14, 15}, {16, 17, 18}, {19, 20, 21}, {22, 23, 24}, {25, 26, 27}, {28, 29, 30}, {31, 32, 33}, {34, 35, 36}};
+    public int[] redNumbers = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36};
+    public int[] blackNumbers = {2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35};
 
 
     public void displayRouletteTable() {
@@ -31,8 +31,7 @@ class Table {
         }
     }
 
-
-    // "Spins" the roulette wheel, spinning the ball and eventually revealing the number it landed on
+    // "Spins" the roulette wheel and displays ball animation
     public void spinWheel() {
         roulette.clearConsole();
         System.out.println("\nThe wheel is spinning and the ball is rolling!! ");
@@ -70,23 +69,5 @@ class Table {
                 e.printStackTrace();
             }
         }
-//        System.out.println("\t\t\t\t\t\t " + winningNumberString);    <= will use for debugging when number is not displayed in result box.
-        System.out.println("\t\t\t  **************");
-        System.out.print("\t\t\t  the number ");
-        if (roulette.getWinningNumber() == 0 || roulette.getWinningNumber() == 37) {
-            System.out.println(ANSI_GREEN_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
-        } else {
-            for (int i = 0; i < redNumbers.length; i++) {
-                if (Integer.valueOf(winningNumberString) == redNumbers[i]) {
-                    System.out.println(ANSI_RED_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
-                }
-            }
-            for (int i = 0; i < blackNumbers.length; i++) {
-                if (Integer.valueOf(winningNumberString) == blackNumbers[i]) {
-                    System.out.println(ANSI_WHITE_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
-                }
-            }
-        }
-        System.out.println("\t\t\t  **************");
     }
 }
