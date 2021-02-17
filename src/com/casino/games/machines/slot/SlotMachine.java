@@ -1,14 +1,12 @@
 package com.casino.games.machines.slot;
 
-
 import com.casino.player.Dealer;
 import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
 import com.casino.games.Playable;
 import com.casino.player.Player;
-
 import java.util.Arrays;
-import java.util.List;
+
 
 public class SlotMachine extends CasinoGames {
     static double SLOT_MINIMUM = 0.25;
@@ -58,9 +56,12 @@ public class SlotMachine extends CasinoGames {
 
     @Override
     public void distributeMoney() {
-        player.setBalance(player.getBalance() + gameResult);
+        if (gameResult > 0) {
+            dealer.moneyTransfer(player, true, gameResult);
+        }else{
+            dealer.moneyTransfer(player, false, -gameResult);
+        }
         System.out.println("Player's new balance is: " + player.getBalance());
-        dealer.setBalance(dealer.getBalance() - gameResult);
         System.out.println("Dealer's new balance is: " + dealer.getBalance());
         endGame();
     }
@@ -75,10 +76,7 @@ public class SlotMachine extends CasinoGames {
             play(player, betAgain, dealer);
         }
         else {
-
-            //For Nick
-            Casino.prompt("Please type in 'select game' to go back to game menu", " ", "Invalid input");
-
+            Casino.prompt("Please type in 'select game' to go back to game menu, or type 'quit' to leave our casino: ", " ", "Invalid input");
         }
     }
 
