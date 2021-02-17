@@ -356,9 +356,42 @@ public class Roulette extends CasinoGames {
         System.out.println("\t\t  You now have [CURRENT AMOUNT]");
     }
 
+    public void playAgain() {
+        System.out.println("\n\n\t\tWould you like to play again?");
+        System.out.println("\n1)\tYes");
+        System.out.println("2)\tNo, Go Back TO Main Casino Menu");
+        System.out.println("3)\tExit Game\n");
+        do {
+            try {
+                System.out.print("Please select: [1] Yes , [2] No, Go Back To Casino Menu , [3] Exit Game : ");
+                userInput = Integer.parseInt(scan.nextLine());
+            } catch (Exception e) {
+                userInput = -1;
+            }
+            if (userInput != 1 && userInput != 2 && userInput != 3) {
+                invalid();
+                System.out.println("Please pick from the list available\n");
+                userInput = -1;
+            }
+        } while (userInput == -1);
+        switch (userInput) {
+            case 1:
+                initializeGame();
+                break;
+            case 2:
+                System.out.println("Thank you for stopping By!");
+                System.out.println("Please press ANY KEY to return to the Main Menu");
+                scan.nextLine();
+                initializeGame();
+                break;
+            case 3:
+                endGame();
+        }
+    }
+
     public int getWinningNumber() {
-        int winningNumber = (int) (Math.random() * 36);
-        return winningNumber;
+        this.winningNumber = randomNumber.nextInt(38);
+        return this.winningNumber;
     }
 
     public void invalid() {
