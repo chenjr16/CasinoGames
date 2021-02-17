@@ -341,23 +341,6 @@ public class Roulette extends CasinoGames {
         return false;
     }
 
-    //TODO
-    public void sixNumbers() {
-        System.out.println("TODO");
-        bets.playBetType(bets.selectBetType());
-    }
-
-    //TODO
-    public void split() {
-        System.out.println("TODO");
-        bets.playBetType(bets.selectBetType());
-    }
-
-    //TODO
-    public void corner() {
-        System.out.println("TODO");
-        bets.playBetType(bets.selectBetType());
-    }
 
     public void didPlayerWin(boolean win){
         if(win){
