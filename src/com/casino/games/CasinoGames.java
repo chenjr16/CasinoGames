@@ -13,7 +13,7 @@ public abstract class CasinoGames implements GameInterface {
 
     }
 
-    public abstract void play(Player player, double bet, Dealer dealer, Casino.CasinoPrompter prompter);
+    public abstract void play(Player player, double bet, Dealer dealer);
 
     public static List<Playable> games(Player player, double bet) {
         List<Playable> playableGames = new ArrayList<>();

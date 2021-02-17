@@ -3,6 +3,7 @@ package com.casino.games.cards.baccarat;
 import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
 import com.casino.employees.Dealer;
+import com.casino.games.CasinoPrompter;
 import com.casino.games.Playable;
 import com.casino.player.Player;
 import com.casino.games.cards.baccarat.ResponsePipeline.Response;
@@ -17,7 +18,6 @@ public final class Baccarat extends CasinoGames {
     private final Map<String, Result<?>> resultMap = new HashMap<>();
     private final ResponsePipeline responsePipeline = new ResponsePipeline();
     private final BaccaratDealer baccaratDealer = new BaccaratDealer();
-    private Casino.CasinoPrompter prompter;
 
     public Baccarat() {
         createResultMap();
@@ -33,7 +33,7 @@ public final class Baccarat extends CasinoGames {
         // Needs access to scanner.
 
         // {"play" => Banker, "playBet" => 50.0, "sidePlay" => PAIR, "sidePlayBet" => 100.0}
-        responsePipeline.start(getResponseMap(), prompter);
+        responsePipeline.start(getResponseMap());
         // Give a template map to the Dealer and let them fill it out with the results. Game logic here.
 
         //{"playerCard" => 5, "playerTotal" => 8, "bankerCard" => 6, "bankerTotal" => 6,
@@ -154,11 +154,10 @@ public final class Baccarat extends CasinoGames {
     }
 
     @Override
-    public void play(Player player, double bet, Dealer dealer, Casino.CasinoPrompter prompter) {
+    public void play(Player player, double bet, Dealer dealer) {
         setDealer(dealer);
         setPlayer(player);
         setBet(bet);
-        this.prompter = prompter;
         System.out.println("Welcome to Nick's Baccarat.");
         playBaccarat();
     }
