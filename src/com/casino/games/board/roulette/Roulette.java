@@ -1,20 +1,21 @@
 package com.casino.games.board.roulette;
 
-import com.casino.player.Dealer;
-import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
 import com.casino.games.Playable;
+import com.casino.player.Dealer;
 import com.casino.player.Player;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Roulette extends CasinoGames {
-    Scanner scan = new Scanner(System.in);
-    Bets bets = new Bets();
-    Table table = new Table();
-    int winningNumber = getWinningNumber();
-    boolean playerWon = true;
-    int userInput;
+    private final Scanner scan = new Scanner(System.in);
+    private final Bets bets = new Bets();
+    private final Table table = new Table();
+    private final Random randomNumber = new Random();
+    private int winningNumber;
+    private boolean winResult;
+    private int userInput;
 
 
     @Override
