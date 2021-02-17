@@ -8,19 +8,14 @@ import com.casino.games.Playable;
 import com.casino.player.Player;
 
 import java.util.Arrays;
-
-//author Junru Chen
+import java.util.List;
 
 public class SlotMachine extends CasinoGames {
-    static double SLOT_MINIMUM = 5.0;
-
+    static double SLOT_MINIMUM = 0.25;
+    private double betAgain;
     private Player player;
     private Dealer dealer;
     private double gameResult;
-
-    public SlotMachine(){
-
-    }
 
     @Override
     public Playable isPlayable(Player player, double bet) {
@@ -57,6 +52,7 @@ public class SlotMachine extends CasinoGames {
         } else {
             System.out.println("Sorry, you didn't win anything, please try again next time!");
         }
+        distributeMoney();
 
     }
 
@@ -66,12 +62,24 @@ public class SlotMachine extends CasinoGames {
         System.out.println("Player's new balance is: " + player.getBalance());
         dealer.setBalance(dealer.getBalance() - gameResult);
         System.out.println("Dealer's new balance is: " + dealer.getBalance());
-
+        endGame();
     }
 
     @Override
     public void endGame() {
+        String input = Casino.prompt("Do you want to play again? ", "[y|Y]es|[n|N]o", "That's not a valid response.");
+        if (input.equalsIgnoreCase("yes")) {
+            String betInput = Casino.prompt("Please enter your bet: ", "[0-9]*\\.?[0-9]*", "\nThat is " +
+                    "not a valid bet!\n");
+            betAgain = Double.parseDouble(betInput);
+            play(player, betAgain, dealer);
+        }
+        else {
 
+            //For Nick
+            Casino.prompt("Please type in 'select game' to go back to game menu", " ", "Invalid input");
+
+        }
     }
 
     public double getGameResult(double bet, String[] result) {
@@ -143,7 +151,7 @@ public class SlotMachine extends CasinoGames {
                 }
             }
             else{
-                System.out.print(reel1[order1] + " " + reel2[order2] + " " + reel3[order3 - i] + "\n");
+                System.out.print(reel1[order1] + " " + reel2[order2] + " " + reel3[order3] + "\n");
                 try {
                     Thread.sleep(750);
                 } catch (InterruptedException ex) {

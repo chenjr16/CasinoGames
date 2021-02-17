@@ -6,8 +6,8 @@ import static com.casino.games.board.roulette.Table.roulette;
 
 class Bets {
     Scanner scan = new Scanner(System.in);
-    public void displayBets(){
-        Roulette roulette = new Roulette();
+
+    public void displayBets() {
         System.out.println("\nHere are the Bets you can make and their payouts:");
         System.out.println(" ");
         System.out.println("\n#\t\tBET TYPE\t\tPAYOUT");
@@ -19,36 +19,24 @@ class Bets {
         System.out.println("5)\t\tDozens\t\t\t2:1");
         System.out.println("6)\t\tColumns\t\t\t2:1");
         System.out.println("7)\t\tStreet\t\t\t11:1");
-        System.out.println("8)\t\t6 Numbers\t\t5:1");
-        System.out.println("9)\t\tSplit\t\t\t17:1");
-        System.out.print("10)\t\tCorner\t\t\t8:1");
         System.out.println("\n");
-        System.out.println("Please select a type of bet you would like to place [1 - 10]");
+        System.out.println("Please select a type of bet you would like to place [1 - 7]\n");
     }
 
-    public int selectBetType(){
+    public int selectBetType() {
         int betSelected;
-        do
-        {
-            System.out.printf("\nWhat kind of bet would you like to make [1-10]: ");
-
-            try
-            {
-                betSelected = Integer.valueOf(scan.nextLine());
-            }
-            catch (Exception e)
-            {
+        do {
+            System.out.print("\nWhat kind of bet would you like to make [1-7]: ");
+            try {
+                betSelected = Integer.parseInt(scan.nextLine());
+            } catch (Exception e) {
                 betSelected = 0;
             }
-
-            if (betSelected > 0 && betSelected < 11)
-            {
+            if (betSelected > 0 && betSelected < 11) {
                 return betSelected;
-            }
-            else
-            {
+            } else {
                 roulette.invalid();
-                System.out.print("Please select from the list: [1 - 10]\n");
+                System.out.print("Please select from the list: [1 - 7]\n");
                 betSelected = 0;
             }
         } while (betSelected == 0);
@@ -56,36 +44,30 @@ class Bets {
     }
 
     public boolean playBetType(int betType) {
+        boolean result = false;
         switch (betType) {
+            case 1:
+                result = roulette.straight();
+                break;
             case 2:
-                 return roulette.oddsOrEvens();
-
-                //break;
+                result = roulette.oddsOrEvens();
+                break;
             case 3:
-                return true;
-//            case 4:
-            //some change
-//                roulette.lowOrHigh();
-//                break;
-//            case 5:
-//                roulette.dozens();
-//                break;
-//            case 6:
-//                roulette.columns();
-//                break;
-//            case 7:
-//                roulette.street();
-//                break;
-//            case 8:
-//                roulette.sixNumbers();
-//                break;
-//            case 9:
-//                roulette.split();
-//                break;
-//            case 10:
-//                roulette.corner();
-//                break;
+                result = roulette.redOrBlack();
+                break;
+            case 4:
+                result = roulette.lowOrHigh();
+                break;
+            case 5:
+                result = roulette.dozen();
+                break;
+            case 6:
+                result = roulette.columns();
+                break;
+            case 7:
+                result = roulette.street();
+                break;
         }
-        return false;
+        return result;
     }
 }
