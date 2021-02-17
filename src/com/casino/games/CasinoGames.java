@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class CasinoGames implements GameInterface {
     //General Methods
-    public void playAgain(){
+    public void playAgain() {
 
     }
 

@@ -14,8 +14,6 @@ public class Casino {
     double bet;
     CasinoGames game;
 
-
-
     public void start() {
         playerCreation();
         betCreation();
@@ -76,7 +74,7 @@ public class Casino {
     }
 
     public static String prompt(String message, String regex, String errorMessage) {
-        String customRegex = "" + regex;
+        String customRegex = "bet|balance|quit|setup|select game|" + regex;
         String input = casinoPrompter.getPrompt(message, customRegex, errorMessage);
         // check for global commands
         switch(input) {

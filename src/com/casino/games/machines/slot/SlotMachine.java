@@ -12,7 +12,7 @@ import java.util.Arrays;
 //author Junru Chen
 
 public class SlotMachine extends CasinoGames {
-    static double SLOT_MINIMUM = 5.0;
+    static double SLOT_MINIMUM = 0.25;
 
     private Player player;
     private Dealer dealer;
