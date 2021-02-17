@@ -72,17 +72,18 @@ class Table {
         }
 //        System.out.println("\t\t\t\t\t\t " + winningNumberString);    <= will use for debugging when number is not displayed in result box.
         System.out.println("\t\t\t  **************");
+        System.out.print("\t\t\t  the number ");
         if (roulette.getWinningNumber() == 0 || roulette.getWinningNumber() == 37) {
-            System.out.println("\t\t\t  the number " + ANSI_GREEN_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
+            System.out.println(ANSI_GREEN_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
         } else {
             for (int i = 0; i < redNumbers.length; i++) {
                 if (Integer.valueOf(winningNumberString) == redNumbers[i]) {
-                    System.out.println("\t\t\t  the number " + ANSI_RED_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
+                    System.out.println(ANSI_RED_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
                 }
             }
             for (int i = 0; i < blackNumbers.length; i++) {
                 if (Integer.valueOf(winningNumberString) == blackNumbers[i]) {
-                    System.out.println("\t\t\t  the number " + ANSI_WHITE_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
+                    System.out.println(ANSI_WHITE_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
                 }
             }
         }
