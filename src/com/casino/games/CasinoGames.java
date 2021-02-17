@@ -1,7 +1,8 @@
 package com.casino.games;
 
-import com.casino.employees.Dealer;
+import com.casino.player.Dealer;
 import com.casino.games.cards.baccarat.Baccarat;
+import com.casino.games.machines.slot.SlotMachine;
 import com.casino.player.Player;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public abstract class CasinoGames implements GameInterface {
         // add each game's Playable to the list by calling their isPlayable method.
         // then return the list to the casino.
         playableGames.add(new Baccarat().isPlayable(player, bet));
+        playableGames.add(new SlotMachine().isPlayable(player, bet));
         return playableGames;
     }
 

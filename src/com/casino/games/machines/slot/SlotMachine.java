@@ -1,8 +1,7 @@
 package com.casino.games.machines.slot;
 
 
-import com.apps.util.Prompter;
-import com.casino.employees.Dealer;
+import com.casino.player.Dealer;
 import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
 import com.casino.games.Playable;
@@ -14,35 +13,39 @@ import java.util.Arrays;
 
 public class SlotMachine extends CasinoGames {
     static double SLOT_MINIMUM = 5.0;
-    Prompter prompter;
 
-    //TODO make private
     private Player player;
     private Dealer dealer;
-    private double bet;
-     double gameResult;
-    
+    private double gameResult;
+
+    public SlotMachine(){
+
+    }
 
     @Override
     public Playable isPlayable(Player player, double bet) {
-        Playable playable = null;
-        boolean result = true;
-        payoutTable();
-        if (player.getBalance() < bet || bet < SLOT_MINIMUM) {
-            result = false;
+        Playable playable;
+        if(player.getBalance() < bet) {
+            playable = new Playable("SlotMachine", "You don't have enough to play", false, new SlotMachine());
         }
-        return null;
+        else if (bet < SLOT_MINIMUM) {
+            playable = new Playable("SlotMachine", "Too little money, minimal bet is: " + SLOT_MINIMUM, false, new SlotMachine());
+        }
+        else{
+            playable = new Playable("SlotMachine", "Can play", true, new SlotMachine());
+        }
+
+        return playable;
     }
 
     @Override
     public void play(Player player, double bet, Dealer dealer, Casino.CasinoPrompter prompter) {
         this.player = player;
         this.dealer = dealer;
-        this.bet = bet;
         int random1 = (int) (Math.random() * 23);
         int random2 = (int) (Math.random() * 23);
         int random3 = (int) (Math.random() * 23);
-
+        payoutTable();
         String[] result = new String[]{reel1[random1], reel2[random2], reel3[random3]};
         animate(random1, random2, random3);
         System.out.println("Your spin result is: " + Arrays.toString(result));

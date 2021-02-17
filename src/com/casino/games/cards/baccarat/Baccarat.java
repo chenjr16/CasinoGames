@@ -2,8 +2,10 @@ package com.casino.games.cards.baccarat;
 
 import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
+
 import com.casino.employees.Dealer;
 import com.casino.games.CasinoPrompter;
+
 import com.casino.games.Playable;
 import com.casino.player.Player;
 import com.casino.games.cards.baccarat.ResponsePipeline.Response;

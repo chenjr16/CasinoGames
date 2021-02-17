@@ -2,6 +2,7 @@ package com.casino.games;
 
 import com.casino.employees.CasinoBoss;
 import com.casino.employees.Dealer;
+
 import com.casino.player.Player;
 
 import java.util.List;
@@ -14,9 +15,6 @@ public class Casino {
     double bet;
     CasinoGames game;
 
-    public Casino() {
-        CasinoBoss casinoBoss = new CasinoBoss(5_000_000.0);
-    }
 
 
     public void start() {
