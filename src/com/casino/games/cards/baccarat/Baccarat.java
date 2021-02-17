@@ -1,15 +1,18 @@
 package com.casino.games.cards.baccarat;
 
-import com.apps.util.Prompter;
+import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
-import com.casino.employees.Dealer;
+
+import com.casino.games.CasinoPrompter;
+
+import com.casino.games.Playable;
+import com.casino.player.Dealer;
 import com.casino.player.Player;
 import com.casino.games.cards.baccarat.ResponsePipeline.Response;
 import com.casino.games.cards.baccarat.BaccaratDealer.Result;
 import java.util.*;
 
 public final class Baccarat extends CasinoGames {
-    private Prompter prompter;
     private Player player;
     private Dealer dealer;
     private double bet;
@@ -57,6 +60,7 @@ public final class Baccarat extends CasinoGames {
         // Compare and see if correct. For Regular Plays.
 
         if(playerPlay.equals(winner)) {
+            System.out.println("You won on " + winner);
             int multiplier = playerPlay.getMultiplier();
             setWinnings(multiplier);
         } else {
@@ -67,9 +71,13 @@ public final class Baccarat extends CasinoGames {
         //  Compare and see if correct. For Side Plays.
 
         if(sidePlay.equals(SidePlay.PAIR) && isPair) {
+            System.out.println("You won on pairs!");
             int multiplier = SidePlay.PAIR.getMultiplier();
             setWinnings(multiplier);
         }
+
+        playBaccarat();
+
     }
 
     // Set the Winners helper for the dishOutWinnings method.
@@ -136,15 +144,24 @@ public final class Baccarat extends CasinoGames {
     // GameInterface overrides
 
     @Override
-    public boolean isPlayable(Player player, double bet, Prompter prompter) {
-        setPlayer(player);
-        this.prompter = prompter;
-        return player.getBalance() >= 10.0;
+    public Playable isPlayable(Player player, double bet) {
+        Playable playable;
+        if(player.getBalance() >= 10.0) {
+            setPlayer(player);
+            playable = new Playable("Baccarat", "Can play", true, new Baccarat());
+        } else {
+            playable = new Playable("Baccarat", "Too little money", false, new Baccarat());
+        }
+        return playable;
     }
 
     @Override
-    public void play(Player player, Dealer dealer, double bet) {
+    public void play(Player player, double bet, Dealer dealer) {
         setDealer(dealer);
+        setPlayer(player);
+        setBet(bet);
+        System.out.println("Welcome to Nick's Baccarat.");
+        playBaccarat();
     }
 
     @Override

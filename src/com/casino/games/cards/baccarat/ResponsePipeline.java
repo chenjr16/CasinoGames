@@ -1,14 +1,15 @@
 package com.casino.games.cards.baccarat;
 
+import com.casino.games.Casino;
+import com.casino.games.CasinoPrompter;
+
 import java.util.Map;
-import java.util.Scanner;
 
 import static com.casino.games.cards.baccarat.utils.Pipe.apply;
 
 final class ResponsePipeline {
 
     void start(Map<String, Response<?>> map) {
-
         apply(map)
                 .pipe(this::getPlay)
                 .pipe(this::getPlayBet)
@@ -19,8 +20,8 @@ final class ResponsePipeline {
 
     Map<String, Response<?>> getPlay(Map<String, Response<?>> map) {
         // {"play" => Banker}
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
+
+        String input = Casino.prompt("BANKER OR PLAYER? ","(BANKER|PLAYER)", "Not a correct choice.");
 
         Baccarat.Play play = Baccarat.Play.valueOf(input);
         map.put("play", new Response<>(play));
@@ -29,8 +30,7 @@ final class ResponsePipeline {
 
     Map<String, Response<?>> getPlayBet(Map<String, Response<?>> map) {
         // {"play" => Banker, "playBet" => 50.0}
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
+        String input = Casino.prompt("How much do you want to bet? ", "\\d+", "Not a valid bet.");
 
         double bet = Double.parseDouble(input);
         map.put("bet", new Response<Double>(bet));
@@ -39,8 +39,7 @@ final class ResponsePipeline {
 
     Map<String, Response<?>> getSidePlay(Map<String, Response<?>> map) {
         // {"play" => Banker, "playBet" => 50.0, "sidePlay" => PAIR}
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
+        String input = Casino.prompt("Bet on Pair? Type PAIR ","(PAIR)", "Not a correct choice.");
 
         Baccarat.SidePlay sidePlay = Baccarat.SidePlay.valueOf(input);
 
@@ -53,8 +52,7 @@ final class ResponsePipeline {
         if(map.get("sidePlay").getResponse().equals(Baccarat.SidePlay.NONE)) {
             return map;
         }
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
+        String input = Casino.prompt("How much do you want to bet on PAIR play? ", "\\d+", "Not a valid bet.");
 
         double sideBet = Double.parseDouble(input);
 
