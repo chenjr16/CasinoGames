@@ -17,51 +17,75 @@ class Table {
     public int[] blackNumbers = { 2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35 };
 
 
-    public void displayRouletteTable(){
-        System.out.print("\t");
-        System.out.print("0");
-        System.out.print(" ");
-        System.out.println("00");
-        for (int i = 0; i < rouletteTableLayout.length; i++)
-        {
-            for (int j = 0; j < rouletteTableLayout[i].length; j++)
-            {
-                System.out.print("" + rouletteTableLayout[i][j] + "\t");
-                System.out.print(" ");
+    public void displayRouletteTable() {
+        System.out.print(" \n\t ");
+        System.out.print(ANSI_GREEN_BACKGROUND + ANSI_BLACK + " 0 " + ANSI_RESET);
+        System.out.println(ANSI_GREEN_BACKGROUND + ANSI_BLACK + " 00" + ANSI_RESET);
+        for (int i = 0; i < rouletteTableLayout.length; i++) {
+
+            for (int j = 0; j < rouletteTableLayout[i].length; j++) {
+                System.out.print("\t" + rouletteTableLayout[i][j] + "");
+                System.out.print("");
             }
-            System.out.println(" ");
+            System.out.println("");
         }
     }
 
 
-    // Rolls the ball and will give the user the winning number
+    // "Spins" the roulette wheel, spinning the ball and eventually revealing the number it landed on
     public void spinWheel() {
-        System.out.println("The wheel is spinning and the ball is rolling!! ");
-        for (int i = 0; i < 5; i ++){
-            try {
-                Thread.sleep(1000);
-                System.out.printf("o ");
-                System.out.printf("O ");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
-        System.out.println("No more bets!");
-        for(int i = 0 ; i <= 2; i ++){
+        roulette.clearConsole();
+        System.out.println("\nThe wheel is spinning and the ball is rolling!! ");
+        for (int i = 0; i < 3; i++) {
             try {
                 Thread.sleep(500);
-                System.out.println("  o");
-                Thread.sleep(500);
-                System.out.println("    o");
-                Thread.sleep(500);
-                System.out.println("  o");
-                Thread.sleep(500);
-                System.out.println("    o");
+                System.out.println(".");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println("It looks like the ball has landed on .... " + roulette.getWinningNumber() );
+        System.out.println("\nNo more bets!");
+        for (int i = 0; i <= 1; i++) {
+            try {
+                Thread.sleep(500);
+                System.out.println("  o");
+                Thread.sleep(500);
+                System.out.println("    o");     // ball rolling animation
+                Thread.sleep(500);
+                System.out.println("  o");
+                Thread.sleep(500);
+                System.out.println("    o");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        String winningNumberString = String.valueOf(roulette.getWinningNumber());
+        System.out.println("\nIt looks like the ball has landed on .... ");
+        System.out.println();
+        for (int i = 0; i <= 3; i++) {
+            try {
+                Thread.sleep(800);
+                System.out.println(".");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+//        System.out.println("\t\t\t\t\t\t " + winningNumberString);    <= will use for debugging when number is not displayed in result box.
+        System.out.println("\t\t\t  **************");
+        if (roulette.getWinningNumber() == 0 || roulette.getWinningNumber() == 37) {
+            System.out.println("\t\t\t  the number " + ANSI_GREEN_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
+        } else {
+            for (int i = 0; i < redNumbers.length; i++) {
+                if (Integer.valueOf(winningNumberString) == redNumbers[i]) {
+                    System.out.println("\t\t\t  the number " + ANSI_RED_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
+                }
+            }
+            for (int i = 0; i < blackNumbers.length; i++) {
+                if (Integer.valueOf(winningNumberString) == blackNumbers[i]) {
+                    System.out.println("\t\t\t  the number " + ANSI_WHITE_BACKGROUND + ANSI_BLACK + winningNumberString + ANSI_RESET);
+                }
+            }
+        }
+        System.out.println("\t\t\t  **************");
     }
 }

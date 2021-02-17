@@ -207,4 +207,7 @@ public class Roulette extends CasinoGames {
         System.out.print("\n[INVALID SELECTION]  ");
     }
 
+    public void clearConsole() {
+        for (int i = 0; i < 50; ++i) System.out.println("");
+    }
 }
