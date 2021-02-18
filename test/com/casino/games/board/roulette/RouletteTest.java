@@ -19,7 +19,6 @@ public class RouletteTest {
     MockedStatic<Casino> staticMocked;
 
 
-
     @Before
     public void setUp(){
         player = new Player("Marco", 50_000);
@@ -31,7 +30,7 @@ public class RouletteTest {
         mockRoulette.play(player,100,dealer);
     }
 
-//    @Test
+    //    @Test
 //    public void
     @Test
     public void getWinningNumber() {
@@ -41,6 +40,7 @@ public class RouletteTest {
 
     @Test
     public void straight_ShouldReturnTrue_WhenWinningNumberEqualUseSelection() {
+
         staticMocked.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(36));
         mockRoulette.setWinningNumber(36);
 
@@ -110,7 +110,7 @@ public class RouletteTest {
     }
 
     @After
-    public void cleanUp(){
+    public void cleanUp() {
         staticMocked.close();
     }
 }
