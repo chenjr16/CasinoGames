@@ -30,6 +30,7 @@ public class SlotMachine extends CasinoGames {
 
     @Override
     public void play(Player player, double bet, Dealer dealer) {
+        System.out.println("running");
         this.player = player;
         this.dealer = dealer;
         int random1 = getRandom23();

@@ -23,6 +23,7 @@ public class SlotMachineConsoleTest {
 
     @Before
     public void setUp() {
+        mockSlot = Mockito.mock(SlotMachine.class);
         casino = new Casino();
         player = new Player("Junru ", 10_000.0);
         dealer = new Dealer("Dealer", 50_000_000.0);
@@ -49,10 +50,11 @@ public class SlotMachineConsoleTest {
     public void distributeMoney_shouldIncreasePlayerBalance_whenManipulatedGetRandom23() {
         SlotMachine mockSlot = Mockito.spy(SlotMachine.class);
         Mockito.when(mockSlot.getRandom23()).thenReturn(1);
+
         MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
         mockSlot.play(player, bet, dealer);
-        assertEquals(10_040, player.getBalance(), 0.001);
+        assertEquals(10_060, player.getBalance(), 0.001);
 
     }
 
