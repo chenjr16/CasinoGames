@@ -5,7 +5,6 @@ import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
 import com.casino.games.Playable;
 import com.casino.player.Player;
-
 import java.util.Arrays;
 
 
@@ -26,7 +25,6 @@ public class SlotMachine extends CasinoGames {
         } else {
             playable = new Playable("SlotMachine", "Can play", true, new SlotMachine());
         }
-
         return playable;
     }
 
@@ -37,27 +35,25 @@ public class SlotMachine extends CasinoGames {
         int random1 = getRandom23();
         int random2 = getRandom23();
         int random3 = getRandom23();
+        System.out.println("Welcome to Slot Machine Game, here's the payout table: ");
         payoutTable();
 
-        String input = Casino.prompt("Welcome to Slot Machine Game, Type [Yes] to start the game, or [No] to return to game menu: ", "[y|Y]es|[n|N]o", "That's not a valid response.");
+        String input = Casino.prompt("Type [Yes] to start the game, or [No] to return to game menu: ", "[y|Y]es|[n|N]o", "That's not a valid response.");
         if (input.equalsIgnoreCase("yes")) {
             String[] result = new String[]{reel1[random1], reel2[random2], reel3[random3]};
-            System.out.println("Started");
             animate(random1, random2, random3);
+            System.out.print(reel1[random1] + " " + reel2[random2] + " " + reel3[random3] + "\n");
             System.out.println("Your spin result is: " + Arrays.toString(result));
-
             gameResult = getGameResult(bet, result);
-
             if (gameResult > 0) {
-                System.out.println("Congratulations, you won:  " + gameResult + " dollars");
+                System.out.println("Congratulations" + player.getName() +", you won:  " + gameResult + " dollars");
             } else {
-                System.out.println("Sorry, you didn't win anything, please try again next time!");
+                System.out.println("Sorry " + player.getName() + ", you didn't win anything, please try again next time!");
             }
             distributeMoney();
         } else {
             Casino.prompt("Please type in [select game] to go back to game menu, or type '[quit] to leave our casino: ", " ", "Invalid input");
         }
-
     }
 
     @Override
@@ -142,7 +138,7 @@ public class SlotMachine extends CasinoGames {
             }
         }
 
-        for (int i = 10; i > 0; i--) {
+        for (int i = 10; i >= 0; i--) {
             if (order3 - i < 0) {
                 order3 = order3 + 22;
             }
@@ -151,17 +147,12 @@ public class SlotMachine extends CasinoGames {
             }
             System.out.print(reel1[order1] + " " + reel2[order2] + " " + reel3[order3 - i] + "\r");
             try {
-                Thread.sleep(800 - i * 50L);
+                Thread.sleep(1000 - i * 50L);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
         }
-        System.out.print(reel1[order1] + " " + reel2[order2] + " " + reel3[order3] + "\n");
-        try {
-            Thread.sleep(750);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
+
     }
 
 

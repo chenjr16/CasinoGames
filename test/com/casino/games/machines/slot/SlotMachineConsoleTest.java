@@ -1,6 +1,5 @@
 package com.casino.games.machines.slot;
 
-import com.apps.util.Prompter;
 import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
 import com.casino.player.Dealer;
@@ -11,9 +10,6 @@ import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-import java.io.File;
-import java.util.Scanner;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -23,9 +19,7 @@ public class SlotMachineConsoleTest {
     Player player;
     Dealer dealer;
     double bet;
-    CasinoGames game;
     SlotMachine slotMachine = new SlotMachine();
-//    MockedStatic<Casino> casinoMock;
 
     @Before
     public void setUp() {
@@ -41,7 +35,7 @@ public class SlotMachineConsoleTest {
     }
 
     @Test
-    public void prompterShouldChangePlayerBalance() {
+    public void play_ShouldChangePlayerBalance_whenCalled() {
 
         MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "Yes", String.valueOf(50));
@@ -52,13 +46,26 @@ public class SlotMachineConsoleTest {
     }
 
     @Test
-    public void name() {
+    public void distributeMoney_shouldIncreasePlayerBalance_whenManipulatedGetRandom23() {
         SlotMachine mockSlot = Mockito.spy(SlotMachine.class);
         Mockito.when(mockSlot.getRandom23()).thenReturn(1);
         MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
         mockSlot.play(player, bet, dealer);
         assertEquals(10_040, player.getBalance(), 0.001);
+
+    }
+
+    @Test
+    public void endGame_shouldChangeBet_whenUsingCasinoMock() {
+        SlotMachine mockSlot = Mockito.spy(SlotMachine.class);
+        Mockito.when(mockSlot.getRandom23()).thenReturn(1);
+        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
+        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "Yes", String.valueOf(2), "Yes", "no");
+
+        mockSlot.play(player, bet, dealer);
+
+        assertEquals(10_120, player.getBalance(), 0.001);
 
     }
 }
