@@ -42,7 +42,7 @@ public class SlotMachine extends CasinoGames {
         String input = Casino.prompt("Type [Yes] to start the game, or [No] to return to game menu: ", "[y|Y]es|[n|N]o", "That's not a valid response.");
         if (input.equalsIgnoreCase("yes")) {
             String[] result = new String[]{reel1[random1], reel2[random2], reel3[random3]};
-            animate(random1, random2, random3);
+            //animate(random1, random2, random3);
             System.out.print(reel1[random1] + " " + reel2[random2] + " " + reel3[random3] + "\n");
             System.out.println("Your spin result is: " + Arrays.toString(result));
             gameResult = getGameResult(bet, result);
