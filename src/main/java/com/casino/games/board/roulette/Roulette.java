@@ -21,12 +21,15 @@ public class Roulette extends CasinoGames {
     private int winningModifier;
     static double ROULETTE_MINIMUM = 100.0;
     private final Scanner scan = new Scanner(System.in);
+    private double totalWinning;
+    private double gameBet;
 
     //METHODS
     @Override
     public void play(Player player, double bet, Dealer dealer) {
         this.player = player;
         this.dealer = dealer;
+        this.gameBet = bet;
         welcomeScreen();
     }
 
@@ -46,6 +49,17 @@ public class Roulette extends CasinoGames {
 
     @Override
     public void distributeMoney() {
+        if (totalWinning>0){
+            dealer.moneyTransfer(player, true, totalWinning);
+            System.out.println("\n\t\t\t   Congrats, you won!");
+            System.out.print("\t\tYou just won " + totalWinning + " dollars");
+        }
+        else{
+            dealer.moneyTransfer(player, false, gameBet);
+            System.out.println("\n\t\t\t   I'm sorry, you lost!");
+            System.out.print("\t\tYou just lost " + gameBet + " dollars");
+        }
+        System.out.println("Your current balance is: " + player.getBalance());
     }
 
     @Override
@@ -58,7 +72,7 @@ public class Roulette extends CasinoGames {
         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         System.out.println("|                                                          |");
         System.out.println("|                Welcome to the Roulette table!            |");
-        System.out.println("|               You have $XYZ in starting chips.           |");
+        System.out.println("|                                                          |");
         System.out.println("|                   Good Luck and Have Fun!                |");
         System.out.println("|                                                          |");
         System.out.println("|                                                          |");
@@ -75,8 +89,7 @@ public class Roulette extends CasinoGames {
         System.out.println("WINNING: " + winningNumber);
         winResult = bets.playBetType(bets.selectBetType());     // User Selects Bets
         table.spinWheel();                                      // Ball Animation and Winning Number Reveal
-        displayWinningNumber();
-        didPlayerWin(winResult);                                // If true, player won else lost
+        displayWinningNumber();                       // If true, player won else lost
         distributeMoney();
         playAgain();
     }
@@ -87,6 +100,7 @@ public class Roulette extends CasinoGames {
     public boolean straight() {
         int userInput;
         clearConsole();
+        winningModifier = 35;
         System.out.println("\n\t\tStraight [1 Number]");
         table.displayRouletteTable();
         System.out.println("\n1)\t[0, 00]");
@@ -105,6 +119,7 @@ public class Roulette extends CasinoGames {
             optionSelection = Integer.parseInt(newOptionSelection);
 
             if (optionSelection == 1 && winningNumber == 0) {
+                totalWinning = winningModifier * gameBet;
                 return true;
             } else {
                 return optionSelection == 2 && winningNumber == 37;
@@ -268,19 +283,19 @@ public class Roulette extends CasinoGames {
         return false;
     }
 
-    public void didPlayerWin(boolean win) {
-        if (win) {
-            System.out.println("\n\t\t\t   Congrats, you won!");
-            System.out.print("\t\tYou just won ");
-            //Create addition/deductions logic
-        } else {
-            System.out.println("\n\t\t\t   I'm sorry, you lost!");
-            System.out.print("\t\tYou just lost ");
-            //Create addition/deductions logic
-        }
-        System.out.println("[BET AMOUNT] chips!");
-        System.out.println("\t\t  You now have [CURRENT AMOUNT]");
-    }
+//    public void didPlayerWin(boolean win) {
+//        if (win) {
+//            System.out.println("\n\t\t\t   Congrats, you won!");
+//            System.out.print("\t\tYou just won ");
+//
+//        } else {
+//            System.out.println("\n\t\t\t   I'm sorry, you lost!");
+//            System.out.print("\t\tYou just lost ");
+//            //Create addition/deductions logic
+//        }
+//        System.out.println("[BET AMOUNT] chips!");
+//        System.out.println("\t\t  You now have [CURRENT AMOUNT]");
+//    }
 
     public void playAgain() {
         System.out.println("\n\n\t\tWould you like to play again?");

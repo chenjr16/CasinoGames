@@ -7,8 +7,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class RouletteTest {
@@ -28,6 +29,7 @@ public class RouletteTest {
         roulette = new Roulette();
         mockRoulette = mock(Roulette.class);
         staticMocked = mockStatic(Casino.class);
+        roulette.play(dealer,100,dealer);
     }
 
     @Test
@@ -39,10 +41,14 @@ public class RouletteTest {
     @Test
     public void straight_ShouldReturnTrue_WhenWinningNumberEqualUseSelection() {
 
+
     }
 
     @Test
     public void testOddsOrEvens() {
+        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
+        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), "Yes", String.valueOf(50));
+
     }
 
     @Test
