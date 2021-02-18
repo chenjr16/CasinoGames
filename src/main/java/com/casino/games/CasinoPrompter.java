@@ -2,7 +2,6 @@ package com.casino.games;
 
 import com.apps.util.Prompter;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class CasinoPrompter {

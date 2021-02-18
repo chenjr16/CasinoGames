@@ -15,36 +15,27 @@ import java.util.Map;
 
 
 public final class Baccarat extends CasinoGames {
-    private final double betMinimum = 10.0;
-    private Player player;
-    private Dealer dealer;
-    private double bet;
+    private final static double BET_MINIMUM = 10.0;
     private final Map<ResponseKeys, Response<?>> responseMap = new HashMap<>();
     private final Map<ResultKeys, Result<?>> resultMap = new HashMap<>();
     private final ResponsePipeline responsePipeline = new ResponsePipeline();
     private final BaccaratDealer baccaratDealer = new BaccaratDealer();
-    private boolean didWin;
+    private Player player;
+    private Dealer dealer;
+    private double bet;
+    private boolean didUserWinPlay;
+    private boolean didUserWinSidePlay;
+    private double playWinnings;
+    private double sidePlayWinnings;
     private double totalWinnings;
 
-    public Baccarat() {
-    }
-
-
+    public Baccarat() {}
 
     // Business methods
 
-    public void playBaccarat() {
-        // Give an empty map to the ResponsePipeline and let it fill it up with Responses from the user.
-        // Needs access to scanner.
-
-        // {"play" => Banker, "playBet" => 50.0, "sidePlay" => PAIR, "sidePlayBet" => 100.0}
-        responsePipeline.start(getResponseMap());
-        // Give a template map to the Dealer and let them fill it out with the results. Game logic here.
-
-        //{"playerCard" => 5, "playerTotal" => 8, "bankerCard" => 6, "bankerTotal" => 6,
-        //  "playerThirdCard" => 3, "winner" =>  PLAYER}
-        baccaratDealer.start(getResultMap());
-        // Dish out them winnings. Takes the responseMap and resultMap and compares results.
+    void playBaccarat() {
+        getResponsePipeline().start(getResponseMap());
+        getBaccaratDealer().start(getResultMap());
         dishOutWinnings(getResponseMap(), getResultMap());
         resetAndRestart();
     }
@@ -55,81 +46,148 @@ public final class Baccarat extends CasinoGames {
         SidePlay sidePlay = (SidePlay) responseMap.get(SIDE_PLAY).getResponse();
 
         // Get the result data
-
         Play winner = (Play) resultMap.get(WINNER).getResult();
         boolean isPair = (boolean) resultMap.get(IS_PAIR).getResult();
 
-
-        // Compare and see if correct. For Regular Plays.
-
-        if(playerPlay.equals(winner)) {
-            didWin = true;
-            int multiplier = playerPlay.getMultiplier();
-            double winnings = (multiplier * (double) responseMap.get(BET).getResponse());
-            setWinnings(winnings);
-            System.out.println(getWinText(winnings, playerPlay));
-        } else {
-            double currentDealerBalance = getDealer().getBalance();
-            getDealer().setBalance(currentDealerBalance + getBet());
+        // Main Plays.
+        playBetDeterminer(playerPlay, winner);
+        if(didUserWinPlay()) {
+            System.out.println(getWinText(playWinnings, playerPlay));
         }
 
-        //  Compare and see if correct. For Side Plays.
-
-        if(sidePlay.equals(SidePlay.PAIR) && isPair) {
-            didWin = true;
-            int multiplier = SidePlay.PAIR.getMultiplier();
-            double winnings = (multiplier * (double) responseMap.get(SIDE_BET).getResponse());
-            setWinnings(winnings);
-            System.out.println(getWinText(winnings, sidePlay));
+        //  Side Plays
+        sidePlayBetDeterminer(sidePlay, isPair);
+        if(didUserWinSidePlay()) {
+            System.out.println(getWinText(sidePlayWinnings, sidePlay));
         }
-
-        if(!didWin) {
-            System.out.println("\nSorry " + getPlayer().getName() + ". You didn't win a thing. " +
-                                "Better luck next time.");
-        } else {
-            System.out.println("\nYou won a total of " + totalWinnings + " playing Baccarat.");
-        }
+        System.out.println(roundEndingText());
     }
 
     // Set the Winners helper for the dishOutWinnings method.
 
-    void setWinnings(double winnings) {
-        totalWinnings += winnings;
-        dealer.moneyTransfer(player, true, winnings);
+    private String roundEndingText() {
+        String result = "";
+        if(!didUserWinPlay() && !didUserWinSidePlay()) {
+            result = "\nSorry " + getPlayer().getName() + ". You didn't win a thing. " +
+                    "Better luck next time.";
+        } else {
+            result = "\nYou won a total of " + getTotalWinnings() + " playing Baccarat.";
+        }
+        return result;
     }
 
-    String getWinText(double winnings, BetType betType) {
+    void moneyTransaction(double winnings, boolean result) {
+        if(result) {
+            addToTotalWinnings(winnings);
+        } else {
+            subtractFromTotalWinnings(winnings);
+        }
+        getDealer().moneyTransfer(getPlayer(), result, winnings);
+    }
+
+
+    private String getWinText(double winnings, BetType betType) {
         return "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + betType;
     }
 
-    public void resetAndRestart() {
-        totalWinnings = 0;
-        didWin = false;
-        bet = 0.0;
+    private void resetAndRestart() {
+        resetTotalWinnings();
+        setPlayWinnings(0.0);
+        setDidUserWinPlay(false);
+        setDidUserWinSidePlay(false);
+        setBet(0.0);
         createResultMap();
         createResponseMap();
         playBaccarat();
     }
 
     private void createResponseMap() {
-        getResponseMap().put(ResponseKeys.PLAY, new Response<>(0));
-        getResponseMap().put(ResponseKeys.BET, new Response<>(bet));
-        getResponseMap().put(ResponseKeys.SIDE_PLAY, new Response<>(SidePlay.NONE));
-        getResponseMap().put(ResponseKeys.SIDE_BET, new Response<>(0.0));
-        getResponseMap().put(ResponseKeys.BET_MINIMUM, new Response<>(betMinimum));
-        getResponseMap().put(ResponseKeys.PLAYER_BALANCE, new Response<>(player.getBalance()));
+        getResponseMap().put(PLAY, new Response<>(0));
+        getResponseMap().put(BET, new Response<>(getBet()));
+        getResponseMap().put(SIDE_PLAY, new Response<>(SidePlay.NONE));
+        getResponseMap().put(SIDE_BET, new Response<>(0.0));
+        getResponseMap().put(ResponseKeys.BET_MINIMUM, new Response<>(BET_MINIMUM));
+        getResponseMap().put(PLAYER_BALANCE, new Response<>(player.getBalance()));
     }
 
     private void createResultMap() {
-        getResultMap().put(ResultKeys.WINNER, new Result<>(0));
-        getResultMap().put(ResultKeys.PLAYER_TOTAL, new Result<>(0));
-        getResultMap().put(ResultKeys.PLAYER_ROUND1, new Result<>(0));
-        getResultMap().put(ResultKeys.BANKER_TOTAL, new Result<>(0));
-        getResultMap().put(ResultKeys.BANKER_ROUND1, new Result<>(0));
-        getResultMap().put(ResultKeys.IS_PAIR, new Result<>(false));
+        getResultMap().put(WINNER, new Result<>(0));
+        getResultMap().put(PLAYER_TOTAL, new Result<>(0));
+        getResultMap().put(PLAYER_ROUND1, new Result<>(0));
+        getResultMap().put(BANKER_TOTAL, new Result<>(0));
+        getResultMap().put(BANKER_ROUND1, new Result<>(0));
+        getResultMap().put(IS_PAIR, new Result<>(false));
+    }
+
+    private void playBetDeterminer(Play play, Play winner) {
+        int multiplier = play.getMultiplier();
+        double bet = (double) getResponseMap().get(BET).getResponse();
+        double winnings = multiplier * bet;
+        if(play.equals(winner)) {
+            setDidUserWinPlay(true);
+            setPlayWinnings(winnings);
+            moneyTransaction(winnings, true);
+        } else {
+            moneyTransaction(bet, false);
+        }
+    }
+
+    private void sidePlayBetDeterminer(SidePlay sidePlay, boolean isPair) {
+        int multiplier = sidePlay.getMultiplier();
+        double bet = (double) getResponseMap().get(SIDE_BET).getResponse();
+        double winnings = (multiplier * bet);
+        if(sidePlay.equals(SidePlay.PAIR) && isPair) {
+            setDidUserWinSidePlay(true);
+            setSidePlayWinnings(winnings);
+            moneyTransaction(winnings, true);
+        } else {
+            moneyTransaction(bet, false);
+        }
     }
 
     // Getters and Setters
+
+
+    private ResponsePipeline getResponsePipeline() {
+        return responsePipeline;
+    }
+
+    private BaccaratDealer getBaccaratDealer() {
+        return baccaratDealer;
+    }
+
+    private boolean didUserWinPlay() {
+        return didUserWinPlay;
+    }
+
+    private boolean didUserWinSidePlay() {
+        return didUserWinSidePlay;
+    }
+
+    private void resetTotalWinnings() {
+        this.totalWinnings = 0.0;
+    }
+
+    private double getTotalWinnings() {
+        return totalWinnings;
+    }
+
+    private void setDidUserWinPlay(boolean result) {
+        this.didUserWinPlay = result;
+    }
+
+    private void setDidUserWinSidePlay(boolean result) {
+        this.didUserWinSidePlay = result;
+    }
+
+    private void setPlayWinnings(double playWinnings) {
+        this.playWinnings = playWinnings;
+    }
+
+    private void setSidePlayWinnings(double sidePlayWinnings) {
+        this.sidePlayWinnings = sidePlayWinnings;
+    }
+
     private Player getPlayer() {
         return player;
     }
@@ -154,6 +212,14 @@ public final class Baccarat extends CasinoGames {
         this.bet = bet;
     }
 
+    private void addToTotalWinnings(double amount) {
+        totalWinnings += amount;
+    }
+
+    private void subtractFromTotalWinnings(double amount) {
+        totalWinnings -= amount;
+    }
+
     Map<ResponseKeys, Response<?>> getResponseMap() {
         return this.responseMap;
     }
@@ -162,14 +228,12 @@ public final class Baccarat extends CasinoGames {
         return this.resultMap;
     }
 
-
-
     // GameInterface overrides
 
     @Override
     public Playable isPlayable(Player player, double bet) {
         Playable playable;
-        if(player.getBalance() >= betMinimum) {
+        if(player.getBalance() >= BET_MINIMUM) {
             setPlayer(player);
             playable = new Playable("Baccarat", "Can play", true, new Baccarat());
         } else {
@@ -190,9 +254,7 @@ public final class Baccarat extends CasinoGames {
     }
 
     @Override
-    public void distributeMoney() {
-
-    }
+    public void distributeMoney() {}
 
     @Override
     public void endGame() {

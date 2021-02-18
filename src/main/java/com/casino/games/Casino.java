@@ -7,12 +7,12 @@ import com.casino.player.Player;
 import java.util.List;
 
 public class Casino {
-    private static Casino me;
     private static final CasinoPrompter casinoPrompter = new CasinoPrompter();
+    private static Casino me;
     Player player;
     Dealer dealer;
-    double bet;
     CasinoGames game;
+    double bet;
 
 
     public Casino() {
@@ -80,23 +80,32 @@ public class Casino {
     }
 
     public static String prompt(String message, String regex, String errorMessage) {
-        String customRegex = "bet|balance|quit|setup|select game|" + regex;
+        String customRegex = "bet|balance|quit|setup|select game|get balance|" + regex;
         String input = casinoPrompter.getPrompt(message, customRegex, errorMessage);
         // check for global commands
         switch(input) {
             case "bet":
                 me.betCreation();
+                input = prompt(message, regex, errorMessage);
                 break;
             case "balance":
+                input = prompt(message, regex, errorMessage);
                 me.balanceCreation();
                 break;
             case "quit":
                 me.quitGame();
             case "setup":
                 me.playerCreation();
+                input = prompt(message, regex, errorMessage);
                 break;
             case "select game":
                 me.gameChoiceMenu();
+                input = prompt(message, regex, errorMessage);
+                break;
+            case "get balance":
+                System.out.println(me.player.getBalance());
+                input = prompt(message, regex, errorMessage);
+                break;
         }
         return input;
     }

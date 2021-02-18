@@ -9,25 +9,25 @@ import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class RouletteTest {
     Player player;
     Dealer dealer;
-    Roulette roulette;
     Roulette mockRoulette;
     MockedStatic<Casino> staticMocked;
 
 
     @Before
-    public void setUp() {
+    public void setUp(){
         player = new Player("Marco", 50_000);
         dealer = new Dealer("Mr. Dealer", 50_000);
-        mockRoulette = mock(Roulette.class);
+        mockRoulette = spy(Roulette.class);
         staticMocked = mockStatic(Casino.class);
-        mockRoulette.play(dealer, 100, dealer);
+        doNothing().when(mockRoulette).initializeGame();
+        doNothing().when(mockRoulette).welcomeScreen();
+        mockRoulette.play(player,100,dealer);
     }
 
     //    @Test
@@ -40,71 +40,72 @@ public class RouletteTest {
 
     @Test
     public void straight_ShouldReturnTrue_WhenWinningNumberEqualUseSelection() {
-        when(mockRoulette.straight()).thenReturn(true);
-        assertEquals(true, mockRoulette.straight());
 
+        staticMocked.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(36));
+        mockRoulette.setWinningNumber(36);
+
+        assertTrue(mockRoulette.playBetType(1));
     }
 
     @Test
     public void oddsOrEvens_ShouldReturnTrue_WhenUserSelectionAndWinningNumberEqual() {
-        Roulette mockRoulette = Mockito.spy(Roulette.class);
         Mockito.when(mockRoulette.getWinningNumber()).thenReturn(2);
-        staticMocked.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(2));
+        staticMocked.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2));
+        mockRoulette.setWinningNumber(2);
         assertTrue(mockRoulette.playBetType(2));
     }
 
     @Test
     public void oddsOrEvens_ShouldReturnFalse_WhenUserSelectionAndWinningNumberNotEqual() {
-        Roulette mockRoulette = Mockito.spy(Roulette.class);
         Mockito.when(mockRoulette.getWinningNumber()).thenReturn(2);
-        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
-        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(2));
-        assertTrue(mockRoulette.playBetType(2));
+        staticMocked.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(2));
+        mockRoulette.setWinningNumber(1);
+
+        assertFalse(mockRoulette.playBetType(2));
     }
 
 
     @Test
     public void redOrBlack_ShouldReturnTrue_WhenWinningNumberEqualUseSelection() {
-        Roulette mockRoulette = Mockito.spy(Roulette.class);
-        Mockito.when(mockRoulette.getWinningNumber()).thenReturn(2);
-        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
-        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(2));
+        staticMocked.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(1));
+        mockRoulette.setWinningNumber(1);
+
         assertTrue(mockRoulette.playBetType(3));
     }
 
     @Test
-    public void dowOrHigh_ShouldReturnTrue_WhenWinningNumberEqualUseSelection() {
-        Roulette mockRoulette = Mockito.spy(Roulette.class);
+    public void lowOrHigh_ShouldReturnTrue_WhenWinningNumberEqualUseSelection() {
         Mockito.when(mockRoulette.getWinningNumber()).thenReturn(2);
-        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
-        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(2));
+        staticMocked.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(1));
+        mockRoulette.setWinningNumber(1);
+
         assertTrue(mockRoulette.playBetType(4));
     }
 
     @Test
     public void dozen_ShouldReturnTrue_WhenWinningNumberEqualUseSelection() {
-        Roulette mockRoulette = Mockito.spy(Roulette.class);
         Mockito.when(mockRoulette.getWinningNumber()).thenReturn(2);
-        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
-        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(2));
+        staticMocked.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(1));
+        mockRoulette.setWinningNumber(1);
+
         assertTrue(mockRoulette.playBetType(5));
     }
 
     @Test
     public void columns_ShouldReturnTrue_WhenWinningNumberEqualUseSelection() {
-        Roulette mockRoulette = Mockito.spy(Roulette.class);
         Mockito.when(mockRoulette.getWinningNumber()).thenReturn(2);
-        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
-        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(2));
+        staticMocked.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(1));
+        mockRoulette.setWinningNumber(1);
+
         assertTrue(mockRoulette.playBetType(6));
     }
 
     @Test
     public void street_ShouldReturnTrue_WhenWinningNumberEqualUseSelection() {
-        Roulette mockRoulette = Mockito.spy(Roulette.class);
         Mockito.when(mockRoulette.getWinningNumber()).thenReturn(2);
-        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
-        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(2));
+        staticMocked.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(1));
+        mockRoulette.setWinningNumber(1);
+
         assertTrue(mockRoulette.playBetType(7));
     }
 

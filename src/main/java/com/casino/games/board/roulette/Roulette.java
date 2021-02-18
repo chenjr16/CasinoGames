@@ -12,6 +12,7 @@ import java.util.Scanner;
 public class Roulette extends CasinoGames {
     private Player player;
     private Dealer dealer;
+
     private int userInput;
     private double gameBet;
     private int winningNumber;
@@ -80,7 +81,7 @@ public class Roulette extends CasinoGames {
     public void initializeGame() {
         clearConsole();
         bets.displayBets();                                         // Display Bets
-        getWinningNumber();
+        setWinningNumber(getWinningNumber());
         winResult = playBetType(bets.selectBetType());             // User Selects Bets
         table.spinWheel();                                        // Ball Animation and Winning Number Reveal
         displayWinningNumber();
@@ -207,7 +208,10 @@ public class Roulette extends CasinoGames {
             return false;
         }
         for (int i = 0; i < table.redNumbers.length; i++) {
-            isRed = winningNumber == table.redNumbers[i];
+            if(winningNumber == table.redNumbers[i]) {
+                isRed = true;
+                break;
+            }
         }
         totalWinning = winningModifier * gameBet;
         return isRed && userInput == 1;
@@ -333,8 +337,7 @@ public class Roulette extends CasinoGames {
     }
 
     public int getWinningNumber() {
-        winningNumber = randomNumber.nextInt(38);
-        return winningNumber;
+        return randomNumber.nextInt(38);
     }
 
     public void playAgain() {
@@ -365,6 +368,10 @@ public class Roulette extends CasinoGames {
 
     public void clearConsole() {
         for (int i = 0; i < 50; ++i) System.out.println();
+    }
+
+    void setWinningNumber(int number) {
+        this.winningNumber = number;
     }
 
 }
