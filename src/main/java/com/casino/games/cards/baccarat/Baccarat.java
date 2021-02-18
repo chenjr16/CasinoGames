@@ -100,8 +100,8 @@ public final class Baccarat extends CasinoGames {
     private void resetAndRestart() {
         resetTotalWinnings();
         setPlayWinnings(0.0);
-        setDidWinPlay(false);
-        setDidWinSidePlay(false);
+        setDidUserWinPlay(false);
+        setDidUserWinSidePlay(false);
         setBet(0.0);
         createResultMap();
         createResponseMap();
@@ -131,7 +131,7 @@ public final class Baccarat extends CasinoGames {
         double bet = (double) getResponseMap().get(BET).getResponse();
         double winnings = multiplier * bet;
         if(play.equals(winner)) {
-            setDidWinPlay(true);
+            setDidUserWinPlay(true);
             setPlayWinnings(winnings);
             moneyTransaction(winnings, true);
         } else {
@@ -144,7 +144,7 @@ public final class Baccarat extends CasinoGames {
         double bet = (double) getResponseMap().get(SIDE_BET).getResponse();
         double winnings = (multiplier * bet);
         if(sidePlay.equals(SidePlay.PAIR) && isPair) {
-            setDidWinSidePlay(true);
+            setDidUserWinSidePlay(true);
             setSidePlayWinnings(winnings);
             moneyTransaction(winnings, true);
         } else {
@@ -179,12 +179,12 @@ public final class Baccarat extends CasinoGames {
         return totalWinnings;
     }
 
-    private void setDidWinPlay(boolean b) {
-        this.didUserWinPlay = true;
+    private void setDidUserWinPlay(boolean result) {
+        this.didUserWinPlay = result;
     }
 
-    private void setDidWinSidePlay(boolean b) {
-        this.didUserWinSidePlay = true;
+    private void setDidUserWinSidePlay(boolean result) {
+        this.didUserWinSidePlay = result;
     }
 
     private void setPlayWinnings(double playWinnings) {
