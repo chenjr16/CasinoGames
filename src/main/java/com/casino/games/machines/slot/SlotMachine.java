@@ -35,23 +35,35 @@ public class SlotMachine extends CasinoGames {
     public void play(Player player, double bet, Dealer dealer) {
         this.player = player;
         this.dealer = dealer;
-        int random1 = (int) (Math.random() * 23);
-        int random2 = (int) (Math.random() * 23);
-        int random3 = (int) (Math.random() * 23);
+        int random1 = getRandom23();
+        int random2 = getRandom23();
+        int random3 = getRandom23();
         payoutTable();
-        String[] result = new String[]{reel1[random1], reel2[random2], reel3[random3]};
-        animate(random1, random2, random3);
-        System.out.println("Your spin result is: " + Arrays.toString(result));
 
-        gameResult = getGameResult(bet, result);
+        String input = Casino.prompt("Welcome to Slot Machine Game, Type [Yes] to start the game, or [No] to return to game menu: ", "[y|Y]es|[n|N]o", "That's not a valid response.");
+        if (input.equalsIgnoreCase("yes")){
+            String[] result = new String[]{reel1[random1], reel2[random2], reel3[random3]};
+            System.out.println("Started");
+            animate(random1, random2, random3);
+            System.out.println("Your spin result is: " + Arrays.toString(result));
 
-        if (gameResult > 0) {
-            System.out.println("Congratulations, you won:  " + gameResult + " dollars");
-        } else {
-            System.out.println("Sorry, you didn't win anything, please try again next time!");
+            gameResult = getGameResult(bet, result);
+
+            if (gameResult > 0) {
+                System.out.println("Congratulations, you won:  " + gameResult + " dollars");
+            } else {
+                System.out.println("Sorry, you didn't win anything, please try again next time!");
+            }
+            distributeMoney();
         }
-        distributeMoney();
+        else{
+            Casino.prompt("Please type in [select game] to go back to game menu, or type '[quit] to leave our casino: ", " ", "Invalid input");
+        }
 
+    }
+
+    public int getRandom23() {
+        return (int) (Math.random() * 23);
     }
 
     @Override
@@ -68,7 +80,7 @@ public class SlotMachine extends CasinoGames {
 
     @Override
     public void endGame() {
-        String input = Casino.prompt("Do you want to play again? ", "[y|Y]es|[n|N]o", "That's not a valid response.");
+        String input = Casino.prompt("Do you want to play again? [Yes] or [No]: ", "[y|Y]es|[n|N]o", "That's not a valid response.");
         if (input.equalsIgnoreCase("yes")) {
             String betInput = Casino.prompt("Please enter your bet: ", "[0-9]*\\.?[0-9]*", "\nThat is " +
                     "not a valid bet!\n");
@@ -76,7 +88,7 @@ public class SlotMachine extends CasinoGames {
             play(player, betAgain, dealer);
         }
         else {
-            Casino.prompt("Please type in 'select game' to go back to game menu, or type 'quit' to leave our casino: ", " ", "Invalid input");
+            Casino.prompt("Please type in [select game] to go back to game menu, or type '[quit] to leave our casino: ", " ", "Invalid input");
         }
     }
 
