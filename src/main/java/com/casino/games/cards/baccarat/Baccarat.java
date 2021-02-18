@@ -34,23 +34,15 @@ public final class Baccarat extends CasinoGames {
     // Business methods
 
     public void playBaccarat() {
-        // Give an empty map to the ResponsePipeline and let it fill it up with Responses from the user.
-        // Needs access to scanner.
-
-        // {"play" => Banker, "playBet" => 50.0, "sidePlay" => PAIR, "sidePlayBet" => 100.0}
         responsePipeline.start(getResponseMap());
-        // Give a template map to the Dealer and let them fill it out with the results. Game logic here.
-
-        //{"playerCard" => 5, "playerTotal" => 8, "bankerCard" => 6, "bankerTotal" => 6,
-        //  "playerThirdCard" => 3, "winner" =>  PLAYER}
         baccaratDealer.start(getResultMap());
-        // Dish out them winnings. Takes the responseMap and resultMap and compares results.
         dishOutWinnings(getResponseMap(), getResultMap());
         resetAndRestart();
     }
 
     void dishOutWinnings(Map<ResponseKeys, Response<?>> responseMap, Map<ResultKeys, Result<?>> resultMap) {
         // Get all the user response data
+        System.out.println(responseMap);
         Play playerPlay = (Play) responseMap.get(PLAY).getResponse();
         SidePlay sidePlay = (SidePlay) responseMap.get(SIDE_PLAY).getResponse();
 

@@ -24,21 +24,22 @@ public class SlotMachineConsoleTest {
     Dealer dealer;
     double bet;
     CasinoGames game;
+    SlotMachine mockSlot;
     SlotMachine slotMachine = new SlotMachine();
 //    MockedStatic<Casino> casinoMock;
 
     @Before
     public void setUp() {
+        mockSlot = Mockito.mock(SlotMachine.class);
         casino = new Casino();
         player = new Player("Junru ", 10_000.0);
         dealer = new Dealer("Dealer", 50_000_000.0);
         bet = 1;
     }
 
-//    @After
-//    public void cleanUp() {
-//
-//    }
+    @After
+    public void cleanUp() {
+    }
 //
 //    @Test
 //    public void prompterShouldChangePlayerBalance() {
@@ -53,12 +54,12 @@ public class SlotMachineConsoleTest {
 
     @Test
     public void name() {
-        SlotMachine mockSlot = Mockito.mock(SlotMachine.class);
-        Mockito.when(mockSlot.getRandom23()).thenReturn(1);
-//        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
-//        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
+        SlotMachine mockSlot = Mockito.spy(SlotMachine.class);
+        Mockito.when(mockSlot.getRandom23()).thenReturn(0);
+        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
+        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
         mockSlot.play(player, bet, dealer);
-        assertEquals(10_040, player.getBalance(), 0.001);
+        assertEquals(10_060, player.getBalance(), 0.001);
 
     }
 }
