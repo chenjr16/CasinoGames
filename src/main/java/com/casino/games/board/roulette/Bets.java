@@ -5,7 +5,7 @@ import java.util.Scanner;
 import static com.casino.games.board.roulette.Table.roulette;
 
 class Bets {
-    Scanner scan = new Scanner(System.in);
+    private Scanner scan = new Scanner(System.in);
 
     public void displayBets() {
         System.out.println("\nHere are the Bets you can make and their payouts:");
@@ -41,33 +41,5 @@ class Bets {
             }
         } while (betSelected == 0);
         return betSelected;
-    }
-
-    public boolean playBetType(int betType) {
-        boolean result = false;
-        switch (betType) {
-            case 1:
-                result = roulette.straight();
-                break;
-            case 2:
-                result = roulette.oddsOrEvens();
-                break;
-            case 3:
-                result = roulette.redOrBlack();
-                break;
-            case 4:
-                result = roulette.lowOrHigh();
-                break;
-            case 5:
-                result = roulette.dozen();
-                break;
-            case 6:
-                result = roulette.columns();
-                break;
-            case 7:
-                result = roulette.street();
-                break;
-        }
-        return result;
     }
 }
