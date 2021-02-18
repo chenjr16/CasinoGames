@@ -34,8 +34,8 @@ public final class Baccarat extends CasinoGames {
     // Business methods
 
     void playBaccarat() {
-        responsePipeline.start(getResponseMap());
-        baccaratDealer.start(getResultMap());
+        getResponsePipeline().start(getResponseMap());
+        getBaccaratDealer().start(getResultMap());
         dishOutWinnings(getResponseMap(), getResultMap());
         resetAndRestart();
     }
@@ -67,7 +67,7 @@ public final class Baccarat extends CasinoGames {
 
     private String roundEndingText() {
         String result = "";
-        if(!didUserWinPlay && !didUserWinSidePlay) {
+        if(!didUserWinPlay() && !didUserWinSidePlay()) {
             result = "\nSorry " + getPlayer().getName() + ". You didn't win a thing. " +
                     "Better luck next time.";
         } else {
@@ -78,11 +78,19 @@ public final class Baccarat extends CasinoGames {
 
     void moneyTransaction(double winnings, boolean result) {
         if(result) {
-            totalWinnings += winnings;
+            addToTotalWinnings(winnings);
         } else {
-            totalWinnings -= winnings;
+            subtractFromTotalWinnings(winnings);
         }
         getDealer().moneyTransfer(getPlayer(), result, winnings);
+    }
+
+    private void addToTotalWinnings(double amount) {
+        totalWinnings += amount;
+    }
+
+    private void subtractFromTotalWinnings(double amount) {
+        totalWinnings -= amount;
     }
 
     private String getWinText(double winnings, BetType betType) {
@@ -145,6 +153,15 @@ public final class Baccarat extends CasinoGames {
     }
 
     // Getters and Setters
+
+
+    private ResponsePipeline getResponsePipeline() {
+        return responsePipeline;
+    }
+
+    private BaccaratDealer getBaccaratDealer() {
+        return baccaratDealer;
+    }
 
     private boolean didUserWinPlay() {
         return didUserWinPlay;
