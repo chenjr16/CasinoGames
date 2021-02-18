@@ -5,6 +5,7 @@ import com.casino.games.Casino;
 import com.casino.games.CasinoGames;
 import com.casino.games.Playable;
 import com.casino.player.Player;
+
 import java.util.Arrays;
 
 
@@ -18,13 +19,11 @@ public class SlotMachine extends CasinoGames {
     @Override
     public Playable isPlayable(Player player, double bet) {
         Playable playable;
-        if(player.getBalance() < bet) {
+        if (player.getBalance() < bet) {
             playable = new Playable("SlotMachine", "You don't have enough to play", false, new SlotMachine());
-        }
-        else if (bet < SLOT_MINIMUM) {
+        } else if (bet < SLOT_MINIMUM) {
             playable = new Playable("SlotMachine", "Too little money, minimal bet is: " + SLOT_MINIMUM, false, new SlotMachine());
-        }
-        else{
+        } else {
             playable = new Playable("SlotMachine", "Can play", true, new SlotMachine());
         }
 
@@ -41,7 +40,7 @@ public class SlotMachine extends CasinoGames {
         payoutTable();
 
         String input = Casino.prompt("Welcome to Slot Machine Game, Type [Yes] to start the game, or [No] to return to game menu: ", "[y|Y]es|[n|N]o", "That's not a valid response.");
-        if (input.equalsIgnoreCase("yes")){
+        if (input.equalsIgnoreCase("yes")) {
             String[] result = new String[]{reel1[random1], reel2[random2], reel3[random3]};
             System.out.println("Started");
             animate(random1, random2, random3);
@@ -55,22 +54,17 @@ public class SlotMachine extends CasinoGames {
                 System.out.println("Sorry, you didn't win anything, please try again next time!");
             }
             distributeMoney();
-        }
-        else{
+        } else {
             Casino.prompt("Please type in [select game] to go back to game menu, or type '[quit] to leave our casino: ", " ", "Invalid input");
         }
 
-    }
-
-    public int getRandom23() {
-        return (int) (Math.random() * 23);
     }
 
     @Override
     public void distributeMoney() {
         if (gameResult > 0) {
             dealer.moneyTransfer(player, true, gameResult);
-        }else{
+        } else {
             dealer.moneyTransfer(player, false, -gameResult);
         }
         System.out.println("Player's new balance is: " + player.getBalance());
@@ -86,10 +80,13 @@ public class SlotMachine extends CasinoGames {
                     "not a valid bet!\n");
             betAgain = Double.parseDouble(betInput);
             play(player, betAgain, dealer);
-        }
-        else {
+        } else {
             Casino.prompt("Please type in [select game] to go back to game menu, or type '[quit] to leave our casino: ", " ", "Invalid input");
         }
+    }
+
+    public int getRandom23() {
+        return (int) (Math.random() * 23);
     }
 
     public double getGameResult(double bet, String[] result) {
@@ -124,7 +121,7 @@ public class SlotMachine extends CasinoGames {
             System.out.print(reel1[order1 - i] + "\r");
 
             try {
-                Thread.sleep(800-i* 50L);
+                Thread.sleep(800 - i * 50L);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
@@ -139,37 +136,35 @@ public class SlotMachine extends CasinoGames {
             }
             System.out.print(reel1[order1] + " " + reel2[order2 - i] + "\r");
             try {
-                Thread.sleep(800-i* 50L);
+                Thread.sleep(800 - i * 50L);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
         }
 
-        for (int i = 15; i >= 0; i--) {
-            if (i >= 1){
-                if (order3 - i < 0) {
-                    order3 = order3 + 22;
-                }
-                if (order3 - i > 22) {
-                    order3 = order3 - 22;
-                }
-                System.out.print(reel1[order1] + " " + reel2[order2] + " " + reel3[order3 - i] + "\r");
-                try {
-                    Thread.sleep(800-i* 50L);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
+        for (int i = 10; i > 0; i--) {
+            if (order3 - i < 0) {
+                order3 = order3 + 22;
             }
-            else{
-                System.out.print(reel1[order1] + " " + reel2[order2] + " " + reel3[order3] + "\n");
-                try {
-                    Thread.sleep(750);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
+            if (order3 - i > 22) {
+                order3 = order3 - 22;
+            }
+            System.out.print(reel1[order1] + " " + reel2[order2] + " " + reel3[order3 - i] + "\r");
+            try {
+                Thread.sleep(800 - i * 50L);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
             }
         }
+        System.out.print(reel1[order1] + " " + reel2[order2] + " " + reel3[order3] + "\n");
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
     }
+
+
 
     private void payoutTable() {
         //rule based on https://anygamble.com/guide/learn-how-to-count-probability-and-payouts-in-slots/

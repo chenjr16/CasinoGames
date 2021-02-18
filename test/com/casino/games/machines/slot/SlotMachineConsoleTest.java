@@ -35,28 +35,28 @@ public class SlotMachineConsoleTest {
         bet = 1;
     }
 
-//    @After
-//    public void cleanUp() {
-//
-//    }
-//
-//    @Test
-//    public void prompterShouldChangePlayerBalance() {
-//
-//        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
-//        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "Yes", String.valueOf(50));
-//        slotMachine.play(player, bet, dealer);
-//
-//        assertNotEquals(10_000.0, player.getBalance(), 0.001);
-//
-//    }
+    @After
+    public void cleanUp() {
+
+    }
+
+    @Test
+    public void prompterShouldChangePlayerBalance() {
+
+        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
+        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "Yes", String.valueOf(50));
+        slotMachine.play(player, bet, dealer);
+
+        assertNotEquals(10_000.0, player.getBalance(), 0.001);
+
+    }
 
     @Test
     public void name() {
-        SlotMachine mockSlot = Mockito.mock(SlotMachine.class);
+        SlotMachine mockSlot = Mockito.spy(SlotMachine.class);
         Mockito.when(mockSlot.getRandom23()).thenReturn(1);
-//        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
-//        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
+        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
+        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
         mockSlot.play(player, bet, dealer);
         assertEquals(10_040, player.getBalance(), 0.001);
 
