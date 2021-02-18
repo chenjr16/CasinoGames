@@ -96,8 +96,8 @@ public class SlotMachine extends CasinoGames {
             winningAmount = bet * 20;
         } else if (result[0].equals(result[1]) && result[1].equals(result[2])) {
             winningAmount = bet * 10;
-        } else if ((result[0].equals(result[1]) || result[1].equals(result[2]) || result[0].equals(result[2])) &&
-                (result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry"))) {
+        } else if (((result[0].equals(result[1]) && (result[0].equals("Cherry"))) || ((result[1].equals(result[2]) && result[1].equals("Cherry")) ||
+                (result[0].equals(result[2])) && result[2].equals("Cherry")))) {
             winningAmount = bet * 3;
         } else if (result[0].equals("Cherry") || result[1].equals("Cherry") || result[2].equals("Cherry")) {
             winningAmount = bet * 1;
