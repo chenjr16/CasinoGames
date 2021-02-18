@@ -146,7 +146,6 @@ public final class Baccarat extends CasinoGames {
 
     // Getters and Setters
 
-
     private boolean didUserWinPlay() {
         return didUserWinPlay;
     }
@@ -211,8 +210,6 @@ public final class Baccarat extends CasinoGames {
         return this.resultMap;
     }
 
-
-
     // GameInterface overrides
 
     @Override
@@ -245,8 +242,6 @@ public final class Baccarat extends CasinoGames {
     public void endGame() {
         System.out.println("Hey get back here!!!");
     }
-
-    
 
     interface BetType {}
     enum Play implements BetType {
