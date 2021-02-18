@@ -4,7 +4,6 @@ class Table {
     static Roulette roulette = new Roulette();
     // COLORS
     // SOURCE : https://www.quora.com/Java-How-do-I-use-System-out-print-to-print-my-text-in-color-to-the-console
-    public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
@@ -30,7 +29,6 @@ class Table {
             System.out.println("");
         }
     }
-
     // "Spins" the roulette wheel and displays ball animation
     public void spinWheel() {
         roulette.clearConsole();
@@ -49,7 +47,7 @@ class Table {
                 Thread.sleep(500);
                 System.out.println("  o");
                 Thread.sleep(500);
-                System.out.println("    o");     // ball rolling animation
+                System.out.println("    o");
                 Thread.sleep(500);
                 System.out.println("  o");
                 Thread.sleep(500);
@@ -58,7 +56,6 @@ class Table {
                 e.printStackTrace();
             }
         }
-        String winningNumberString = String.valueOf(roulette.getWinningNumber());
         System.out.println("\nIt looks like the ball has landed on .... ");
         System.out.println();
         for (int i = 0; i <= 3; i++) {
