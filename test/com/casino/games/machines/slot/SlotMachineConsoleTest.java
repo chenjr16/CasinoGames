@@ -23,7 +23,7 @@ public class SlotMachineConsoleTest {
 
     @Before
     public void setUp() {
-        mockSlot = Mockito.mock(SlotMachine.class);
+//        mockSlot = Mockito.mock(SlotMachine.class);
         casino = new Casino();
         player = new Player("Junru ", 10_000.0);
         dealer = new Dealer("Dealer", 50_000_000.0);
