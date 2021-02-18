@@ -85,13 +85,6 @@ public final class Baccarat extends CasinoGames {
         getDealer().moneyTransfer(getPlayer(), result, winnings);
     }
 
-    private void addToTotalWinnings(double amount) {
-        totalWinnings += amount;
-    }
-
-    private void subtractFromTotalWinnings(double amount) {
-        totalWinnings -= amount;
-    }
 
     private String getWinText(double winnings, BetType betType) {
         return "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + betType;
@@ -217,6 +210,14 @@ public final class Baccarat extends CasinoGames {
 
     private void setBet(double bet) {
         this.bet = bet;
+    }
+
+    private void addToTotalWinnings(double amount) {
+        totalWinnings += amount;
+    }
+
+    private void subtractFromTotalWinnings(double amount) {
+        totalWinnings -= amount;
     }
 
     Map<ResponseKeys, Response<?>> getResponseMap() {
