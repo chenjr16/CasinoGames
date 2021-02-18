@@ -21,18 +21,16 @@ public class RouletteTest {
     MockedStatic<Casino> staticMocked;
 
 
-
     @Before
-    public void setUp(){
-        player= new Player("Marco", 50_000);
+    public void setUp() {
+        player = new Player("Marco", 50_000);
         dealer = new Dealer("Mr. Dealer", 50_000);
-        roulette = new Roulette();
         mockRoulette = mock(Roulette.class);
         staticMocked = mockStatic(Casino.class);
-        roulette.play(dealer,100,dealer);
+        mockRoulette.play(dealer, 100, dealer);
     }
 
-//    @Test
+    //    @Test
 //    public void
     @Test
     public void getWinningNumber() {
@@ -43,7 +41,7 @@ public class RouletteTest {
     @Test
     public void straight_ShouldReturnTrue_WhenWinningNumberEqualUseSelection() {
         when(mockRoulette.straight()).thenReturn(true);
-        assertEquals(true,mockRoulette.straight());
+        assertEquals(true, mockRoulette.straight());
 
     }
 
@@ -51,8 +49,7 @@ public class RouletteTest {
     public void oddsOrEvens_ShouldReturnTrue_WhenUserSelectionAndWinningNumberEqual() {
         Roulette mockRoulette = Mockito.spy(Roulette.class);
         Mockito.when(mockRoulette.getWinningNumber()).thenReturn(2);
-        MockedStatic<Casino> casinoMock = Mockito.mockStatic(Casino.class);
-        casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(2));
+        staticMocked.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(2), String.valueOf(2));
         assertTrue(mockRoulette.playBetType(2));
     }
 
@@ -112,7 +109,7 @@ public class RouletteTest {
     }
 
     @After
-    public void cleanUp(){
+    public void cleanUp() {
         staticMocked.close();
     }
 }

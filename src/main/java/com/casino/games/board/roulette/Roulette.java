@@ -169,7 +169,6 @@ public class Roulette extends CasinoGames {
         return false;
     }
 
-
     public boolean oddsOrEvens() {
         clearConsole();
         winningModifier = 1;
@@ -194,7 +193,6 @@ public class Roulette extends CasinoGames {
         }
     }
 
-
     public boolean redOrBlack() {
         boolean isRed = false;
         clearConsole();
@@ -215,7 +213,6 @@ public class Roulette extends CasinoGames {
         return isRed && userInput == 1;
     }
 
-
     public boolean lowOrHigh() {
         clearConsole();
         System.out.println("\n\t\tLows or Highs");
@@ -229,7 +226,6 @@ public class Roulette extends CasinoGames {
         }
         return winningNumber < 19 && userInput == 1 || winningNumber > 18 && userInput == 2;
     }
-
 
     public boolean dozen() {
         clearConsole();
@@ -255,7 +251,6 @@ public class Roulette extends CasinoGames {
         }
     }
 
-
     public boolean columns() {
         clearConsole();
         winningModifier = 2;
@@ -279,7 +274,6 @@ public class Roulette extends CasinoGames {
         }
         return false;
     }
-
 
     public boolean street() {
         clearConsole();
