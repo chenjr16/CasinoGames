@@ -2,11 +2,9 @@ package com.casino.games.cards.baccarat;
 
 import com.casino.games.Casino;
 import java.util.Map;
-
 import static com.casino.games.cards.baccarat.Baccarat.ResponseKeys;
 import static com.casino.games.cards.baccarat.Baccarat.ResponseKeys.*;
 import static com.casino.games.cards.baccarat.Baccarat.SidePlay.*;
-
 import static com.casino.games.cards.baccarat.utils.Pipe.apply;
 
 final class ResponsePipeline {

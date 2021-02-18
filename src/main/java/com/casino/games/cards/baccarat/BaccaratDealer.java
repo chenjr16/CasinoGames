@@ -5,7 +5,6 @@ import com.casino.games.cards.baccarat.deck.Cards;
 import static com.casino.games.cards.baccarat.utils.Pipe.apply;
 import static com.casino.games.cards.baccarat.Baccarat.ResultKeys;
 import static com.casino.games.cards.baccarat.Baccarat.ResultKeys.*;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,6 @@ final class BaccaratDealer {
         }
 
         printTotals(play, card1, card2, total);
-
         setFrozen(play, total);
         insertTotals(resultMap, play, total);
         sleepBetweenDraw(2000);
@@ -211,7 +209,6 @@ final class BaccaratDealer {
     }
 
     static class Result<T> {
-
         private final T result;
 
         public Result(T result) {
@@ -226,6 +223,5 @@ final class BaccaratDealer {
         public String toString() {
             return result.toString();
         }
-
     }
 }

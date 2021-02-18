@@ -1,9 +1,7 @@
 package com.casino.games;
 
-
 import com.casino.player.Dealer;
 import com.casino.player.Player;
-
 import java.util.List;
 
 public class Casino {
@@ -13,7 +11,6 @@ public class Casino {
     Dealer dealer;
     CasinoGames game;
     double bet;
-
 
     public Casino() {
     }
@@ -52,13 +49,14 @@ public class Casino {
     private void gameChoiceMenu() {
         List<Playable> playableGames = CasinoGames.games(player, bet);
 
-
         for(int i = 0; i < playableGames.size(); i++) {
             System.out.println(i + ": " + playableGames.get(i).getName());
         }
+
         int gameChoice = promptGameChoice("Please choose a playable game:", playableGames,
                                                         "Please enter a valid number.");
         Playable playable = playableGames.get(gameChoice);
+
         if(playable.playableResult()) {
             game = playable.getInstance();
             game.play(player, bet, dealer);

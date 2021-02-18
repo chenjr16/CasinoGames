@@ -1,7 +1,6 @@
 package com.casino.games;
 
 import com.apps.util.Prompter;
-
 import java.util.Scanner;
 
 public class CasinoPrompter {
@@ -10,9 +9,4 @@ public class CasinoPrompter {
     String getPrompt(String message, String regex, String errorMessage) {
         return prompter.prompt(message, regex, errorMessage);
     }
-
-    String getPrompt(String message) {
-        return prompter.prompt(message);
-    }
-
 }

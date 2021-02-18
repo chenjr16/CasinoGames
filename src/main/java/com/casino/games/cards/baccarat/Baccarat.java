@@ -1,7 +1,6 @@
 package com.casino.games.cards.baccarat;
 
 import com.casino.games.CasinoGames;
-
 import com.casino.games.Playable;
 import com.casino.player.Dealer;
 import com.casino.player.Player;
@@ -9,7 +8,6 @@ import com.casino.games.cards.baccarat.ResponsePipeline.Response;
 import static com.casino.games.cards.baccarat.Baccarat.ResponseKeys.*;
 import static com.casino.games.cards.baccarat.Baccarat.ResultKeys.*;
 import com.casino.games.cards.baccarat.BaccaratDealer.Result;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -146,8 +144,6 @@ public final class Baccarat extends CasinoGames {
     }
 
     // Getters and Setters
-
-
     private ResponsePipeline getResponsePipeline() {
         return responsePipeline;
     }
@@ -274,7 +270,7 @@ public final class Baccarat extends CasinoGames {
         SidePlay(int multiplier) {this.multiplier = multiplier;}
         int getMultiplier() {return multiplier;}
     }
-    enum ResponseKeys {PLAY, BET, SIDE_PLAY, SIDE_BET, BET_MINIMUM, PLAYER_BALANCE;}
+    enum ResponseKeys {PLAY, BET, SIDE_PLAY, SIDE_BET, BET_MINIMUM, PLAYER_BALANCE}
     enum ResultKeys {WINNER, PLAYER_TOTAL, PLAYER_ROUND1, BANKER_TOTAL, BANKER_ROUND1, IS_PAIR,
-                        PLAYER_THIRD_CARD, BANKER_THIRD_CARD;}
+                        PLAYER_THIRD_CARD, BANKER_THIRD_CARD}
 }

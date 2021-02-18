@@ -11,14 +11,13 @@ import org.mockito.Mockito;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 
 public class SlotMachineConsoleTest {
     Casino casino;
     Player player;
     Dealer dealer;
     double bet;
-    SlotMachine slotMachine = new SlotMachine();
     SlotMachine mockSlot;
     MockedStatic<Casino> casinoMock;
 
@@ -30,6 +29,7 @@ public class SlotMachineConsoleTest {
         bet = 1;
         mockSlot = Mockito.spy(SlotMachine.class);
         casinoMock = Mockito.mockStatic(Casino.class);
+        Mockito.doNothing().when(mockSlot).animate(anyInt(), anyInt(), anyInt());
     }
 
     @After
@@ -39,16 +39,14 @@ public class SlotMachineConsoleTest {
 
     @Test
     public void play_ShouldChangePlayerBalance_whenCalled() {
-
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "Yes", String.valueOf(50));
-        slotMachine.play(player, bet, dealer);
+        mockSlot.play(player, bet, dealer);
         assertNotEquals(10_000.0, player.getBalance(), 0.001);
 
     }
 
     @Test
     public void distributeMoney_shouldWin60_whenManipulatedGetRandom0() {
-
         Mockito.when(mockSlot.getRandom23()).thenReturn(0);
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
         mockSlot.play(player, bet, dealer);
@@ -58,7 +56,6 @@ public class SlotMachineConsoleTest {
 
     @Test
     public void distributeMoney_shouldWin40_whenManipulatedGetRandom1() {
-
         Mockito.when(mockSlot.getRandom23()).thenReturn(1);
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
         mockSlot.play(player, bet, dealer);
@@ -68,7 +65,6 @@ public class SlotMachineConsoleTest {
 
     @Test
     public void distributeMoney_shouldWin10_whenManipulatedGetRandom2() {
-
         Mockito.when(mockSlot.getRandom23()).thenReturn(2);
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
         mockSlot.play(player, bet, dealer);
@@ -78,7 +74,6 @@ public class SlotMachineConsoleTest {
 
     @Test
     public void distributeMoney_shouldWin10_whenManipulatedGetRandom21() {
-
         Mockito.when(mockSlot.getRandom23()).thenReturn(21);
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
         mockSlot.play(player, bet, dealer);
@@ -88,7 +83,6 @@ public class SlotMachineConsoleTest {
 
     @Test
     public void distributeMoney_shouldWin1_whenManipulatedGetRandom7() {
-
         Mockito.when(mockSlot.getRandom23()).thenReturn(7);
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
         mockSlot.play(player, bet, dealer);
@@ -98,7 +92,6 @@ public class SlotMachineConsoleTest {
 
     @Test
     public void distributeMoney_shouldLose1_whenManipulatedGetRandom4() {
-
         Mockito.when(mockSlot.getRandom23()).thenReturn(3);
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "no");
         mockSlot.play(player, bet, dealer);
@@ -108,7 +101,6 @@ public class SlotMachineConsoleTest {
 
     @Test
     public void endGame_shouldChangeBetAndWin180_whenUsingCasinoMock() {
-
         Mockito.when(mockSlot.getRandom23()).thenReturn(0);
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "Yes", String.valueOf(2), "Yes", "no");
         mockSlot.play(player, bet, dealer);
@@ -118,7 +110,6 @@ public class SlotMachineConsoleTest {
 
     @Test
     public void endGame_shouldChangeBetAndWin120_whenUsingCasinoMock() {
-
         Mockito.when(mockSlot.getRandom23()).thenReturn(1);
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn("Yes", "Yes", String.valueOf(2), "Yes", "no");
         mockSlot.play(player, bet, dealer);

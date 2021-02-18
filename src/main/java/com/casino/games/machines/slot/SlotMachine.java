@@ -10,7 +10,6 @@ import java.util.Arrays;
 
 public class SlotMachine extends CasinoGames {
     static double SLOT_MINIMUM = 0.25;
-    private double betAgain;
     private Player player;
     private Dealer dealer;
     private double gameResult;
@@ -75,18 +74,18 @@ public class SlotMachine extends CasinoGames {
         if (input.equalsIgnoreCase("yes")) {
             String betInput = Casino.prompt("Please enter your bet: ", "[0-9]*\\.?[0-9]*", "\nThat is " +
                     "not a valid bet!\n");
-            betAgain = Double.parseDouble(betInput);
+            double betAgain = Double.parseDouble(betInput);
             play(player, betAgain, dealer);
         } else {
             Casino.prompt("Please type in [select game] to go back to game menu, or type '[quit] to leave our casino: ", " ", "Invalid input");
         }
     }
 
-    public int getRandom23() {
+    int getRandom23() {
         return (int) (Math.random() * 23);
     }
 
-    public double getGameResult(double bet, String[] result) {
+    double getGameResult(double bet, String[] result) {
         double winningAmount;
         if (result[0].equals(result[1]) && result[1].equals(result[2]) && result[0].equals("BAR")) {
             winningAmount = bet * 60;
@@ -107,7 +106,7 @@ public class SlotMachine extends CasinoGames {
         return winningAmount;
     }
 
-    private void animate(int order1, int order2, int order3) {
+    void animate(int order1, int order2, int order3) {
         for (int i = 15; i >= 0; i--) {
             if (order1 - i < 0) {
                 order1 = order1 + 22;
@@ -156,8 +155,6 @@ public class SlotMachine extends CasinoGames {
 
     }
 
-
-
     private void payoutTable() {
         //rule based on https://anygamble.com/guide/learn-how-to-count-probability-and-payouts-in-slots/
         System.out.println("Payout Table: \n" +
@@ -170,15 +167,15 @@ public class SlotMachine extends CasinoGames {
     }
 
 
-    String[] reel1 = {"BAR", "SEVEN", "Orange", "SEVEN", "Banana", "SEVEN", "Lemon",
+    private final String[] reel1 = {"BAR", "SEVEN", "Orange", "SEVEN", "Banana", "SEVEN", "Lemon",
             "Cherry", "Orange", "Cherry", "Banana", "Cherry", "Lemon", "Cherry",
             "Orange", "Banana", "Orange", "Lemon", "Orange", "Banana", "Lemon",
             "Banana", "Lemon"};
-    String[] reel2 = {"BAR", "SEVEN", "Orange", "Lemon", "Banana", "Orange", "Lemon",
+    private final String[] reel2 = {"BAR", "SEVEN", "Orange", "Lemon", "Banana", "Orange", "Lemon",
             "Banana", "Orange", "Cherry", "Banana", "Cherry", "Lemon", "Cherry",
             "Orange", "Banana", "Orange", "Lemon", "Orange", "Banana", "Lemon",
             "Banana", "Lemon"};
-    String[] reel3 = {"BAR", "SEVEN", "Orange", "Lemon", "Banana", "Orange", "Lemon",
+    private final String[] reel3 = {"BAR", "SEVEN", "Orange", "Lemon", "Banana", "Orange", "Lemon",
             "Banana", "Orange", "Cherry", "Banana", "Cherry", "Lemon", "Cherry",
             "Orange", "Banana", "Orange", "Lemon", "Orange", "Banana", "Lemon",
             "Banana", "Lemon"};

@@ -2,7 +2,6 @@ package com.casino.games.board.roulette;
 
 import java.util.Scanner;
 
-import static com.casino.games.board.roulette.Table.roulette;
 
 class Bets {
     private Scanner scan = new Scanner(System.in);
@@ -35,7 +34,7 @@ class Bets {
             if (betSelected > 0 && betSelected < 8) {
                 return betSelected;
             } else {
-                roulette.invalid();
+                System.out.print("\n[INVALID SELECTION]  ");
                 System.out.print("Please select from the list: [1 - 7]\n");
                 betSelected = 0;
             }

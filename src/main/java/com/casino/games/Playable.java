@@ -28,5 +28,4 @@ public class Playable {
     public CasinoGames getInstance() {
         return instance;
     }
-
 }

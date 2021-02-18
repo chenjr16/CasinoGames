@@ -10,37 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class CasinoGames implements GameInterface {
-    //General Methods
-    public void playAgain() {
-
-    }
 
     public abstract void play(Player player, double bet, Dealer dealer);
 
-    public static List<Playable> games(Player player, double bet) {
+    /*
+     * This is how we consume each game's Playable object.
+     * We call their isPlayable contract method, passing in the player and bet,
+     * and get back a Playable, which is then added to the list.
+     */
+    static List<Playable> games(Player player, double bet) {
         List<Playable> playableGames = new ArrayList<>();
-        // add each game's Playable to the list by calling their isPlayable method.
-        // then return the list to the casino.
-
         playableGames.add(new Baccarat().isPlayable(player, bet));
         playableGames.add(new SlotMachine().isPlayable(player, bet));
         playableGames.add(new Roulette().isPlayable(player, bet));
-
-//        Playable baccarat = new Baccarat().isPlayable(player, bet);
-//        Playable slotMachine = new SlotMachine().isPlayable(player, bet);
-//        Playable roulette = new Roulette().isPlayable(player, bet);
-//
-//        if(baccarat.playableResult()){
-//            playableGames.add(baccarat);
-//        }
-//        if(slotMachine.playableResult()){
-//            playableGames.add(slotMachine);
-//        }
-//        if(roulette.playableResult()){
-//            playableGames.add(roulette);
-//        }
-
         return playableGames;
     }
-
 }

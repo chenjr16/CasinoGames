@@ -5,14 +5,12 @@ import com.casino.games.CasinoGames;
 import com.casino.games.Playable;
 import com.casino.player.Dealer;
 import com.casino.player.Player;
-
 import java.util.Random;
 import java.util.Scanner;
 
 public class Roulette extends CasinoGames {
     private Player player;
     private Dealer dealer;
-
     private int userInput;
     private double gameBet;
     private int winningNumber;
@@ -64,7 +62,7 @@ public class Roulette extends CasinoGames {
         System.exit(0);
     }
 
-    public void welcomeScreen() {
+    void welcomeScreen() {
         System.out.println("                 \t\tMarco Bragado");
         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         System.out.println("|                                                          |");
@@ -78,11 +76,12 @@ public class Roulette extends CasinoGames {
         scan.nextLine();
     }
 
-    public void initializeGame() {
+    void initializeGame() {
         clearConsole();
         bets.displayBets();                                         // Display Bets
         setWinningNumber(getWinningNumber());
         winResult = playBetType(bets.selectBetType());             // User Selects Bets
+        clearConsole();
         table.spinWheel();                                        // Ball Animation and Winning Number Reveal
         displayWinningNumber();
         didPlayerWin(winResult);                                 // If true, player won else lost
@@ -90,7 +89,7 @@ public class Roulette extends CasinoGames {
         playAgain();
     }
 
-    public boolean playBetType(int betType) {
+    boolean playBetType(int betType) {
         boolean winResult = false;
         switch (betType) {
             case 1:
@@ -118,7 +117,7 @@ public class Roulette extends CasinoGames {
         return winResult;
     }
 
-    public void didPlayerWin(boolean win) {
+    private void didPlayerWin(boolean win) {
         if (win) {
             System.out.println("\n\t\t\t   Congrats, you won!");
             System.out.println("\t\t  You just won " + totalWinning + " dollars\t\t\t");
@@ -130,7 +129,7 @@ public class Roulette extends CasinoGames {
 
     //ROULETTE METHODS
 
-    public boolean straight() {
+    private boolean straight() {
         clearConsole();
         winningModifier = 35;
         System.out.println("\n\t\tStraight [1 Number]");
@@ -170,7 +169,7 @@ public class Roulette extends CasinoGames {
         return false;
     }
 
-    public boolean oddsOrEvens() {
+    private boolean oddsOrEvens() {
         clearConsole();
         winningModifier = 1;
         System.out.println("\n\t\tODDS/EVENS");
@@ -194,7 +193,7 @@ public class Roulette extends CasinoGames {
         }
     }
 
-    public boolean redOrBlack() {
+    private boolean redOrBlack() {
         boolean isRed = false;
         clearConsole();
         System.out.println("\t\tRED/BLACK");
@@ -217,7 +216,7 @@ public class Roulette extends CasinoGames {
         return isRed && userInput == 1;
     }
 
-    public boolean lowOrHigh() {
+    private boolean lowOrHigh() {
         clearConsole();
         System.out.println("\n\t\tLows or Highs");
         table.displayRouletteTable();
@@ -231,7 +230,7 @@ public class Roulette extends CasinoGames {
         return winningNumber < 19 && userInput == 1 || winningNumber > 18 && userInput == 2;
     }
 
-    public boolean dozen() {
+    private boolean dozen() {
         clearConsole();
         winningModifier = 2;
         System.out.println("\n\t\tDozens");
@@ -255,7 +254,7 @@ public class Roulette extends CasinoGames {
         }
     }
 
-    public boolean columns() {
+    private boolean columns() {
         clearConsole();
         winningModifier = 2;
         System.out.println("\n\t\t\t\tColumns");
@@ -279,7 +278,7 @@ public class Roulette extends CasinoGames {
         return false;
     }
 
-    public boolean street() {
+    private boolean street() {
         clearConsole();
         winningModifier = 11;
         System.out.println("\t STREET");
@@ -314,7 +313,7 @@ public class Roulette extends CasinoGames {
         return false;
     }
 
-    public void displayWinningNumber() {
+    private void displayWinningNumber() {
         String winningNumberString = String.valueOf(winningNumber);
 //        System.out.println("\t\t\t\t\t\t " + winningNumberString);    <= will use for debugging when number is not displayed in result box.
         System.out.println("\t\t\t\t  **************");
@@ -336,11 +335,11 @@ public class Roulette extends CasinoGames {
         System.out.println("\t\t\t\t  **************");
     }
 
-    public int getWinningNumber() {
+    int getWinningNumber() {
         return randomNumber.nextInt(38);
     }
 
-    public void playAgain() {
+    private void playAgain() {
         System.out.println("\n\n\t\tWould you like to play again?");
         System.out.println("\n1)\tYes");
         System.out.println("2)\tNo, Go Back TO Main Casino Menu");
@@ -362,16 +361,15 @@ public class Roulette extends CasinoGames {
         }
     }
 
-    public void invalid() {
+    void invalid() {
         System.out.print("\n[INVALID SELECTION]  ");
     }
 
-    public void clearConsole() {
+    void clearConsole() {
         for (int i = 0; i < 50; ++i) System.out.println();
     }
 
     void setWinningNumber(int number) {
         this.winningNumber = number;
     }
-
 }
