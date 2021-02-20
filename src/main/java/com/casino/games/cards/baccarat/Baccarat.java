@@ -7,6 +7,7 @@ import com.casino.player.Player;
 import com.casino.games.cards.baccarat.ResponsePipeline.Response;
 import static com.casino.games.cards.baccarat.Baccarat.ResponseKeys.*;
 import static com.casino.games.cards.baccarat.Baccarat.ResultKeys.*;
+import static com.casino.games.cards.baccarat.Baccarat.WinKeys.*;
 import com.casino.games.cards.baccarat.BaccaratDealer.Result;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,15 +17,15 @@ public final class Baccarat extends CasinoGames {
     private final static double BET_MINIMUM = 10.0;
     private final Map<ResponseKeys, Response<?>> responseMap = new HashMap<>();
     private final Map<ResultKeys, Result<?>> resultMap = new HashMap<>();
+    private final Map<WinKeys, Boolean> winMap = new HashMap<>();
     private final ResponsePipeline responsePipeline = new ResponsePipeline();
     private final BaccaratDealer baccaratDealer = new BaccaratDealer();
+    private final WinDeterminer winDeterminer = new WinDeterminer();
     private Player player;
     private Dealer dealer;
     private double bet;
-    private boolean didUserWinPlay;
-    private boolean didUserWinSidePlay;
-    private double playWinnings;
-    private double sidePlayWinnings;
+    private String winOrLostPlayText;
+    private String winOrLostSidePlayText;
     private double totalWinnings;
 
     public Baccarat() {}
@@ -34,38 +35,54 @@ public final class Baccarat extends CasinoGames {
     void playBaccarat() {
         getResponsePipeline().start(getResponseMap());
         getBaccaratDealer().start(getResultMap());
-        dishOutWinnings(getResponseMap(), getResultMap());
+        getWinDeterminer().start(getWinMap(), getResponseMap(), getResultMap());
+        dishOutPlayWinnings();
+        dishOutSidePlayWinnings();
+        roundEndingSouts();
         resetAndRestart();
     }
 
-    void dishOutWinnings(Map<ResponseKeys, Response<?>> responseMap, Map<ResultKeys, Result<?>> resultMap) {
-        // Get all the user response data
-        Play playerPlay = (Play) responseMap.get(PLAY).getResponse();
-        SidePlay sidePlay = (SidePlay) responseMap.get(SIDE_PLAY).getResponse();
-
-        // Get the result data
-        Play winner = (Play) resultMap.get(WINNER).getResult();
-        boolean isPair = (boolean) resultMap.get(IS_PAIR).getResult();
-
-        // Main Plays.
-        playBetDeterminer(playerPlay, winner);
-        if(didUserWinPlay()) {
-            System.out.println(getWinText(playWinnings, playerPlay));
-        }
-
-        //  Side Plays
-        sidePlayBetDeterminer(sidePlay, isPair);
-        if(didUserWinSidePlay()) {
-            System.out.println(getWinText(sidePlayWinnings, sidePlay));
-        }
+    private void roundEndingSouts() {
+        System.out.println(getWinOrLostPlayText());
+        System.out.println(getWinOrLostSidePlayText());
         System.out.println(roundEndingText());
     }
 
-    // Set the Winners helper for the dishOutWinnings method.
+    void dishOutPlayWinnings() {
+        Play play = (Play) getResponseMap().get(PLAY).getResponse();
+        boolean result = getWinMap().get(PLAY_RESULT);
+        int multiplier = play.getMultiplier();
+        double bet = (double) getResponseMap().get(BET).getResponse();
+        double winnings = multiplier * bet;
+        if(result) {
+            moneyTransaction(winnings, true);
+            setWinOrLostPlayText(true, winnings, play);
+        } else {
+            moneyTransaction(bet, false);
+            setWinOrLostPlayText(false, winnings, play);
+        }
+    }
+
+    void dishOutSidePlayWinnings() {
+        SidePlay sidePlay = (SidePlay) getResponseMap().get(SIDE_PLAY).getResponse();
+        boolean result = getWinMap().get(SIDE_PLAY_RESULT);
+        int multiplier = sidePlay.getMultiplier();
+        double bet = (double) getResponseMap().get(SIDE_BET).getResponse();
+        double winnings = multiplier * bet;
+        if(result) {
+            moneyTransaction(winnings, true);
+            setWinOrLostSidePlayText(true, winnings, sidePlay);
+        } else {
+            moneyTransaction(bet, false);
+            setWinOrLostSidePlayText(false, winnings, sidePlay);
+        }
+    }
 
     private String roundEndingText() {
+        boolean sidePlayResult = getWinMap().get(SIDE_PLAY_RESULT);
+        boolean playResult = getWinMap().get(PLAY_RESULT);
         String result = "";
-        if(!didUserWinPlay() && !didUserWinSidePlay()) {
+        if(!playResult && !sidePlayResult) {
             result = "\nSorry " + getPlayer().getName() + ". You didn't win a thing. " +
                     "Better luck next time.";
         } else {
@@ -84,15 +101,28 @@ public final class Baccarat extends CasinoGames {
     }
 
 
-    private String getWinText(double winnings, BetType betType) {
-        return "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + betType;
+    private void setWinOrLostPlayText(boolean won, double winnings, Play play) {
+        String result = "";
+        if(won) {
+            result = "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + play;
+        } else {
+            result = "\nSorry " + getPlayer().getName() + ". You lost " + winnings + " on " + play;
+        }
+        this.winOrLostPlayText = result;
+    }
+
+    private void setWinOrLostSidePlayText(boolean won, double winnings, SidePlay sidePlay) {
+        String result = "";
+        if(won) {
+            result = "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + sidePlay;
+        } else {
+            result = "\nSorry " + getPlayer().getName() + ". You lost " + winnings + " on " + sidePlay;
+        }
+        this.winOrLostSidePlayText = result;
     }
 
     private void resetAndRestart() {
         resetTotalWinnings();
-        setPlayWinnings(0.0);
-        setDidUserWinPlay(false);
-        setDidUserWinSidePlay(false);
         setBet(0.0);
         createResultMap();
         createResponseMap();
@@ -100,7 +130,7 @@ public final class Baccarat extends CasinoGames {
     }
 
     private void createResponseMap() {
-        getResponseMap().put(PLAY, new Response<>(0));
+        getResponseMap().put(PLAY, new Response<>(Play.PLAYER));
         getResponseMap().put(BET, new Response<>(getBet()));
         getResponseMap().put(SIDE_PLAY, new Response<>(SidePlay.NONE));
         getResponseMap().put(SIDE_BET, new Response<>(0.0));
@@ -117,47 +147,22 @@ public final class Baccarat extends CasinoGames {
         getResultMap().put(IS_PAIR, new Result<>(false));
     }
 
-    private void playBetDeterminer(Play play, Play winner) {
-        int multiplier = play.getMultiplier();
-        double bet = (double) getResponseMap().get(BET).getResponse();
-        double winnings = multiplier * bet;
-        if(play.equals(winner)) {
-            setDidUserWinPlay(true);
-            setPlayWinnings(winnings);
-            moneyTransaction(winnings, true);
-        } else {
-            moneyTransaction(bet, false);
-        }
-    }
-
-    private void sidePlayBetDeterminer(SidePlay sidePlay, boolean isPair) {
-        int multiplier = sidePlay.getMultiplier();
-        double bet = (double) getResponseMap().get(SIDE_BET).getResponse();
-        double winnings = (multiplier * bet);
-        if(sidePlay.equals(SidePlay.PAIR) && isPair) {
-            setDidUserWinSidePlay(true);
-            setSidePlayWinnings(winnings);
-            moneyTransaction(winnings, true);
-        } else {
-            moneyTransaction(bet, false);
-        }
+    private  void createWinMap() {
+        getWinMap().put(PLAY_RESULT, false);
+        getWinMap().put(SIDE_PLAY_RESULT, false);
     }
 
     // Getters and Setters
     private ResponsePipeline getResponsePipeline() {
-        return responsePipeline;
+        return this.responsePipeline;
     }
 
     private BaccaratDealer getBaccaratDealer() {
-        return baccaratDealer;
+        return this.baccaratDealer;
     }
 
-    private boolean didUserWinPlay() {
-        return didUserWinPlay;
-    }
-
-    private boolean didUserWinSidePlay() {
-        return didUserWinSidePlay;
+    private WinDeterminer getWinDeterminer() {
+        return this.winDeterminer;
     }
 
     private void resetTotalWinnings() {
@@ -166,22 +171,6 @@ public final class Baccarat extends CasinoGames {
 
     private double getTotalWinnings() {
         return totalWinnings;
-    }
-
-    private void setDidUserWinPlay(boolean result) {
-        this.didUserWinPlay = result;
-    }
-
-    private void setDidUserWinSidePlay(boolean result) {
-        this.didUserWinSidePlay = result;
-    }
-
-    private void setPlayWinnings(double playWinnings) {
-        this.playWinnings = playWinnings;
-    }
-
-    private void setSidePlayWinnings(double sidePlayWinnings) {
-        this.sidePlayWinnings = sidePlayWinnings;
     }
 
     private Player getPlayer() {
@@ -216,12 +205,24 @@ public final class Baccarat extends CasinoGames {
         totalWinnings -= amount;
     }
 
+    private String getWinOrLostPlayText() {
+        return winOrLostPlayText;
+    }
+
+    private String getWinOrLostSidePlayText() {
+        return winOrLostSidePlayText;
+    }
+
     Map<ResponseKeys, Response<?>> getResponseMap() {
         return this.responseMap;
     }
 
     Map<ResultKeys, Result<?>> getResultMap() {
         return this.resultMap;
+    }
+
+    Map<WinKeys, Boolean> getWinMap() {
+        return this.winMap;
     }
 
     // GameInterface overrides
@@ -245,6 +246,7 @@ public final class Baccarat extends CasinoGames {
         setBet(bet);
         createResultMap();
         createResponseMap();
+        createWinMap();
         System.out.println("\nWelcome to Nick's Baccarat.");
         playBaccarat();
     }
@@ -273,4 +275,5 @@ public final class Baccarat extends CasinoGames {
     enum ResponseKeys {PLAY, BET, SIDE_PLAY, SIDE_BET, BET_MINIMUM, PLAYER_BALANCE}
     enum ResultKeys {WINNER, PLAYER_TOTAL, PLAYER_ROUND1, BANKER_TOTAL, BANKER_ROUND1, IS_PAIR,
                         PLAYER_THIRD_CARD, BANKER_THIRD_CARD}
+    enum WinKeys {PLAY_RESULT, SIDE_PLAY_RESULT}
 }
