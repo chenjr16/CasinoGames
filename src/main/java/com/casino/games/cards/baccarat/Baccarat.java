@@ -79,14 +79,16 @@ public final class Baccarat extends CasinoGames {
     }
 
     private String roundEndingText() {
-        boolean sidePlayResult = getWinMap().get(SIDE_PLAY_RESULT);
-        boolean playResult = getWinMap().get(PLAY_RESULT);
         String result = "";
-        if(!playResult && !sidePlayResult) {
+        if(getTotalWinnings() == 0) {
             result = "\nSorry " + getPlayer().getName() + ". You didn't win a thing. " +
                     "Better luck next time.";
-        } else {
-            result = "\nYou won a total of " + getTotalWinnings() + " playing Baccarat.";
+        } else if(getTotalWinnings() > 0) {
+            result = "\nCongrats " + getPlayer().getName() + ". You won a total of " +
+                    getTotalWinnings() + " playing Baccarat.";
+        } else if (getTotalWinnings() < 0) {
+            result = "\nSorry " + getPlayer().getName() + ". You lost " +
+                    getTotalWinnings() + " playing Baccarat.";
         }
         return result;
     }
@@ -103,20 +105,22 @@ public final class Baccarat extends CasinoGames {
 
     private void setWinOrLostPlayText(boolean won, double winnings, Play play) {
         String result = "";
+        double playBet = (double) getResponseMap().get(BET).getResponse();
         if(won) {
             result = "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + play;
         } else {
-            result = "\nSorry " + getPlayer().getName() + ". You lost " + winnings + " on " + play;
+            result = "\nSorry " + getPlayer().getName() + ". You lost " + playBet + " on " + play;
         }
         this.winOrLostPlayText = result;
     }
 
     private void setWinOrLostSidePlayText(boolean won, double winnings, SidePlay sidePlay) {
         String result = "";
+        double sideBet = (double) getResponseMap().get(SIDE_BET).getResponse();
         if(won) {
             result = "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + sidePlay;
         } else {
-            result = "\nSorry " + getPlayer().getName() + ". You lost " + winnings + " on " + sidePlay;
+            result = "\nSorry " + getPlayer().getName() + ". You lost " + sideBet + " on " + sidePlay;
         }
         this.winOrLostSidePlayText = result;
     }
