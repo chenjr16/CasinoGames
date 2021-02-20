@@ -15,7 +15,7 @@ import static com.casino.games.cards.baccarat.Baccarat.ResponseKeys;
 import static com.casino.games.cards.baccarat.Baccarat.ResultKeys;
 import static com.casino.games.cards.baccarat.utils.Pipe.apply;
 
-class WinDeterminer {
+final class WinDeterminer {
     private Map<ResultKeys, Result<?>> resultMap;
     private Map<ResponseKeys, Response<?>> responseMap;
 

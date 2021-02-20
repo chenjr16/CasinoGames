@@ -102,9 +102,8 @@ public final class Baccarat extends CasinoGames {
         getDealer().moneyTransfer(getPlayer(), result, winnings);
     }
 
-
     private void setWinOrLostPlayText(boolean won, double winnings, Play play) {
-        String result = "";
+        String result;
         double playBet = (double) getResponseMap().get(BET).getResponse();
         if(won) {
             result = "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + play;
@@ -115,7 +114,7 @@ public final class Baccarat extends CasinoGames {
     }
 
     private void setWinOrLostSidePlayText(boolean won, double winnings, SidePlay sidePlay) {
-        String result = "";
+        String result;
         double sideBet = (double) getResponseMap().get(SIDE_BET).getResponse();
         if(won) {
             result = "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + sidePlay;
