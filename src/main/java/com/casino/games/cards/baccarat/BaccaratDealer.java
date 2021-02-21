@@ -187,8 +187,6 @@ final class BaccaratDealer {
     private Map<ResultKeys, Result<?>> INSERT(Map<ResultKeys, Result<?>> resultMap) {
         // TODO: run validations
         getDatabase().setWinner((Baccarat.Play) resultMap.get(WINNER).getResult());
-        getDatabase().setPlayerTotal((int) resultMap.get(PLAYER_TOTAL).getResult());
-        getDatabase().setBankerTotal((int) resultMap.get(BANKER_TOTAL).getResult());
         getDatabase().setPair((boolean) resultMap.get(IS_PAIR).getResult());
         return resultMap;
     }

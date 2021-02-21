@@ -3,16 +3,14 @@ import static com.casino.games.cards.baccarat.Baccarat.Play;
 import static com.casino.games.cards.baccarat.Baccarat.SidePlay;
 
 class Database {
-    Play play;
-    double bet;
-    SidePlay sidePlay;
-    double sideBet;
-    Play winner;
-    int playerTotal;
-    int bankerTotal;
-    boolean isPair;
-    boolean playResult;
-    boolean sidePlayResult;
+    private Play play;
+    private double bet;
+    private SidePlay sidePlay;
+    private double sideBet;
+    private Play winner;
+    private boolean isPair;
+    private boolean playResult;
+    private boolean sidePlayResult;
 
     Play getPlay() {
         return play;
@@ -55,16 +53,6 @@ class Database {
         this.winner = winner;
     }
 
-    void setPlayerTotal(int playerTotal) {
-        this.playerTotal = playerTotal;
-    }
-
-
-    void setBankerTotal(int bankerTotal) {
-        this.bankerTotal = bankerTotal;
-    }
-
-
     boolean getPair() {
         return isPair;
     }
@@ -98,9 +86,9 @@ class Database {
                 ", sidePlay=" + getSidePlay() +
                 ", sideBet=" + getSideBet() +
                 ", WINNER=" + getWinner() +
-                ", IS_PAIR=" + isPair +
-                ", PLAY_RESULT=" + playResult +
-                ", SIDE_PLAY_RESULT=" + sidePlayResult +
+                ", IS_PAIR=" + getPair() +
+                ", PLAY_RESULT=" + getPlayResult() +
+                ", SIDE_PLAY_RESULT=" + getSidePlayResult() +
                 '}';
     }
 }
