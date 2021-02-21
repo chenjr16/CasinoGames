@@ -25,6 +25,7 @@ public class BaccaratTest {
     Baccarat mockBaccarat;
     Player player;
     Dealer dealer;
+    Database database;
 
     @Before
     public void setUp() {
@@ -37,16 +38,17 @@ public class BaccaratTest {
         player = new Player("Nick", 50_000.0);
         dealer = new Dealer("Ron", 50_000_000.0);
         mockBaccarat.play(player, 1000, dealer);
+        database = new Database();
+        mockBaccarat.setDatabase(database);
     }
 
     @Test
     public void dishOutWinnings_shouldIncreasePlayerBalanceByTwoTimesTheBet_whenPlayIsCorrectAndIsBanker() {
         double bet = 1000;
         double newExpectedTotal = 50_000.0 + (bet * 2);
-        responseMap.put(BET, new Response<>(bet));
-        responseMap.put(PLAY, new Response<>(BANKER));
-        winMap.put(PLAY_RESULT, true);
-
+        database.setPlay(BANKER);
+        database.setBet(bet);
+        database.setPlayResult(true);
         mockBaccarat.dishOutPlayWinnings();
 
         assertEquals(newExpectedTotal, player.getBalance(), .001);
@@ -56,10 +58,9 @@ public class BaccaratTest {
     public void dishOutWinnings_shouldIncreasePlayerBalanceByTwoTimesTheBet_whenPlayIsCorrectAndIsPlayer() {
         double bet = 1000;
         double newExpectedTotal = 50_000.0 + (bet * 2);
-        responseMap.put(BET, new Response<>(bet));
-        responseMap.put(PLAY, new Response<>(PLAYER));
-        winMap.put(PLAY_RESULT, true);
-
+        database.setBet(bet);
+        database.setPlay(PLAYER);
+        database.setPlayResult(true);
         mockBaccarat.dishOutPlayWinnings();
 
         assertEquals(newExpectedTotal, player.getBalance(), .001);
@@ -68,10 +69,9 @@ public class BaccaratTest {
     public void dishOutWinnings_shouldIncreasePlayerBalanceByNineTimesTheBet_whenPlayIsCorrectAndIsTie() {
         double bet = 1000;
         double newExpectedTotal = 50_000.0 + (bet * 9);
-        responseMap.put(BET, new Response<>(bet));
-        responseMap.put(PLAY, new Response<>(TIE));
-        winMap.put(PLAY_RESULT, true);
-
+        database.setBet(bet);
+        database.setPlay(TIE);
+        database.setPlayResult(true);
         mockBaccarat.dishOutPlayWinnings();
 
         assertEquals(newExpectedTotal, player.getBalance(), .001);
@@ -80,10 +80,10 @@ public class BaccaratTest {
     @Test
     public void dishOutWinnings_shouldTakeAwayBetFromPlayerBalance_whenPlayIsWrong() {
         double bet = 2000.0;
-        double originalBalance = (double) responseMap.get(PLAYER_BALANCE).getResponse();
-        responseMap.put(BET, new Response<>(bet));
-        winMap.put(PLAY_RESULT, false);
-
+        double originalBalance = 50_000.0;
+        database.setBet(bet);
+        database.setPlay(PLAYER);
+        database.setPlayResult(false);
         mockBaccarat.dishOutPlayWinnings();
 
         assertEquals(originalBalance - bet, player.getBalance(), .001);
@@ -94,7 +94,6 @@ public class BaccaratTest {
     @Test
     public void testSetWinnings_shouldIncreasePlayerBalanceByMultiplierAmountTimesBetAmount() {
         double expectedTotal = 50_000.0 + 2000;
-
         mockBaccarat.moneyTransaction(2000, true);
 
         assertEquals(expectedTotal, player.getBalance(), .001);
@@ -106,9 +105,9 @@ public class BaccaratTest {
     public void dishOutSidePlayWinnings_shouldIncreasePlayerBalanceByElevenTimesTheBet_whenSidePlayIsCorrectAndIsPair() {
         double bet = 1000;
         double newExpectedTotal = 50_000.0 + (bet * 11);
-        responseMap.put(SIDE_PLAY, new Response<>(PAIR));
-        responseMap.put(SIDE_BET, new Response<>(bet));
-        winMap.put(SIDE_PLAY_RESULT, true);
+        database.setSidePlay(PAIR);
+        database.setSideBet(bet);
+        database.setSidePlayResult(true);
 
         mockBaccarat.dishOutSidePlayWinnings();
 
@@ -119,10 +118,10 @@ public class BaccaratTest {
     @Test
     public void dishOutSidePlayWinnings_shouldTakeAwayBetFromPlayerBalance_whenSidePlayIsWrong() {
         double bet = 2000.0;
-        double originalBalance = (double) responseMap.get(PLAYER_BALANCE).getResponse();
-        responseMap.put(SIDE_BET, new Response<>(bet));
-        winMap.put(SIDE_PLAY_RESULT, false);
-
+        double originalBalance = 50_000.0;
+        database.setSidePlay(PAIR);
+        database.setSideBet(bet);
+        database.setSidePlayResult(false);
         mockBaccarat.dishOutSidePlayWinnings();
 
         assertEquals(originalBalance - bet, player.getBalance(), .001);

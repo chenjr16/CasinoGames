@@ -15,6 +15,7 @@ import java.util.Map;
 
 public final class Baccarat extends CasinoGames {
     private final static double BET_MINIMUM = 10.0;
+    private Database database = new Database();
     private final Map<ResponseKeys, Response<?>> responseMap = new HashMap<>();
     private final Map<ResultKeys, Result<?>> resultMap = new HashMap<>();
     private final Map<WinKeys, Boolean> winMap = new HashMap<>();
@@ -33,9 +34,12 @@ public final class Baccarat extends CasinoGames {
     // Business methods
 
     void playBaccarat() {
-        getResponsePipeline().start(getResponseMap());
-        getBaccaratDealer().start(getResultMap());
-        getWinDeterminer().start(getWinMap(), getResponseMap(), getResultMap());
+        getResponsePipeline().start(getResponseMap(), getDatabase());
+        System.out.println(database);
+        getBaccaratDealer().start(getResultMap(), getDatabase());
+        System.out.println(database);
+        getWinDeterminer().start(getWinMap(), getDatabase());
+        System.out.println(database);
         dishOutPlayWinnings();
         dishOutSidePlayWinnings();
         roundEndingSouts();
@@ -49,10 +53,10 @@ public final class Baccarat extends CasinoGames {
     }
 
     void dishOutPlayWinnings() {
-        Play play = (Play) getResponseMap().get(PLAY).getResponse();
-        boolean result = getWinMap().get(PLAY_RESULT);
+        Play play = getDatabase().getPlay();
+        boolean result = getDatabase().getPlayResult();
         int multiplier = play.getMultiplier();
-        double bet = (double) getResponseMap().get(BET).getResponse();
+        double bet = getDatabase().getBet();
         double winnings = multiplier * bet;
         if(result) {
             moneyTransaction(winnings, true);
@@ -64,10 +68,10 @@ public final class Baccarat extends CasinoGames {
     }
 
     void dishOutSidePlayWinnings() {
-        SidePlay sidePlay = (SidePlay) getResponseMap().get(SIDE_PLAY).getResponse();
-        boolean result = getWinMap().get(SIDE_PLAY_RESULT);
+        SidePlay sidePlay = getDatabase().getSidePlay();
+        boolean result = getDatabase().getSidePlayResult();
         int multiplier = sidePlay.getMultiplier();
-        double bet = (double) getResponseMap().get(SIDE_BET).getResponse();
+        double bet = getDatabase().getSideBet();
         double winnings = multiplier * bet;
         if(result) {
             moneyTransaction(winnings, true);
@@ -104,7 +108,7 @@ public final class Baccarat extends CasinoGames {
 
     private void setWinOrLostPlayText(boolean won, double winnings, Play play) {
         String result;
-        double playBet = (double) getResponseMap().get(BET).getResponse();
+        double playBet = getDatabase().getBet();
         if(won) {
             result = "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + play;
         } else {
@@ -115,7 +119,7 @@ public final class Baccarat extends CasinoGames {
 
     private void setWinOrLostSidePlayText(boolean won, double winnings, SidePlay sidePlay) {
         String result;
-        double sideBet = (double) getResponseMap().get(SIDE_BET).getResponse();
+        double sideBet = getDatabase().getSideBet();
         if(won) {
             result = "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + sidePlay;
         } else {
@@ -227,6 +231,14 @@ public final class Baccarat extends CasinoGames {
     Map<WinKeys, Boolean> getWinMap() {
         return this.winMap;
     }
+
+    private Database getDatabase() {
+        return this.database;
+    }
+    void setDatabase(Database database) {
+        this.database = database;
+    }
+
 
     // GameInterface overrides
 

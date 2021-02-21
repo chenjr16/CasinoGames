@@ -8,14 +8,16 @@ import static com.casino.games.cards.baccarat.Baccarat.SidePlay.*;
 import static com.casino.games.cards.baccarat.utils.Pipe.apply;
 
 final class ResponsePipeline {
+    private Database database;
 
-    void start(Map<ResponseKeys, Response<?>> map) {
+    void start(Map<ResponseKeys, Response<?>> map, Database database) {
+        setDatabase(database);
         apply(map)
                 .pipe(this::getPlay)
                 .pipe(this::getPlayBet)
                 .pipe(this::getSidePlay)
                 .pipe(this::getSidePlayBet)
-                .result();
+                .pipe(this::INSERT);
     }
 
     Map<ResponseKeys, Response<?>> getPlay(Map<ResponseKeys, Response<?>> map) {
@@ -81,6 +83,25 @@ final class ResponsePipeline {
         double playerBalance = (double) map.get(PLAYER_BALANCE).getResponse();
         System.out.println("\nBets must be between: " + betMinimum +
                 " and " + playerBalance);
+    }
+
+    private Map<ResponseKeys, Response<?>> INSERT(Map<ResponseKeys, Response<?>> map) {
+        // TODO: Run validations
+        getDatabase().setPlay((Baccarat.Play) map.get(PLAY).getResponse());
+        getDatabase().setBet((double) map.get(BET).getResponse());
+        getDatabase().setSidePlay((Baccarat.SidePlay) map.get(SIDE_PLAY).getResponse());
+        getDatabase().setSideBet((double) map.get(SIDE_BET).getResponse());
+        return map;
+    }
+
+    // getters and setters
+
+    private void setDatabase(Database database) {
+        this.database = database;
+    }
+
+    private Database getDatabase() {
+        return this.database;
     }
 
     // {String, Response<T>}

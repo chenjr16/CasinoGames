@@ -13,11 +13,8 @@ import static com.casino.games.cards.baccarat.Baccarat.ResponseKeys.*;
 import com.casino.games.cards.baccarat.ResponsePipeline.Response;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-
-
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
-
 
 public class ResponsePipelineTest {
 
@@ -49,7 +46,7 @@ public class ResponsePipelineTest {
     }
 
     @Test
-    public void testGetPlay_shouldReturnResponseMapWithUserInput() throws Exception {
+    public void testGetPlay_shouldReturnResponseMapWithUserInput() {
         Baccarat.Play play = Baccarat.Play.PLAYER;
         casinoMock.when(() -> Casino.prompt(anyString(), anyString(), anyString())).thenReturn(String.valueOf(0));
 

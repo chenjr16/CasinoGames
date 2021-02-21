@@ -17,6 +17,7 @@ import java.util.Map;
  */
 final class BaccaratDealer {
     private List<Card> deckOfCards = Cards.getDeck();
+    private Database database;
     private boolean isPlayerFrozen = false;
     private boolean isBankerFrozen = false;
 
@@ -24,7 +25,8 @@ final class BaccaratDealer {
         Collections.shuffle(getDeckOfCards());
     }
 
-    void start(Map<ResultKeys, Result<?>> resultMap) {
+    void start(Map<ResultKeys, Result<?>> resultMap, Database database) {
+        setDatabase(database);
         System.out.println("\nStarting game. No more bets please!");
         sleepBetweenDraw(3000);
         apply(resultMap)
@@ -33,7 +35,7 @@ final class BaccaratDealer {
                 .pipe(this::playerDrawIfEligible)
                 .pipe(this::bankerDrawIfEligible)
                 .pipe(this::determineWinner)
-                .result();
+                .pipe(this::INSERT);
     }
 
     Map<ResultKeys, Result<?>> drawTwoFor(Map<ResultKeys, Result<?>> resultMap, Baccarat.Play play) {
@@ -174,12 +176,21 @@ final class BaccaratDealer {
                 card2.getRankValue() + " for a total of " + total);
     }
 
-    private void sleepBetweenDraw(int time) {
+    void sleepBetweenDraw(int time) {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private Map<ResultKeys, Result<?>> INSERT(Map<ResultKeys, Result<?>> resultMap) {
+        // TODO: run validations
+        getDatabase().setWinner((Baccarat.Play) resultMap.get(WINNER).getResult());
+        getDatabase().setPlayerTotal((int) resultMap.get(PLAYER_TOTAL).getResult());
+        getDatabase().setBankerTotal((int) resultMap.get(BANKER_TOTAL).getResult());
+        getDatabase().setPair((boolean) resultMap.get(IS_PAIR).getResult());
+        return resultMap;
     }
 
     // Getters and Setters
@@ -207,6 +218,14 @@ final class BaccaratDealer {
     void replaceDeckOfCards(List<Card> cards) {
         this.deckOfCards = cards;
     }
+
+    private void setDatabase(Database database) {
+        this.database = database;
+    }
+    private Database getDatabase() {
+        return this.database;
+    }
+
 
     static class Result<T> {
         private final T result;
