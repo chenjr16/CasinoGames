@@ -27,7 +27,7 @@ final class BaccaratDealer {
 
     void start(Map<ResultKeys, Result<?>> resultMap, Database database) {
         setDatabase(database);
-        System.out.println("\nStarting game. No more bets please!");
+        View.gameStartMessage();
         sleepBetweenDraw(3000);
         apply(resultMap)
                 .pipe(this::drawTwoFor, Baccarat.Play.PLAYER)
@@ -49,7 +49,7 @@ final class BaccaratDealer {
             total %= 10;
         }
 
-        printTotals(play, card1, card2, total);
+        View.printTotals(play, card1, card2, total);
         setFrozen(play, total);
         insertTotals(resultMap, play, total);
         sleepBetweenDraw(2000);
@@ -161,19 +161,9 @@ final class BaccaratDealer {
         if(newTotal > 9) {
             newTotal %= 10;
         }
-        printTotals(play, thirdCard, newTotal);
+        View.printTotals(play, thirdCard, newTotal);
         resultMap.put(bankerOrPlayerTotal, new Result<>(newTotal));
         sleepBetweenDraw(2000);
-    }
-
-    private void printTotals(Baccarat.Play play, Card thirdCard, int total) {
-        System.out.println("\nThe " + play + " received a " + thirdCard.getRankValue() +
-                    " for a total of " + total);
-    }
-
-    private void printTotals(Baccarat.Play play, Card card1, Card card2, int total) {
-        System.out.println("\nThe " + play + " received a " + card1.getRankValue() + " and a " +
-                card2.getRankValue() + " for a total of " + total);
     }
 
     void sleepBetweenDraw(int time) {

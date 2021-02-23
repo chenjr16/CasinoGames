@@ -1,6 +1,5 @@
 package com.casino.games.cards.baccarat;
 
-import com.casino.games.Casino;
 import java.util.Map;
 import static com.casino.games.cards.baccarat.Baccarat.ResponseKeys;
 import static com.casino.games.cards.baccarat.Baccarat.ResponseKeys.*;
@@ -22,12 +21,11 @@ final class ResponsePipeline {
 
     Map<ResponseKeys, Response<?>> getPlay(Map<ResponseKeys, Response<?>> map) {
         Baccarat.Play[] listOfPlays = Baccarat.Play.values();
-        System.out.println("\nHere you will select a play.");
+        View.playText();
         for(int i = 0; i < listOfPlays.length; i++) {
             System.out.println(i + ": " + Baccarat.Play.values()[i]);
         }
-        String input = Casino.prompt("\nPlease select a play. Enter the number. ","[0-" +
-                                        listOfPlays.length + "]", "Not a correct choice.");
+        String input = View.askWhoToPlacePlayBetOn(listOfPlays.length);
         int choice = Integer.parseInt(input);
         Baccarat.Play play = listOfPlays[choice];
         map.put(PLAY, new Response<>(play));
@@ -38,7 +36,7 @@ final class ResponsePipeline {
         double currentBet = (double) map.get(BET).getResponse();
         while (isInvalidBet(map, currentBet)) {
             printInvalidBetText(map);
-            String input = Casino.prompt("\nHow much do you want to bet? ", "\\d+", "Not a valid bet.");
+            String input = View.askHowMuchBetOnPlay();
             currentBet = Double.parseDouble(input);
         }
         map.put(BET, new Response<>(currentBet));
@@ -46,13 +44,12 @@ final class ResponsePipeline {
     }
 
     Map<ResponseKeys, Response<?>> getSidePlay(Map<ResponseKeys, Response<?>> map) {
-        System.out.println("\nHere you will select a side play.");
+        View.sidePlayText();
         Baccarat.SidePlay[] listOfSidePlays = Baccarat.SidePlay.values();
         for(int i = 0; i < listOfSidePlays.length; i++) {
             System.out.println(i + ": " + listOfSidePlays[i]);
         }
-        String input = Casino.prompt("\nPlease select a side play. Enter the number.",
-                                        "[0-" + listOfSidePlays.length + "]", "Not a correct choice.");
+        String input = View.askIfWantToPlaySidePlay(listOfSidePlays.length);
         int choice = Integer.parseInt(input);
         Baccarat.SidePlay sidePlay = listOfSidePlays[choice];
         map.put(SIDE_PLAY, new Response<>(sidePlay));
@@ -66,7 +63,7 @@ final class ResponsePipeline {
         }
         while(isInvalidBet(map, currentSideBet)) {
             printInvalidBetText(map);
-            String input = Casino.prompt("\nHow much do you want to bet on PAIR play? ", "\\d+", "Not a valid bet.");
+            String input = View.askHowMuchBetOnSidePlay();
             currentSideBet = Double.parseDouble(input);
         }
         map.put(SIDE_BET, new Response<>(currentSideBet));
@@ -81,8 +78,7 @@ final class ResponsePipeline {
     private void printInvalidBetText(Map<ResponseKeys, Response<?>> map) {
         double betMinimum = (double) map.get(BET_MINIMUM).getResponse();
         double playerBalance = (double) map.get(PLAYER_BALANCE).getResponse();
-        System.out.println("\nBets must be between: " + betMinimum +
-                " and " + playerBalance);
+        View.printInvalidBet(betMinimum, playerBalance);
     }
 
     private Map<ResponseKeys, Response<?>> INSERT(Map<ResponseKeys, Response<?>> map) {

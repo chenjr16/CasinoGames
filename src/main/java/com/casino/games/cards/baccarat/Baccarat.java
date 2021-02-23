@@ -25,8 +25,6 @@ public final class Baccarat extends CasinoGames {
     private Player player;
     private Dealer dealer;
     private double bet;
-    private String winOrLostPlayText;
-    private String winOrLostSidePlayText;
     private double totalWinnings;
 
     public Baccarat() {}
@@ -35,21 +33,12 @@ public final class Baccarat extends CasinoGames {
 
     void playBaccarat() {
         getResponsePipeline().start(getResponseMap(), getDatabase());
-        System.out.println(database);
         getBaccaratDealer().start(getResultMap(), getDatabase());
-        System.out.println(database);
         getWinDeterminer().start(getWinMap(), getDatabase());
-        System.out.println(database);
         dishOutPlayWinnings();
         dishOutSidePlayWinnings();
-        roundEndingSouts();
+        roundEndingText();
         resetAndRestart();
-    }
-
-    private void roundEndingSouts() {
-        System.out.println(getWinOrLostPlayText());
-        System.out.println(getWinOrLostSidePlayText());
-        System.out.println(roundEndingText());
     }
 
     void dishOutPlayWinnings() {
@@ -60,10 +49,10 @@ public final class Baccarat extends CasinoGames {
         double winnings = multiplier * bet;
         if(result) {
             moneyTransaction(winnings, true);
-            setWinOrLostPlayText(true, winnings, play);
+            View.playWonMessage(getPlayer().getName(), winnings, play);
         } else {
             moneyTransaction(bet, false);
-            setWinOrLostPlayText(false, winnings, play);
+            View.playLostMessage(getPlayer().getName(), bet, play);
         }
     }
 
@@ -75,26 +64,21 @@ public final class Baccarat extends CasinoGames {
         double winnings = multiplier * bet;
         if(result) {
             moneyTransaction(winnings, true);
-            setWinOrLostSidePlayText(true, winnings, sidePlay);
+            View.sidePlayWonMessage(getPlayer().getName(), winnings, sidePlay);
         } else {
             moneyTransaction(bet, false);
-            setWinOrLostSidePlayText(false, winnings, sidePlay);
+            View.sidePlayLostMessage(getPlayer().getName(), bet, sidePlay);
         }
     }
 
-    private String roundEndingText() {
-        String result = "";
+    private void roundEndingText() {
         if(getTotalWinnings() == 0) {
-            result = "\nSorry " + getPlayer().getName() + ". You didn't win a thing. " +
-                    "Better luck next time.";
+            View.wonNothing(getPlayer().getName());
         } else if(getTotalWinnings() > 0) {
-            result = "\nCongrats " + getPlayer().getName() + ". You won a total of " +
-                    getTotalWinnings() + " playing Baccarat.";
+            View.wonSomething(getPlayer().getName(), getTotalWinnings());
         } else if (getTotalWinnings() < 0) {
-            result = "\nSorry " + getPlayer().getName() + ". You lost " +
-                    getTotalWinnings() + " playing Baccarat.";
+            View.lostSomething(getPlayer().getName(), getTotalWinnings());
         }
-        return result;
     }
 
     void moneyTransaction(double winnings, boolean result) {
@@ -104,28 +88,6 @@ public final class Baccarat extends CasinoGames {
             subtractFromTotalWinnings(winnings);
         }
         getDealer().moneyTransfer(getPlayer(), result, winnings);
-    }
-
-    private void setWinOrLostPlayText(boolean won, double winnings, Play play) {
-        String result;
-        double playBet = getDatabase().getBet();
-        if(won) {
-            result = "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + play;
-        } else {
-            result = "\nSorry " + getPlayer().getName() + ". You lost " + playBet + " on " + play;
-        }
-        this.winOrLostPlayText = result;
-    }
-
-    private void setWinOrLostSidePlayText(boolean won, double winnings, SidePlay sidePlay) {
-        String result;
-        double sideBet = getDatabase().getSideBet();
-        if(won) {
-            result = "\nCongrats " + getPlayer().getName() + ". You won " + winnings + " on " + sidePlay;
-        } else {
-            result = "\nSorry " + getPlayer().getName() + ". You lost " + sideBet + " on " + sidePlay;
-        }
-        this.winOrLostSidePlayText = result;
     }
 
     private void resetAndRestart() {
@@ -212,14 +174,6 @@ public final class Baccarat extends CasinoGames {
         totalWinnings -= amount;
     }
 
-    private String getWinOrLostPlayText() {
-        return winOrLostPlayText;
-    }
-
-    private String getWinOrLostSidePlayText() {
-        return winOrLostSidePlayText;
-    }
-
     Map<ResponseKeys, Response<?>> getResponseMap() {
         return this.responseMap;
     }
@@ -262,7 +216,7 @@ public final class Baccarat extends CasinoGames {
         createResultMap();
         createResponseMap();
         createWinMap();
-        System.out.println("\nWelcome to Nick's Baccarat.");
+        View.welcomeScreen();
         playBaccarat();
     }
 
@@ -271,7 +225,7 @@ public final class Baccarat extends CasinoGames {
 
     @Override
     public void endGame() {
-        System.out.println("Hey get back here!!!");
+        View.endGameMessage();
     }
 
     interface BetType {}
