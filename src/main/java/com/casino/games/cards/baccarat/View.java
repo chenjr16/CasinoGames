@@ -7,7 +7,7 @@ import com.casino.games.cards.baccarat.deck.Card;
  * Temporary view until front end developed. All Baccarat souts have been extracted to this class
  * to simplify moving to web view when the time comes.
  */
-class View {
+enum View {;
 
     // Baccarat base class
     static void welcomeScreen() {
@@ -96,6 +96,4 @@ class View {
     static void playText() {
         System.out.println("\nHere you will select a play.");
     }
-
-
 }
